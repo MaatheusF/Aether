@@ -267,14 +267,3 @@ Deve conter:
 * arquitetura do Core
 * como criar módulos
 * como criar protocolos
-
----
-
-Se quiser, posso agora:
-✔ gerar todos os CMakeLists base
-✔ criar READMEs automáticos para cada pasta
-✔ gerar skeleton de código C++ (EventBus, Adapter, Module)
-✔ gerar servidor TCP e loop do daemon
-✔ criar CLI inicial (`aetherctl`)
-
-É só pedir!
