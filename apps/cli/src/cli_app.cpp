@@ -4,6 +4,13 @@
 
 #include <complex>
 #include <iostream>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <unistd.h>
+#include <iostream>
+#include <string>
+
+#define SOCKET_PATH "/tmp/aetherd.socket"
 
 int CliApp::run(int argc, char** argv)
 {
@@ -27,7 +34,7 @@ int CliApp::run(int argc, char** argv)
 // ReSharper disable once CppMemberFunctionMayBeStatic
 int CliApp::runOneShot(const std::vector<std::string>& args)
 {
-    const std::string command = args.at(0); // Converte o args para string
+    const std::string& command = args.at(0); // Converte o args para string
 
     if (command == "version")
     {
@@ -37,6 +44,18 @@ int CliApp::runOneShot(const std::vector<std::string>& args)
     if (command == "help")
     {
         cmd_help(args);
+    }
+
+    if (command == "alive")
+    {
+        //Envia comando para o Aetherd Deamon
+        auto result = CliApp::sendCommand(command);
+
+        if (result == "ACK") {
+            std::cout << "Daemon is alive!" << std::endl;
+        } else {
+            std::cout << "Dameon not alive: " << result << std::endl;
+        }
     }
 
     return 0;
@@ -83,18 +102,56 @@ int CliApp::runShell()
         // Comando 'clear / 'c'
         if (cmd == "clear" || cmd == "c") {
             std::cout << "\033[2J\033[H";   //Limpa o console
+            continue;
         }
 
         if (cmd == "version")
         {
             cmd_version(args);
+            continue;
         }
 
         if (cmd == "help")
         {
             cmd_help(args);
+            continue;
         }
     }
 
     return 0;
+}
+
+std::string CliApp::sendCommand(std::string command)
+{
+    //std::string cmd = argv[1];
+    //command += "\n";
+
+    int fd = socket(AF_UNIX , SOCK_STREAM , 0);
+    if (fd < 0) {
+        perror("socket");
+        return nullptr;
+    }
+
+    sockaddr_un addr{};
+    addr.sun_family = AF_UNIX;
+    strncpy(addr.sun_path, SOCKET_PATH, sizeof(addr.sun_path) - 1); //Copia o caminho do socket para o membro do sockaddr
+
+    if (connect(fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0)
+    {
+        perror("connect");
+        return nullptr;
+    }
+
+    write(fd, command.c_str(), command.size()); //Envia o comando para o daemon
+
+    char buffer[512];
+    ssize_t bytes_read = read(fd, buffer, sizeof(buffer)-1);
+
+    if (bytes_read > 0) {
+        //buffer[bytes_read] = '\0';
+        return buffer;
+    }
+
+    close(fd);
+    return nullptr;
 }

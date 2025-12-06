@@ -16,6 +16,7 @@ int cmd_help(const std::vector<std::string>& arg)
     std::cout << "  help     -  Exibe dados essenciais de apoio do CLI ou do Aether alem da lista de comandos disponíveis." << std::endl;
     std::cout << "  aether   -  Inicia o modo Shell" << std::endl;
     std::cout << "  version  -  Exibe a versão atual do Aether." << std::endl;
+    std::cout << "  alive    -  Verifica se o Daemon está respondendo." << std::endl;
 
     std::cout << "\n\n" << std::endl;
 
