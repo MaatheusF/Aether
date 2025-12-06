@@ -18,6 +18,12 @@ class CliApp
          * @param argv Array de argumentos
          */
         int run(int argc, char** argv);
+        /**
+         * @brief Função que envia comando ao AtherD Daemon
+         * @param command Comandos do tipo std::string que será enviado
+         * @return retorna um comando do tipo std::String de retorno
+         */
+        std::string sendCommand(std::string command);
 
     private:
         /**
