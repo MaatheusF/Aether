@@ -7,7 +7,6 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>
-#include <iostream>
 #include <string>
 
 #define SOCKET_PATH "/tmp/aetherd.socket"
@@ -27,37 +26,7 @@ int CliApp::run(int argc, char** argv)
         return runShell();
     }
 
-    // Identifica se o comando foi executado com argumentos, caso "true" processa o comando direto
-    return runOneShot(args);
-}
-
-// ReSharper disable once CppMemberFunctionMayBeStatic
-int CliApp::runOneShot(const std::vector<std::string>& args)
-{
-    const std::string& command = args.at(0); // Converte o args para string
-
-    if (command == "version")
-    {
-        cmd_version(args);
-    }
-
-    if (command == "help")
-    {
-        cmd_help(args);
-    }
-
-    if (command == "alive")
-    {
-        //Envia comando para o Aetherd Deamon
-        auto result = CliApp::sendCommand(command);
-
-        if (result == "ACK") {
-            std::cout << "Daemon is alive!" << std::endl;
-        } else {
-            std::cout << "Dameon not alive: " << result << std::endl;
-        }
-    }
-
+    std::cout << "Comando incorreto, execute apenas aether para iniciar o Shell!" << std::endl;
     return 0;
 }
 
@@ -93,6 +62,11 @@ int CliApp::runShell()
         auto args = CliApp::splitArgs(line);      // Passa os dados da linha para a função que realiza o split dos comandos
         const std::string& cmd = args[0];         // Transforma os args recebidos em string chamado "cmd" com o comando principal
 
+
+        ///=============================
+        ///==  Comandos do Console    ==
+        ///=============================
+
         // Comando 'exit' / 'quit'
         if (cmd == "exit" || cmd == "quit") {
             std::cout << "Finalizando shell...\n";
@@ -105,31 +79,60 @@ int CliApp::runShell()
             continue;
         }
 
-        if (cmd == "version")
-        {
-            cmd_version(args);
-            continue;
-        }
-
+        // Comando 'help'
         if (cmd == "help")
         {
             cmd_help(args);
-            continue;
         }
+
+        ///=============================
+        ///==    Comandos do CLI     ===
+        ///=============================
+
+        // PRIMEIRO ARGS = categoria (ex: core, module)
+        std::string cmd_category = args[0];
+
+        if (cmd_category == "core") {
+            handleCoreCommand(args);
+        } else {
+            std::cout << "Comandos desconhecido" << std::endl;
+        }
+
     }
 
     return 0;
 }
 
+void CliApp::handleCoreCommand(const std::vector<std::string>& args)
+{
+    /// Verifica se possui mais de 2 parametros/args
+    if (args.size() < 2)
+    {
+        std::cout << "Uso: core <start|stop|status>" << std::endl;
+        return;
+    }
+
+    std::string cmd_action = args[1];
+
+    if (cmd_action == "start") {
+        CliApp::sendCommand("core.start");
+    }
+    else if (cmd_action == "stop")
+    {
+        CliApp::sendCommand("core.stop");
+    }
+    else
+    {
+        std::cout << "Uso: core <start|stop|status>" << std::endl;
+    }
+}
+
 std::string CliApp::sendCommand(std::string command)
 {
-    //std::string cmd = argv[1];
-    //command += "\n";
-
     int fd = socket(AF_UNIX , SOCK_STREAM , 0);
     if (fd < 0) {
         perror("socket");
-        return nullptr;
+        return "ERROR";
     }
 
     sockaddr_un addr{};
@@ -139,7 +142,7 @@ std::string CliApp::sendCommand(std::string command)
     if (connect(fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0)
     {
         perror("connect");
-        return nullptr;
+        return "ERROR";
     }
 
     write(fd, command.c_str(), command.size()); //Envia o comando para o daemon
@@ -148,10 +151,9 @@ std::string CliApp::sendCommand(std::string command)
     ssize_t bytes_read = read(fd, buffer, sizeof(buffer)-1);
 
     if (bytes_read > 0) {
-        //buffer[bytes_read] = '\0';
         return buffer;
     }
 
     close(fd);
-    return nullptr;
+    return "ERROR";
 }
