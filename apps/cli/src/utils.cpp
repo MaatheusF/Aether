@@ -5,8 +5,7 @@
 #include <string>
 
 namespace Utils
-{
-    /**
+{/**
   * @brief Retorna o timestamp atual formatado como string.
   *
   * Esta função obtém o horário atual do sistema, converte para uma

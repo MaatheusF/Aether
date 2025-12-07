@@ -29,12 +29,15 @@ class CliApp
         /**
          * @brief Função responsavel por processar comandos diretos / sem --shel
          * @param args argumentos do comando
+         * @deprecated Não mais utilizado, apenas via Shell
          */
         int runOneShot(const std::vector<std::string>& args);
         /**
          * @brief Função responsavel por iniciar um Shell com o comando "aether"
          */
         int runShell();
+
+        void handleCoreCommand(const std::vector<std::string>& args);
 
         /**
          * @brief Quebra as linha do terminal em Tokens (Faz split por espaço) e transforma em args
