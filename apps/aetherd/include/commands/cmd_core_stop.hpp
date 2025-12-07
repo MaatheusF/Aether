@@ -15,6 +15,15 @@ inline void waitForAllModulesToStop(const std::vector<IModule*>& modules) {
     std::unique_lock<std::mutex> lock(stopMutex);
     stoppedModules.clear();
 
+    // Marca os modulos ja parados
+    for (auto* m : modules)
+    {
+        if (!m->isRunning())
+        {
+            stoppedModules.insert(m->name()); //Adiciona o modulo na lista de modulos parados
+        }
+    }
+
     // Espera até todos os módulos confirmarem parada
     stopCv.wait(lock, [&modules]() {
         return stoppedModules.size() == modules.size();
