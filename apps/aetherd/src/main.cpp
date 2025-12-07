@@ -13,7 +13,7 @@
 #include "../../../core/eventbus/include/EventTypes.hpp"
 #include "../../../core/eventbus/include/Event.hpp"
 
-#include "../../../core/tests/moduleTest.hpp"
+#include "../../../modules/ModuleTest/include/ModuleTest.hpp"
 
 #include "../include/commands/cmd_core_stop.hpp"
 
@@ -56,6 +56,8 @@ int main() {
 
     // Inicialização dos módulos
     std::vector<std::unique_ptr<IModule>> loadedModules;
+
+    /// Inicializa o modulo ModuleTest
     loadedModules.push_back(std::make_unique<ModuleTest>());
 
     // Vetor de ponteiros para passar para processCliCommand
