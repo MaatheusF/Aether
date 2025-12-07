@@ -1,0 +1,35 @@
+#pragma once
+#include <memory>
+#include <vector>
+
+#include "../../../core/eventbus/include/IModule.hpp"
+
+class IModule;
+
+class AetherDaemon
+{
+public:
+    /**
+     * @brief Função que inicia o daemon do Aether
+     * @return retorna 0 caso o daemon for finalizado
+     */
+    int initializeAetherDaemon();
+private:
+    /**
+     * @brief Função que realiza a inicialização inicial de todos os modulos do Aether
+     * @return retorna true se todos os modulos foram inicializados com sucesso
+     */
+    void initializeModules();
+    /**
+     * @brief Função que realiza a inicialização do socket de conexão com o CLI
+     */
+    void initializeCliSocket();
+    /**
+     * @brief Função que realiza o processamento dos comandos recebidos pelo CLI
+     */
+    void processCliCommands(const std::string& command);
+
+    std::vector<IModule*> modules;                           /// Lista de Modulos
+    std::vector<std::unique_ptr<IModule>> loadedModules;     /// Lista de Modulos do Aether Inicializados
+    int server_fd = 0;                                       /// File descriptor do socket do servidor CLI
+};

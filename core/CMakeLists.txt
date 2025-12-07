@@ -7,8 +7,6 @@ add_library(aether_core
         eventbus/src/EventBus.cpp
         module/IModule.hpp
         eventbus/include/IModule.hpp
-        # tests/moduleTest.cpp
-        tests/moduleTest.hpp
         # outros .cpp do core aqui quando existirem
         # src/runtime.cpp
         # src/eventbus.cpp

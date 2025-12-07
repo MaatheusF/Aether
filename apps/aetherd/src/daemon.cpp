@@ -1,0 +1,141 @@
+#include "../include/daemon.hpp"
+
+#include <memory>
+#include <vector>
+#include <sys/socket.h>
+#include <sys/un.h>
+
+#include "../../../modules/ModuleTest/include/ModuleTest.hpp"
+#include "../include/commands/cmd_core_stop.hpp"
+
+#define SOCKET_PATH "/tmp/aetherd.socket"
+
+class IModule; /// Declaração antecipada da classe IModule
+
+/**
+ * @brief Função que inicia o daemon do Aether
+ * @return retorna 0 caso o daemon for finalizado
+ */
+int AetherDaemon::initializeAetherDaemon()
+{
+    std::cout << "[Daemon] Aether daemon inicializando..." << std::endl;
+
+    initializeModules();   /// Inicializa os modulos do Aether
+    initializeCliSocket(); /// Inicializa o socket de comunicação com o CLI
+
+    std::cout << "[Daemon] Aether daemon executando com sucesso." << std::endl;
+
+    /// Loop principal do daemon
+    while (true) {
+        int client_fd = accept(server_fd, nullptr, nullptr); /// Aceita uma conexão do CLI
+        if (client_fd < 0) {
+            perror("accept");
+        }
+
+        char buffer[512];                                                /// Buffer para armazenar o comando recebido
+        ssize_t bytes_read = read(client_fd, buffer, sizeof(buffer) -1); /// Lê o comando enviado pelo CLI
+
+        if (bytes_read > 0)
+        {
+            /*
+            buffer[bytes_read] = '\0';
+            std::string cmd(buffer);
+            std::string response; //String que armazena o dado de retorno do comando
+            write(client_fd, response.c_str(), response.size()); //Envia o retorno do comando para o CLI*/
+
+            std::string command(buffer, bytes_read);
+            processCliCommands(command);
+        }
+        write(client_fd, "ACK", 3); /// Envia um ACK simples para o CLI
+        close(client_fd);           /// Fecha a conexão com o cliente
+    }
+
+    close(server_fd);
+    unlink(SOCKET_PATH);
+    return 0;
+}
+
+/**
+ * @brief Função que realiza a inicialização inicial de todos os modulos do Aether
+ * @return retorna true se todos os modulos foram inicializados com sucesso
+ */
+void AetherDaemon::initializeModules()
+{
+    std::cout << "[Aetherd] Inicializando Modulos individuais." << std::endl;
+
+    /// Carrega os Modulos Individuais
+    loadedModules.push_back(std::make_unique<ModuleTest>());
+
+    /// Inicializa os modulos
+    for (auto& m : loadedModules) {
+        //EventBus::getInstance().subscribe(m.get()); // Inscreve no EventBus // MOVIDO PARA DENTRO DO START DO MODULO
+        m->start();                 // Inicia o módulo (thread ou loop interno)
+        modules.push_back(m.get()); // Adiciona ao vetor de ponteiros crus
+    }
+
+    std::cout << "[Aetherd] Modulos individuais inicializados com sucesso." << std::endl;
+}
+
+
+/**
+ * @brief Função que realiza a inicialização do socket de conexão com o CLI
+ */
+void AetherDaemon::initializeCliSocket()
+{
+    std::cout << "[Daemon] Inicializando Daemon Socket CLI." << std::endl;
+
+    unlink(SOCKET_PATH); // Exclui um arquivo de socket Unix do Sistema (Garante que não tenha lixo na memoria)
+    server_fd = socket(AF_UNIX, SOCK_STREAM, 0); // Cria um Socket do tipo UNIX
+
+    /// Verifica se socket foi criado com sucesso
+    if (server_fd < 0) {
+        perror("socket");
+    }
+
+    sockaddr_un addr{};        /// Estrutura de endereço do socket UNIX
+    addr.sun_family = AF_UNIX; /// Define a família do socket como UNIX
+    strncpy(addr.sun_path, SOCKET_PATH, sizeof(addr.sun_path) - 1); /// Copia o caminho do socket para o membro do sockaddr
+
+    /// Associa o socket (bind) a um endereço e porta
+    if (bind(server_fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0)
+    {
+        perror("bind");
+    }
+
+
+    /// Coloca o socket em modo de escuta (listen) para aceitar conexões
+    if (listen(server_fd, 5) < 0)
+    {
+        perror("listen");
+    }
+
+    std::cout << "[Daemon] Daemon Socket CLI inicializado com sucesso." << std::endl;
+}
+
+/**
+ * @brief Função que realiza o processamento dos comandos recebidos pelo CLI
+ * @param command comando recebido
+ */
+void AetherDaemon::processCliCommands(const std::string& command)
+{
+    if (command == "core.stop")
+    {
+        std::cout << "[CLI] Comando recebido 'core.stop'. Parando todos os modulos..." << std::endl;
+
+        StopListener stopListener;                        /// Listener para aguardar confirmação de parada dos módulos
+        EventBus::getInstance().subscribe(&stopListener); /// Inscreve o listener no EventBus para ouvir o callback
+
+        /// Publica o evento de parada para todos os módulos
+        EventBus::getInstance().publish(
+            Event("CLI", "", Events::CORE_STOP, {})
+        );
+
+        // Aguarda todos os módulos confirmarem
+        waitForAllModulesToStop(modules);
+
+        EventBus::getInstance().unsubscribe(&stopListener); /// Remove o listener do EventBus
+
+        std::cout << "[CLI] Todos os módulos parados." << std::endl;
+    }
+}
+
