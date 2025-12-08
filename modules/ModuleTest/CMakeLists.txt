@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
 project(ModuleTest)
 
-# Cria uma biblioteca estática do módulo
+# Cria a biblioteca estática do módulo
 add_library(ModuleTest STATIC
         src/ModuleTest.cpp
         include/ModuleTest.hpp
 )
 
-# Expõe o include para o projeto principal
-target_include_directories(aetherd PUBLIC include)
+# Expõe o include para quem linkar com essa biblioteca
+target_include_directories(ModuleTest PUBLIC include)

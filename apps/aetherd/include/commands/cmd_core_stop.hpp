@@ -24,6 +24,18 @@ inline void waitForAllModulesToStop(const std::vector<IModule*>& modules) {
         }
     }
 
+    /// Publica o evento de parada para todos os módulos que estão rodando
+    for (auto* m : modules)
+    {
+        if (m->isRunning())
+        {
+            EventBus::getInstance().publish(
+                Event("CLI", m->name(), Events::CORE_STOP, {})
+            );
+            std::cout << "[CORE_STOP] Enviando comando de parada para o módulo: " << m->name() << std::endl;
+        }
+    }
+
     // Espera até todos os módulos confirmarem parada
     stopCv.wait(lock, [&modules]() {
         return stoppedModules.size() == modules.size();

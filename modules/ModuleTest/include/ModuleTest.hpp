@@ -12,6 +12,7 @@ public:
     ModuleTest() : running(false) {}
 
     void onEvent(const Event& event) override {
+
         if (event.type == Events::CORE_STOP) {
             stop();
             // Executa stop em outra thread para não travar o EventBus
@@ -44,24 +45,6 @@ public:
 
     }
 
-    /*
-    void initialize() {
-        running = true;
-
-        worker = std::thread([this]()
-        {
-            while (running)
-            {
-                std::cout << "[ModuleTest] Running........" << std::endl;
-                std::this_thread::sleep_for(std::chrono::seconds(1));
-            }aaa
-        });
-
-        std::cout << "[ModuleTest] Módulo inicializado." << std::endl;
-        EventBus::getInstance().subscribe(this); // Inscreve-se para receber eventos
-        std::cout << "[ModuleTest] Módulo inscrito para receber eventos." << std::endl;
-    }*/
-
     bool isRunning() override
     {
         return running;
@@ -70,14 +53,19 @@ public:
     void stop() {
         if (!running) return;
         running = false;
-        std::cout << "[ModuleTest] Parando módulo..." << std::endl;
+
+        std::cout << "[ModuleTest] Parando módulo....." << std::endl;
+
         // Simula limpeza de recursos
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 
         if (worker.joinable()) {
             worker.join();
             std::cout << "[ModuleTest] Módulo parado." << std::endl;
         }
+
+        // Desinscreve do EventBus antes de publicar
+        EventBus::getInstance().unsubscribe(this);
 
         // Notifica EventBus que o módulo parou
         EventBus::getInstance().publish(Event(name(), "", Events::MODULE_STOPPED, ""));
