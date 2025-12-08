@@ -138,4 +138,3 @@ void AetherDaemon::processCliCommands(const std::string& command)
         std::cout << "[CLI] Todos os módulos parados." << std::endl;
     }
 }
-
