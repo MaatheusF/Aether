@@ -1,25 +1,17 @@
-# Cria a biblioteca estática do core
-add_library(aether_core
+cmake_minimum_required(VERSION 3.10)
+project(aether_core)
+
+# Cria a biblioteca estática do core apenas com os .cpp
+add_library(aether_core STATIC
         utils/src/logger.cpp
-        eventbus/include/Event.hpp
-        eventbus/include/EventTypes.hpp
-        eventbus/include/EventBus.hpp
         eventbus/src/EventBus.cpp
-        module/IModule.hpp
-        eventbus/include/IModule.hpp
-        # outros .cpp do core aqui quando existirem
-        # src/runtime.cpp
-        # src/eventbus.cpp
-        # src/network.cpp
 )
 
 # Inclui todos os headers públicos do core
 target_include_directories(aether_core PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/utils/include
-        # adicionar outros include paths dos subdiretórios
-        # ${CMAKE_CURRENT_SOURCE_DIR}/network/include
-        # ${CMAKE_CURRENT_SOURCE_DIR}/eventbus/include
+        utils/include
+        eventbus/include
 )
 
-# Link com pthread (se precisar)
+# Link com pthread (se necessário)
 target_link_libraries(aether_core PUBLIC pthread)

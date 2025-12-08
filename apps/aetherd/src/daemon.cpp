@@ -126,9 +126,9 @@ void AetherDaemon::processCliCommands(const std::string& command)
         EventBus::getInstance().subscribe(&stopListener); /// Inscreve o listener no EventBus para ouvir o callback
 
         /// Publica o evento de parada para todos os módulos
-        EventBus::getInstance().publish(
+        /*EventBus::getInstance().publish(
             Event("CLI", "", Events::CORE_STOP, {})
-        );
+        );*/
 
         // Aguarda todos os módulos confirmarem
         waitForAllModulesToStop(modules);
