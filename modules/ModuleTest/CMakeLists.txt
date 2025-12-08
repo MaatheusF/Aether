@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.10)
-project(ModuleTest)
 
 # Cria a biblioteca estática do módulo
 add_library(ModuleTest STATIC
