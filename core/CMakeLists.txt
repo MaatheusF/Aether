@@ -5,6 +5,12 @@ project(aether_core)
 add_library(aether_core STATIC
         utils/src/logger.cpp
         eventbus/src/EventBus.cpp
+        database/src/PostgresDriver.cpp
+        database/include/PostgresDriver.hpp
+        database/src/ConnectionHandle.cpp
+        database/include/ConnectionHandle.hpp
+        database/src/ConnectionPool.cpp
+        database/include/ConnectionPool.hpp
 )
 
 # Inclui todos os headers públicos do core
@@ -15,3 +21,8 @@ target_include_directories(aether_core PUBLIC
 
 # Link com pthread (se necessário)
 target_link_libraries(aether_core PUBLIC pthread)
+
+# Link com a biblioteca do PostgreSQL
+find_package(PostgreSQL REQUIRED)
+target_link_libraries(aether_core PRIVATE ${PostgreSQL_LIBRARIES})
+target_include_directories(aether_core PRIVATE ${PostgreSQL_INCLUDE_DIRS})
