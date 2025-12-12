@@ -11,6 +11,10 @@ add_library(aether_core STATIC
         database/include/ConnectionHandle.hpp
         database/src/ConnectionPool.cpp
         database/include/ConnectionPool.hpp
+        network/TcpServer.cpp
+        network/TcpServer.hpp
+        network/TcpConnection.cpp
+        network/TcpConnection.hpp
 )
 
 # Inclui todos os headers públicos do core

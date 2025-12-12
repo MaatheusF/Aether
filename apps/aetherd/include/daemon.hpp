@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "../../../core/eventbus/include/IModule.hpp"
+#include "../../../core/network/TcpServer.hpp"
 
 class IModule;
 
@@ -28,8 +29,13 @@ private:
      * @brief Função que realiza o processamento dos comandos recebidos pelo CLI
      */
     void processCliCommands(const std::string& command);
+    /**
+     * @brief Função que inicializa o servidor TCP para comunicação externa
+     */
+    void initializeTcpServer();
 
     std::vector<IModule*> modules;                           /// Lista de Modulos
     std::vector<std::unique_ptr<IModule>> loadedModules;     /// Lista de Modulos do Aether Inicializados
     int server_fd = 0;                                       /// File descriptor do socket do servidor CLI
+    std::unique_ptr<TcpServer> tcpServer;                    /// Servidor TCP para comunicação externa
 };

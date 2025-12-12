@@ -7,6 +7,7 @@
 
 #include "../../../modules/ModuleTest/include/ModuleTest.hpp"
 #include "../include/commands/cmd_core_stop.hpp"
+#include "../../../core/network/TcpServer.hpp"
 
 #define SOCKET_PATH "/tmp/aetherd.socket"
 
@@ -22,6 +23,7 @@ int AetherDaemon::initializeAetherDaemon()
 
     initializeModules();   /// Inicializa os modulos do Aether
     initializeCliSocket(); /// Inicializa o socket de comunicação com o CLI
+    initializeTcpServer(); /// Inicializa o servidor TCP para comunicação externa
 
     std::cout << "[Daemon] Aether daemon executando com sucesso." << std::endl;
 
@@ -137,4 +139,32 @@ void AetherDaemon::processCliCommands(const std::string& command)
 
         std::cout << "[CLI] Todos os módulos parados." << std::endl;
     }
+}
+
+/**
+ * @brief Função que inicializa o servidor TCP para comunicação externa
+ */
+void AetherDaemon::initializeTcpServer()
+{
+    std::cout << "[TcpServer] Inicializando TCP SERVER." << std::endl;
+
+    tcpServer = std::make_unique<TcpServer>(9000); /// Cria o servidor TCP na porta 9000
+
+    // Logs para Debug
+    /**
+    tcpServer->setOnClientConnected([](int fd){
+        std::cout << "[TCP] Cliente conectado FD=" << fd << std::endl;
+    });
+
+    tcpServer->setOnDataReceived([](int fd, const std::string& msg){
+        std::cout << "[TCP] Recebido do FD " << fd << ": " << msg << std::endl;
+    });
+
+    tcpServer->setOnClientDisconnected([](int fd){
+        std::cout << "[TCP] Cliente desconectado FD=" << fd << std::endl;
+    });*/
+
+    tcpServer->start(); /// Inicia o servidor TCP
+
+    std::cout << "[TcpServer] Tcp Server inicializado" << std::endl;
 }
