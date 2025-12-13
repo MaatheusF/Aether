@@ -8,6 +8,7 @@
 #include "../../../modules/ModuleTest/include/ModuleTest.hpp"
 #include "../include/commands/cmd_core_stop.hpp"
 #include "../../../core/network/TcpServer.hpp"
+#include "../../../core/utils/logger.hpp"
 
 #define SOCKET_PATH "/tmp/aetherd.socket"
 
@@ -20,6 +21,8 @@ class IModule; /// Declaração antecipada da classe IModule
 int AetherDaemon::initializeAetherDaemon()
 {
     std::cout << "[Daemon] Aether daemon inicializando..." << std::endl;
+
+    AetherCoreLogger::Initialize("/var/log/aether/aether_log"); /// Inicializa o sistema de logs do AetherCore
 
     initializeModules();   /// Inicializa os modulos do Aether
     initializeCliSocket(); /// Inicializa o socket de comunicação com o CLI

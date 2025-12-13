@@ -3,7 +3,7 @@ project(aether_core)
 
 # Cria a biblioteca estática do core apenas com os .cpp
 add_library(aether_core STATIC
-        utils/src/logger.cpp
+        utils/logger.cpp
         eventbus/src/EventBus.cpp
         database/src/PostgresDriver.cpp
         database/include/PostgresDriver.hpp
@@ -17,6 +17,7 @@ add_library(aether_core STATIC
         network/TcpConnection.hpp
         network/TcpResponseChannel.cpp
         network/TcpResponseChannel.hpp
+        utils/logger.hpp
 )
 
 # Inclui todos os headers públicos do core
