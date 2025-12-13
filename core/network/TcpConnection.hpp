@@ -7,8 +7,8 @@
 class TcpConnection
 {
 public:
-    using OnMessage = std::function<void(const std::string&)>; /// Callback para mensagem recebida
-    using OnDisconnect = std::function<void()>;                /// Callback para desconexão
+    using OnBytes = std::function<void(std::vector<uint8_t>&)>;               /// Callback para mensagem recebida (dados binários)
+    using OnDisconnect = std::function<void()>;                               /// Callback para desconexão
 
     /**
      * Construtor da conexão TCP
@@ -21,27 +21,25 @@ public:
      */
     ~TcpConnection();
 
-    void start();                               /// Inicia a conexão TCP
-    void stop();                                /// Inicia e para a conexão TCP
-    void send(const std::string& msg) const;    /// Envia uma mensagem pela conexão
+    void start();                                           /// Inicia a conexão TCP
+    void stop();                                            /// Inicia e para a conexão TCP
+    void sendBytes(const std::vector<uint8_t>& data) const; /// Envia uma mensagem pela conexão (Servidor para cliente)
 
     /** Retorna o descritor do socket da conexão */
     int getFd() const { return socketFd; }
 
-    void setOnMessage(const OnMessage& cb) { onMessage = cb; }          /// Define o callback para mensagem recebida
-    void setOnDisconnect(const OnDisconnect& cb) { onDisconnect = cb; } /// Define o callback para desconexão
-
-
+    void setOnBytesReceived(const OnBytes& cb) { onBytesReceived = cb; }    /// Define o callback para dados recebidos
+    void setOnDisconnect(const OnDisconnect& cb) { onDisconnect = cb; }     /// Define o callback para desconexão
 
 private:
-
-    /** Tipo de callback para mensagem recebida */
-    void readLoop();
+    void readLoop();                                                        /// Loop de leitura de dados do socket
+    void onSocketRead(const uint8_t* data, size_t len);                     /// Manipula os dados lidos do socket
 
     int socketFd;                   /// Socket da conexão
     std::atomic<bool> isRunning;    /// Indica se a conexão está ativa
     std::thread readThread;         /// Thread para leitura de dados
 
-    OnMessage onMessage;            /// Callback para mensagem recebida
+    std::vector<uint8_t> recvBuffer;/// Buffer de recepção de dados
+    OnBytes onBytesReceived;        /// Callback para mensagem recebida
     OnDisconnect onDisconnect;      /// Callback para desconexão
 };

@@ -4,6 +4,12 @@ add_library(aether_protocol
         src/dummy.cpp
         include/Packet.hpp
         include/CommandType.hpp
+        src/Parser.cpp
+        include/Parser.hpp
+        common/IResponseChannel.hpp
+        src/PacketBuilder.cpp
+        include/PacketBuilder.hpp
+        common/IProtocolHandler.hpp
 )
 
 target_include_directories(aether_protocol

@@ -15,6 +15,8 @@ add_library(aether_core STATIC
         network/TcpServer.hpp
         network/TcpConnection.cpp
         network/TcpConnection.hpp
+        network/TcpResponseChannel.cpp
+        network/TcpResponseChannel.hpp
 )
 
 # Inclui todos os headers públicos do core

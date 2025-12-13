@@ -14,7 +14,7 @@ struct Event
     std::string source;  /// Nome do modulo ou do processo que publicou o evento
     std::string target;  /// Nome do modulo ou do processo de destino do evento, caso tenha
     std::string type;    /// Tipo do evento (ex: "CLI_COMMAND", "DAEMON_STATUS")
-    std::string data;    /// Dados associados ao evento. Pode ser qualquer tipo.
+    std::any data;       /// Dados associados ao evento. Pode ser qualquer tipo.
 
     /**
      * @brief Construtor do evento
@@ -23,5 +23,13 @@ struct Event
      * @param type Nome/identificador do evento
      * @param data Dados do evento, armazenados como std::any
      */
-    Event(std::string source, std::string target, std::string type, std::string data ) : source(std::move(source)), target(std::move(target)), type(std::move(type)), data(std::move(data)) {}
+    Event(
+        std::string source,
+        std::string target,
+        std::string type,
+        std::any data )
+    :   source(std::move(source)),
+        target(std::move(target)),
+        type(std::move(type)),
+        data(std::move(data)) {}
 };

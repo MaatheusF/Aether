@@ -67,6 +67,7 @@ void AetherDaemon::initializeModules()
 
     /// Carrega os Modulos Individuais
     loadedModules.push_back(std::make_unique<ModuleTest>());
+    moduleTest = dynamic_cast<ModuleTest*>(loadedModules.back().get()); /// Armazena o ponteiro direto para o ModuleTest
 
     /// Inicializa os modulos
     for (auto& m : loadedModules) {
@@ -147,24 +148,14 @@ void AetherDaemon::processCliCommands(const std::string& command)
 void AetherDaemon::initializeTcpServer()
 {
     std::cout << "[TcpServer] Inicializando TCP SERVER." << std::endl;
-
     tcpServer = std::make_unique<TcpServer>(9000); /// Cria o servidor TCP na porta 9000
 
-    // Logs para Debug
-    /**
-    tcpServer->setOnClientConnected([](int fd){
-        std::cout << "[TCP] Cliente conectado FD=" << fd << std::endl;
-    });
-
-    tcpServer->setOnDataReceived([](int fd, const std::string& msg){
-        std::cout << "[TCP] Recebido do FD " << fd << ": " << msg << std::endl;
-    });
-
-    tcpServer->setOnClientDisconnected([](int fd){
-        std::cout << "[TCP] Cliente desconectado FD=" << fd << std::endl;
-    });*/
+    /** Registra o ModuleTest como ProtocolHandler do TcpServer */
+    if (moduleTest) {
+        tcpServer->setProtocolHandler(moduleTest);
+        std::cout << "[TcpServer] ModuleTest registrado como ProtocolHandler" << std::endl;
+    }
 
     tcpServer->start(); /// Inicia o servidor TCP
-
     std::cout << "[TcpServer] Tcp Server inicializado" << std::endl;
 }

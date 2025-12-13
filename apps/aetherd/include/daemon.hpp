@@ -5,6 +5,7 @@
 #include "../../../core/eventbus/include/IModule.hpp"
 #include "../../../core/network/TcpServer.hpp"
 
+class ModuleTest;
 class IModule;
 
 class AetherDaemon
@@ -38,4 +39,5 @@ private:
     std::vector<std::unique_ptr<IModule>> loadedModules;     /// Lista de Modulos do Aether Inicializados
     int server_fd = 0;                                       /// File descriptor do socket do servidor CLI
     std::unique_ptr<TcpServer> tcpServer;                    /// Servidor TCP para comunicação externa
+    ModuleTest* moduleTest = nullptr;                        /// Módulo de Teste (Ponteiro direto para facilitar o acesso)
 };

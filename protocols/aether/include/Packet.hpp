@@ -29,8 +29,7 @@ namespace ProtocolAether
         static constexpr uint8_t MAGIC_1 = 0xAA; /// Magic | Numero de identificação do protocolo
         static constexpr uint8_t MAGIC_2 = 0x55; /// Magic | Numero de identificação do protocolo
 
-        uint8_t  magic1 = MAGIC_1;              /// Magic | Numero de identificação do protocolo
-        uint8_t  magic2 = MAGIC_2;              /// Magic | Numero de identificação do protocolo
+        uint16_t magic;                         /// Magic | Numero de identificação do protocolo
         std::uint8_t version;                   /// Version | Versão do protocolo
         uint16_t type;                          /// Type | Tipo do pacote (comando).
         uint16_t module;                        /// Module | Módulo de destino do pacote.

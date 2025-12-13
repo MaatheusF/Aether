@@ -1,4 +1,6 @@
 #include "TcpServer.hpp"
+#include "../../protocols/aether/include/Parser.hpp"
+#include "TcpResponseChannel.hpp"
 
 #include <sys/socket.h>
 #include <unistd.h>
@@ -7,14 +9,13 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-
 /**
- * @brief Construtor do servidor TCP
+ * Construtor do servidor TCP
  * @param port Porta na qual o servidor irá escutar
  */
-TcpServer::TcpServer(const int port) : serverSocket(-1), serverPort(port), isRunning(false) {}
+TcpServer::TcpServer(const int port) : serverSocket(-1), serverPort(port), isRunning(false), parser(std::make_unique<ProtocolAether::Parser>()) {}
 
-/** * Destrutor do servidor TCP */
+/** Destrutor do servidor TCP */
 TcpServer::~TcpServer()
 {
     stop(); /// Para o servidor ao destruir
@@ -31,7 +32,6 @@ void TcpServer::start()
     {
         throw std::runtime_error("[Core TCP] Erro ao criar Socket do servidor");
     }
-
 
     sockaddr_in serverAddr{};                                       /// Estrutura para o endereço do servidor
     serverAddr.sin_family = AF_INET;                                /// Família de endereços IPv4
@@ -50,13 +50,22 @@ void TcpServer::start()
     acceptThread = std::thread(&TcpServer::acceptLoop, this); /// Inicia a thread para aceitar conexões de clientes
 }
 
+/**
+ * Define o manipulador de protocolo para o parser
+ * @param handler Ponteiro para o manipulador de protocolo
+ */
+void TcpServer::setProtocolHandler(IProtocolHandler* handler)
+{
+    parser->setHandler(handler);    /// Define o manipulador de protocolo no parser
+}
+
 /** Para o servidor TCP */
 void TcpServer::stop()
 {
     if (!isRunning) return;
     isRunning = false;
 
-shutdown(serverSocket, SHUT_RDWR);        /// Encerra as operações de leitura e escrita no socket do servidor
+    shutdown(serverSocket, SHUT_RDWR);    /// Encerra as operações de leitura e escrita no socket do servidor
     close(serverSocket);                  /// Fecha o socket do servidor
 
     if (acceptThread.joinable())
@@ -83,7 +92,9 @@ void TcpServer::acceptLoop()
             continue;   /// Continua se houver erro ao aceitar conexão
         }
 
+        /// Cria uma nova conexão TCP para o cliente
         auto conn = std::make_shared<TcpConnection>(clientSocket);
+        /// Adiciona a conexão à lista de conexões ativas
         connections.insert(conn);
 
         if (onClientConnected)
@@ -91,14 +102,15 @@ void TcpServer::acceptLoop()
             onClientConnected(clientSocket); /// Chama o callback de conexão de cliente
         }
 
-        conn->setOnMessage([this, conn](const std::string& msg)
+        /** Define o callback para recebimento de bytes */
+        conn->setOnBytesReceived([this, conn](std::vector<uint8_t>& bytes)
         {
-           if (onDataReceived)
-           {
-               onDataReceived(conn->getFd(), msg);
-           }
+            std::cout << "[TcpServer] onBytesReceived bytes=" << bytes.size() << std::endl;
+            auto channel = std::make_shared<TcpResponseChannel>(conn);  /// Cria o canal de resposta TCP
+            parser->feed(bytes, channel);                               /// Alimenta o parser com os bytes recebidos
         });
 
+        /** Define o callback para desconexão do cliente */
         conn->setOnDisconnect([this, conn]()
         {
             if (onClientDisconnected)
@@ -108,6 +120,7 @@ void TcpServer::acceptLoop()
             connections.erase(conn);
         });
 
-        conn->start(); /// Inicia a thread de comunicação com o cliente
+        /** Inicia a conexão para começar a receber dados */
+        conn->start();
     }
 }
