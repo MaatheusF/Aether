@@ -7,7 +7,10 @@ add_executable(aetherd
 )
 
 # Link com core e qualquer outra lib que existir
-target_link_libraries(aetherd PRIVATE aether_core)
+target_link_libraries(aetherd
+        PRIVATE aether_core
+        PRIVATE aether_protocol
+)
 
 # Linka o módulo ao daemon
 target_link_libraries(aetherd PRIVATE aether_core ModuleTest)
