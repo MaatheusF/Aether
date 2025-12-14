@@ -37,7 +37,17 @@ class CliApp
          */
         int runShell();
 
+        /**
+         * @brief Implementa o comando core stop | core start para o Daemon, parando os modulos do Sistema
+         * @param args argumentos fornecidos no Shell
+         */
         void handleCoreCommand(const std::vector<std::string>& args);
+
+        /**
+         * @brief Implementa uma função para exibir os logs do Aether (tail -f)
+         * @param args argumentos fornecidos no Shell
+         */
+        static void handleLogsCommand(const std::vector<std::string>& args);
 
         /**
          * @brief Quebra as linha do terminal em Tokens (Faz split por espaço) e transforma em args

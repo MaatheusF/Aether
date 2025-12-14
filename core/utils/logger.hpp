@@ -76,7 +76,7 @@ private:
          * @param sb1 Primeiro buffer de saída.
          * @param sb2 Segundo buffer de saída.
          */
-        TeeBuffer(std::streambuf* sb1, std::streambuf* sb2) : sb1(sb1), sb2(sb2), atLineStart(true) {}
+        TeeBuffer(std::streambuf* sb1, std::streambuf* sb2) : sb1(sb1), sb2(sb2), atLineStart1(true), atLineStart2(true) {}
 
     protected:
         /**
@@ -91,33 +91,33 @@ private:
             // Console
             if (sb1)
             {
-                if (atLineStart)
+                if (atLineStart1)
                 {
                     std::string ts = returnCurrentTimeStamp() + " | ";
                     sb1->sputn(ts.c_str(), ts.size());
-                    atLineStart = false;
+                    atLineStart1 = false;
                 }
 
                 sb1->sputc(c);  // Escreve o caractere no arquivo de log
 
                 if (c == '\n')
-                    atLineStart = true; // próxima linha começa, adiciona timestamp
+                    atLineStart1 = true; // próxima linha começa, adiciona timestamp
             }
 
             // Arquivo de Log
             if (sb2)
             {
-                if (atLineStart)
+                if (atLineStart2)
                 {
                     std::string ts = returnCurrentTimeStamp() + " | ";
                     sb2->sputn(ts.c_str(), ts.size());
-                    atLineStart = false;
+                    atLineStart2 = false;
                 }
 
                 sb2->sputc(c);  // Escreve o caractere no arquivo de log
 
                 if (c == '\n')
-                    atLineStart = true; // próxima linha começa, adiciona timestamp
+                    atLineStart2 = true; // próxima linha começa, adiciona timestamp
             }
 
             return c;
@@ -137,7 +137,8 @@ private:
     private:
         std::streambuf* sb1;        /// Primeiro buffer de saída
         std::streambuf* sb2;        /// Segundo buffer de saída
-        bool atLineStart = false;   /// indica se está no início de uma linha
+        bool atLineStart1 = false;   /// indica se está no início de uma linha
+        bool atLineStart2 = false;   /// indica se está no início de uma linha
     };
 
     static std::ofstream logFile;       /// Arquivo de log

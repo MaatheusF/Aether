@@ -1,13 +1,19 @@
 #include "../include/cli_app.hpp"
+
+#include <chrono>
 #include "../include/commands/cmd_version.hpp"
 #include "../include/commands/cmd_help.hpp"
+#include "../include/utils.hpp"
 
 #include <complex>
+#include <deque>
+#include <fstream>
 #include <iostream>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>
 #include <string>
+#include <thread>
 
 #define SOCKET_PATH "/tmp/aetherd.socket"
 
@@ -44,6 +50,9 @@ std::vector<std::string> CliApp::splitArgs(const std::string& line) {
 
 int CliApp::runShell()
 {
+    /// imprime a mensagem de boas vindas
+    Utils::printWelcomeMessage();
+
     std::cout << "Running shell" << std::endl;
 
     while (true)
@@ -94,6 +103,8 @@ int CliApp::runShell()
 
         if (cmd_category == "core") {
             handleCoreCommand(args);
+        } else if (cmd_category == "logs"){
+            handleLogsCommand(args);
         } else {
             std::cout << "Comandos desconhecido" << std::endl;
         }
@@ -101,6 +112,81 @@ int CliApp::runShell()
     }
 
     return 0;
+}
+
+/**
+ * @brief Implementa uma função para exibir os logs do Aether (tail -f)
+ * @param args argumentos fornecidos no Shell
+ */
+void CliApp::handleLogsCommand(const std::vector<std::string>& args)
+{
+
+    /// ================================================
+    ///      Tratamento dos Parametros de entrada
+    /// ================================================
+
+    int lines = 10; /// Linhas de logs que serão exibidas por padrão
+
+    /// Verifica se possui maior de 1 parametros/args
+    if (args.size() > 1)
+    {
+        /// Se o parametro for maior que o padrão, utiliza o parametro fornecido no CLI
+        try {
+            int argLines = std::stoi(args[1]);
+            if (argLines > lines)
+                lines = argLines;
+        } catch (...) {
+            /// Se receber um valor incorreto mantem 'lines' com o valor padrão
+        }
+    }
+
+    /// ================================================
+    ///                 Exibição dos logs
+    /// ================================================
+
+    std::ifstream file("/var/log/aether/aether_log", std::ios::in);
+    if (!file.is_open())
+    {
+        std::cerr << "Não foi possível abrir o arquivo de logs em " << "/var/log/aether/aether_log" << std::endl;
+        return;
+    }
+
+    std::deque<std::string> buffer;
+    std::string line; // <-- variável correta para getline
+
+    // Le o arquivo inteiro, mas mantem apenas as ultimas linhas
+    while (std::getline(file, line))
+    {
+        buffer.push_back(line);
+        if (buffer.size() > lines)
+        {
+            buffer.pop_front();
+        }
+    }
+
+    // Exibe as ultimas linhas
+    for (const auto& l : buffer)
+    {
+        std::cout << l << std::endl;
+    }
+
+    // Move para o final do arquivo para acompanhar novas linhas
+    file.clear();                   /// Limpa flags EOF
+    file.seekg(0, std::ios::end);   /// Posiciona o ponteiro do arquivo para a ultima linha
+
+    while (true)
+    {
+        std::streampos currentPos = file.tellg();
+        if (std::getline(file, line))
+        {
+            std::cout << line << std::endl;
+        } else
+        {
+            file.clear();
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            file.seekg(currentPos);
+        }
+    }
 }
 
 void CliApp::handleCoreCommand(const std::vector<std::string>& args)

@@ -19,6 +19,7 @@ int cmd_help(const std::vector<std::string>& arg)
     std::cout << "  alive    -  Verifica se o Daemon está respondendo." << std::endl;
 
     std::cout << "\n  core <start|stop|status>     -  Inicia/Para ou verifica o status de todos os modulos." << std::endl;
+    std::cout << "  logs <size>                  -  Exibe os logs do Aetherd (Daemon)" << std::endl;
 
     std::cout << "\n\n" << std::endl;
 
