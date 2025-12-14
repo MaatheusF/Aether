@@ -35,9 +35,16 @@ private:
      */
     void initializeTcpServer();
 
+    /**
+     * @brief Função que instancia todos os modulos do sistema Aether,
+     * utilizado no Daemon para registrar os modulos na conexão TCP principalmente
+     * @return retorna um elemento contendo todos os modulos criados
+     */
+    static std::vector<std::shared_ptr<IModule>> createModules();
+
     std::vector<IModule*> modules;                           /// Lista de Modulos
-    std::vector<std::unique_ptr<IModule>> loadedModules;     /// Lista de Modulos do Aether Inicializados
+    std::vector<std::shared_ptr<IModule>> loadedModules;     /// Lista de Modulos do Aether Inicializados
     int server_fd = 0;                                       /// File descriptor do socket do servidor CLI
     std::unique_ptr<TcpServer> tcpServer;                    /// Servidor TCP para comunicação externa
-    ModuleTest* moduleTest = nullptr;                        /// Módulo de Teste (Ponteiro direto para facilitar o acesso)
+    std::shared_ptr<ModuleTest> moduleTest;                  /// Módulo de Teste (Ponteiro direto para facilitar o acesso)
 };

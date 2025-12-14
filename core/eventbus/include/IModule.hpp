@@ -2,7 +2,7 @@
 
 #include <string>
 #include "Event.hpp"
-
+#include <cstdint>
 /**
  * @brief Classe que determina a estrutura padrão dos modulos acoplaveis ao Aehter
  */

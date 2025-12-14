@@ -39,7 +39,7 @@ public:
     void setOnClientConnected(const OnClientConnected& cb) { onClientConnected = cb; }          /// Define o callback para conexão de cliente
     void setOnDataReceived(const OnDataReceived& cb) { onDataReceived = cb; }                   /// Define o callback para recebimento de dados
     void setOnClientDisconnected(const OnClientDisconnected& cb) { onClientDisconnected = cb; } /// Define o callback para descon
-    void setProtocolHandler(IProtocolHandler* handler);                                         /// Define o handler de protocolo
+    void setProtocolHandler(std::shared_ptr<IProtocolHandler> handler);                         /// Define o handler de protocolo
 
 private:
     void acceptLoop();                  /// Loop para aceitar conexões de clientes
@@ -55,4 +55,5 @@ private:
     OnDataReceived onDataReceived = nullptr;                /// Callback para quando dados são recebidos
     OnClientDisconnected onClientDisconnected = nullptr;    /// Callback para quando um cliente se desconecta
     std::unique_ptr<ProtocolAether::Parser> parser;         /// Parser de pacotes
+    std::shared_ptr<IProtocolHandler> protocolHandler;      /// Esse manipulador será responsável por processar os pacotes recebidos e  enviar as respostas adequadas ao cliente.
 };

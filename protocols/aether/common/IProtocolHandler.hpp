@@ -22,6 +22,11 @@ public:
     virtual ~IProtocolHandler() = default;
 
     /**
+     * @brief Codigo identificador do modulo
+     */
+    virtual uint8_t moduleId() const = 0;
+
+    /**
      * @brief Manipula um pacote recebido.
      *
      * @param packet O pacote recebido para processamento.

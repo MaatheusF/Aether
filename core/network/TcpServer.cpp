@@ -51,12 +51,19 @@ void TcpServer::start()
 }
 
 /**
- * Define o manipulador de protocolo para o parser
- * @param handler Ponteiro para o manipulador de protocolo
+ * @brief Define o manipulador de protocolo utilizado pelo servidor TCP.
+ *
+ * O TcpServer mantém um std::shared_ptr para garantir o ciclo de vida
+ * do IProtocolHandler durante toda a execução do servidor.
+ *
+ * O Parser recebe apenas um ponteiro cru (non-owning pointer),
+ * sendo responsável apenas por chamar o handler quando um pacote
+ * completo é parseado, sem gerenciar sua memória.
  */
-void TcpServer::setProtocolHandler(IProtocolHandler* handler)
+void TcpServer::setProtocolHandler(std::shared_ptr<IProtocolHandler> handler)
 {
-    parser->setHandler(handler);    /// Define o manipulador de protocolo no parser
+    protocolHandler = handler;              // mantém vivo
+    parser->setHandler(handler.get());      // apenas observa
 }
 
 /** Para o servidor TCP */

@@ -9,6 +9,7 @@
 #include "../include/commands/cmd_core_stop.hpp"
 #include "../../../core/network/TcpServer.hpp"
 #include "../../../core/utils/logger.hpp"
+#include "common/ProtocolRouter.hpp"
 
 #define SOCKET_PATH "/tmp/aetherd.socket"
 
@@ -69,12 +70,10 @@ void AetherDaemon::initializeModules()
     std::cout << "[Aetherd] Inicializando Modulos individuais." << std::endl;
 
     /// Carrega os Modulos Individuais
-    loadedModules.push_back(std::make_unique<ModuleTest>());
-    moduleTest = dynamic_cast<ModuleTest*>(loadedModules.back().get()); /// Armazena o ponteiro direto para o ModuleTest
+    loadedModules = createModules();
 
     /// Inicializa os modulos
     for (auto& m : loadedModules) {
-        //EventBus::getInstance().subscribe(m.get()); // Inscreve no EventBus // MOVIDO PARA DENTRO DO START DO MODULO
         m->start();                 // Inicia o módulo (thread ou loop interno)
         modules.push_back(m.get()); // Adiciona ao vetor de ponteiros crus
     }
@@ -82,6 +81,21 @@ void AetherDaemon::initializeModules()
     std::cout << "[Aetherd] Modulos individuais inicializados com sucesso." << std::endl;
 }
 
+/**
+ * @brief Função que instancia todos os modulos do sistema Aether,
+ * utilizado no Daemon para registrar os modulos na conexão TCP principalmente
+ * @return retorna um elemento contendo todos os modulos criados
+ */
+std::vector<std::shared_ptr<IModule>> AetherDaemon::createModules()
+{
+    std::vector<std::shared_ptr<IModule>> mods; /// Lista de modulos
+
+    mods.push_back(std::make_shared<ModuleTest>());
+    //mods.push_back(std::make_shared<ModuleGps>());
+    //mods.push_back(std::make_shared<ModuleTelemetry>());
+
+    return mods;
+}
 
 /**
  * @brief Função que realiza a inicialização do socket de conexão com o CLI
@@ -107,7 +121,6 @@ void AetherDaemon::initializeCliSocket()
     {
         perror("bind");
     }
-
 
     /// Coloca o socket em modo de escuta (listen) para aceitar conexões
     if (listen(server_fd, 5) < 0)
@@ -152,13 +165,21 @@ void AetherDaemon::initializeTcpServer()
 {
     std::cout << "[TcpServer] Inicializando TCP SERVER." << std::endl;
     tcpServer = std::make_unique<TcpServer>(9000); /// Cria o servidor TCP na porta 9000
+    auto router = std::make_shared<ProtocolRouter>();
 
-    /** Registra o ModuleTest como ProtocolHandler do TcpServer */
-    if (moduleTest) {
-        tcpServer->setProtocolHandler(moduleTest);
-        std::cout << "[TcpServer] ModuleTest registrado como ProtocolHandler" << std::endl;
+    /// Registra automaticamente todos os módulos que falam TCP
+    for (auto& m : loadedModules)
+    {
+        auto handler = std::dynamic_pointer_cast<IProtocolHandler>(m);
+        if (handler)
+        {
+            router->registerModule(handler);
+            std::cout << "[TcpServer] Módulo registrado no ProtocolRouter: 0x" << std::hex << static_cast<int>(handler->moduleId()) << std::dec << std::endl;
+        }
     }
 
+    tcpServer->setProtocolHandler(router);  /// Define o router como destino de todos os pacotes TCP
     tcpServer->start(); /// Inicia o servidor TCP
+
     std::cout << "[TcpServer] Tcp Server inicializado" << std::endl;
 }
