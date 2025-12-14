@@ -9,7 +9,7 @@
 #include "../include/commands/cmd_core_stop.hpp"
 #include "../../../core/network/TcpServer.hpp"
 #include "../../../core/utils/logger.hpp"
-#include "common/ProtocolRouter.hpp"
+#include "../../../core/network/ProtocolRouter.hpp"
 
 #define SOCKET_PATH "/tmp/aetherd.socket"
 

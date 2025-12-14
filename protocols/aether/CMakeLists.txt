@@ -10,7 +10,7 @@ add_library(aether_protocol
         src/PacketBuilder.cpp
         include/PacketBuilder.hpp
         common/IProtocolHandler.hpp
-        common/ProtocolRouter.hpp
+        ../../core/network/ProtocolRouter.hpp
         common/ModuleId.hpp
 )
 

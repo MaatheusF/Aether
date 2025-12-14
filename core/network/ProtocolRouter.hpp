@@ -2,7 +2,7 @@
 #include <iostream>
 #include <unordered_map>
 
-#include "IProtocolHandler.hpp"
+#include "../../protocols/aether/common/IProtocolHandler.hpp"
 #include "include/Packet.hpp"
 
 /**
@@ -42,10 +42,7 @@ public:
      * @param packet Pacote recebido
      * @param channel Canal de comunicação
      */
-    void onPacket(
-        const ProtocolAether::Packet& packet,
-        std::shared_ptr<IResponseChannel> channel
-        ) override
+    void onPacket( const ProtocolAether::Packet& packet, std::shared_ptr<IResponseChannel> channel ) override
     {
         /// Busca o modulo correto para enviar o pacote
         auto it = std::find_if(
@@ -64,6 +61,15 @@ public:
         }
         else
         {
+            /// Responde ao cliente um ERROR_GENERIC indicando a falta de Identificação
+            std::string payload = "Modulo não encontrado";
+            auto response = ProtocolAether::PacketBuilder::build(
+                /* CommandType  */CommandType::ERROR_GENERIC,
+                /* Module */    static_cast<uint16_t>(ModuleId::CORE),
+                /* Payload */   std::vector<uint8_t>(payload.begin(), payload.end())
+            );
+
+            channel->sendResponse(response);
             std::cout << "[Router] Nenhum módulo para moduleId=" << static_cast<int>(packet.module) << std::endl;
         }
     }
