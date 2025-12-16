@@ -6,6 +6,7 @@
 #include "../../../core/network/TcpServer.hpp"
 
 class ModuleTest;
+class ModulePoseidon;
 class IModule;
 
 class AetherDaemon
@@ -47,4 +48,5 @@ private:
     int server_fd = 0;                                       /// File descriptor do socket do servidor CLI
     std::unique_ptr<TcpServer> tcpServer;                    /// Servidor TCP para comunicação externa
     std::shared_ptr<ModuleTest> moduleTest;                  /// Módulo de Teste (Ponteiro direto para facilitar o acesso)
+    std::shared_ptr<ModulePoseidon> modulePoseidon;          /// Módulo Poseidon (Ponteiro direto para facilitar o acesso)
 };

@@ -14,9 +14,11 @@ target_link_libraries(aetherd
 
 # Linka o módulo ao daemon
 target_link_libraries(aetherd PRIVATE aether_core ModuleTest)
+target_link_libraries(aetherd PRIVATE aether_core ModulePoseidon)
 
 # Inclui os headers do módulo
 target_include_directories(aetherd
         PRIVATE
         ${CMAKE_SOURCE_DIR}/modules/ModuleTest/include
+        ${CMAKE_SOURCE_DIR}/modules/ModulePoseidon/include
 )

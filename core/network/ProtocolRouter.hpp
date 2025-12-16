@@ -15,17 +15,18 @@ class ProtocolRouter : public IProtocolHandler
 public:
     /**
      * @brief Registra um módulo capaz de receber pacotes TCP. Cada módulo implementa IProtocolHandler
+     * @param handler
      * @param module
      */
-    void registerModule(const std::shared_ptr<IProtocolHandler>& module)
+    void registerModule(const std::shared_ptr<IProtocolHandler>& handler, const std::shared_ptr<IModule>& module)
     {
 
         std::cout << "[Router] Registrando módulo com ID="
-          << static_cast<int>(module->moduleId())
+          << static_cast<int>(handler->moduleId())
           << " (" << typeid(*module).name() << ")"
           << std::endl;
 
-        modules.push_back(module);
+        modules.emplace_back(RegisteredModule{handler, module});;
     }
 
     /**
@@ -50,14 +51,28 @@ public:
             modules.end(),
             [&](const auto& m)
             {
-                return m->moduleId() == packet.module;
+                return m.handler->moduleId() == packet.module;
             }
         );
+
+        /// Verifica se o modulo está disponível
+        if (!it->module->isRunning())
+        {
+            std::string payload = "Modulo indisponível";
+            auto response = ProtocolAether::PacketBuilder::build(
+                /* CommandType  */CommandType::MODULE_UNAVAILABLE,
+                /* Module */    static_cast<uint16_t>(ModuleId::CORE),
+                /* Payload */   std::vector<uint8_t>(payload.begin(), payload.end())
+            );
+
+            channel->sendResponse(response);
+            return;
+        }
 
         /// Encaminha o pacote para o modulo correspondente
         if (it != modules.end())
         {
-            (*it)->onPacket(packet, channel);
+            it->handler->onPacket(packet, channel);
         }
         else
         {
@@ -71,9 +86,18 @@ public:
 
             channel->sendResponse(response);
             std::cout << "[Router] Nenhum módulo para moduleId=" << static_cast<int>(packet.module) << std::endl;
+
         }
     }
 
 private:
-    std::vector<std::shared_ptr<IProtocolHandler>> modules; /// Lista de modulos registrados
+    /// Definição da estrutura do vector modules
+    struct RegisteredModule
+    {
+        std::shared_ptr<IProtocolHandler> handler;
+        std::shared_ptr<IModule> module;
+    };
+    std::vector<RegisteredModule> modules; /// Lista de modulos registrados
+
+    //std::vector<std::shared_ptr<IProtocolHandler>> modules; /// Lista de modulos registrados
 };

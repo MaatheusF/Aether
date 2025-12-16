@@ -6,6 +6,7 @@
 #include <sys/un.h>
 
 #include "../../../modules/ModuleTest/include/ModuleTest.hpp"
+#include "../../../modules/ModulePoseidon/include/PoseidonMain.hpp"
 #include "../include/commands/cmd_core_stop.hpp"
 #include "../../../core/network/TcpServer.hpp"
 #include "../../../core/utils/logger.hpp"
@@ -91,6 +92,7 @@ std::vector<std::shared_ptr<IModule>> AetherDaemon::createModules()
     std::vector<std::shared_ptr<IModule>> mods; /// Lista de modulos
 
     mods.push_back(std::make_shared<ModuleTest>());
+    mods.push_back(std::make_shared<ModulePoseidon>());
     //mods.push_back(std::make_shared<ModuleGps>());
     //mods.push_back(std::make_shared<ModuleTelemetry>());
 
@@ -173,7 +175,7 @@ void AetherDaemon::initializeTcpServer()
         auto handler = std::dynamic_pointer_cast<IProtocolHandler>(m);
         if (handler)
         {
-            router->registerModule(handler);
+            router->registerModule(handler, m);
             std::cout << "[TcpServer] Módulo registrado no ProtocolRouter: 0x" << std::hex << static_cast<int>(handler->moduleId()) << std::dec << std::endl;
         }
     }

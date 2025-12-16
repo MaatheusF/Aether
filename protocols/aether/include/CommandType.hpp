@@ -26,6 +26,7 @@ enum class CommandType : uint16_t {
     HELLO_ACK           = 0x0005,       /// Confirma o recebimento do handshake.
     HEARTBEAT           = 0x0006,       /// Pacote de heartbeat para manter a conexão ativa.
     ACK                 = 0x0007,       /// Confirma o recebimento de um pacote específico.
+    MODULE_UNAVAILABLE  = 0x0008,       /// Indica que o modulo de comunicação está indisponível ou parado, não podendo responder no momento
 
     /// ----------------------------------------------------------------------
     /// 0x0100 – 0x01FF → Mensagens genéricas de dados (bidirecionais)
