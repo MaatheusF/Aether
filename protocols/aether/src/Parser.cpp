@@ -49,8 +49,6 @@ namespace ProtocolAether
                 break; /// Sai do loop se não houver pacotes completos
             }
 
-            std::cout << "[Parser] Packet parseado!" << std::endl;
-
             if (handler)
             {
                 handler->onPacket(packet, channel); /// Chama o handler se estiver definido
@@ -69,7 +67,6 @@ namespace ProtocolAether
      */
     bool Parser::tryParsePacket(std::vector<uint8_t>& buffer, Packet& outPacket)
     {
-        std::cout << "[Parser] tryParsePacket buffer=" << buffer.size() << std::endl;
         if (buffer.size() < HEADER_SIZE)
         {
             return false;
@@ -103,8 +100,6 @@ namespace ProtocolAether
             return true; // tenta de novo
         }
 
-        std::cout << "[Parser] MAGIC=" << std::hex << outPacket.magic << std::dec << std::endl;
-
         /// Lê o restante do cabeçalho do pacote
         outPacket.version = buffer[offset++];
 
@@ -125,8 +120,6 @@ namespace ProtocolAether
         std::memcpy(outPacket.payload.data(), buffer.data() + HEADER_SIZE, outPacket.length);
         /// Remove os dados processados do buffer
         buffer.erase(buffer.begin(), buffer.begin() + HEADER_SIZE + outPacket.length);
-
-        std::cout << "[Parser] Packet completo, payload=" << outPacket.length << std::endl;
 
         return true;
     }

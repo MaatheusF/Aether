@@ -67,6 +67,28 @@ public:
     {
         return m_conn;
     }
+
+    /**
+     * @brief Realiza uma consulta parametrizada usando PQexecParams.
+     * @param sql Comando SQL com placeholders ($1, $2, etc.).
+     * @param nParams Número de parâmetros a serem substituídos.
+     * @param paramValues Array de strings contendo os valores dos parâmetros.
+     * @return Ponteiro para PGresult contendo o resultado da query,
+     */
+    PGresult* queryParams(const std::string& sql, int nParams, const char* const* paramValues) const
+    {
+        return PQexecParams(
+            m_conn,
+            sql.c_str(),
+            nParams,
+            nullptr,
+            paramValues,
+            nullptr,
+            nullptr,
+            0
+        );
+    }
+
 private:
     /**
      * @brief Conexão nativa com o PostgreSQL (libpq).

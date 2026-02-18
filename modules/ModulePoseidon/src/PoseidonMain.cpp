@@ -31,6 +31,9 @@ void ModulePoseidon::stop()
     EventBus::getInstance().publish(Event(name(), "", Events::MODULE_STOPPED, ""));
 }
 
+/**
+ * @brief Função chamada quando o modulo é iniciado
+ */
 void ModulePoseidon::start()
 {
     running = true;
