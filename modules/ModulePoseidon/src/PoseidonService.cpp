@@ -4,11 +4,14 @@
 #include "../../../protocols/aether/include/CommandType.hpp"
 #include "../../../protocols/aether/include/PacketBuilder.hpp"
 #include "../../../protocols/aether/common/IResponseChannel.hpp"
+#include "../../../core/network/SessionManager.hpp"
 
 #include "../config/DatabaseConfig.hpp"
 #include "../../../core/database/include/ConnectionPool.hpp"
 
 #include <../../../include/external/json.hpp>
+
+#include "../../../protocols/aether/common/ModuleId.hpp"
 
 /**
  * @brief Callback chamado quando um modulo é adicionado no EventBus,
@@ -184,6 +187,12 @@ void PoseidonService::handlePacket(const ProtocolAether::Packet& packet, const s
 
     if (packet.type == static_cast<uint16_t>(CommandType::DATA_PUSH))
     {
+        /// Identifica o connExternalId da conexão TCP e imprime o recebimento do dado no console
+        auto connExternalId = SessionManager::instance().getDeviceExternalId(channel);
+        std::cout << "[Poseidon] - Cliente conectado enviou um DATA_PUSH, Identificação: " << *connExternalId << std::endl;
+
+        sendReverseToDevice("IDESP32", json, static_cast<uint16_t>(ModuleId::MODULE_POSEIDON));
+
         // Realiza o processamento dos dados recebidos
         auto returnValue = processJsonPacketDataPush(packet);
 
@@ -228,4 +237,40 @@ void PoseidonService::handlePacket(const ProtocolAether::Packet& packet, const s
         );
         channel->sendResponse(response);
     }
+}
+
+/**
+ * @brief Função que permite enviar uma dado TCP para um cliente conectado, buscando pelo ID externo definido durante
+ * o HANDSHAKE
+ * @param deviceId String contendo o nome do dispositivo a ser encontrado
+ * @param json Json a ser disparado no Payload
+ * @param targetModule modulo, será descontinuado no futuro e ira virar o modulo de origem e não destino
+ */
+void PoseidonService::sendReverseToDevice(const std::string& deviceId, const nlohmann::json& jsonPayload, uint16_t targetModule)
+{
+    // 1) Busca o canal pelo deviceExternalId
+    auto channel = SessionManager::instance().getChannelByDeviceExternalId(deviceId);
+    if (!channel) {
+        // cliente não encontrado / não identificado
+        std::cout << "[ReverseSender] device '" << deviceId << "' não conectado ou não identificado\n";
+        return;
+    }
+
+    // 2) Serializa payload (ex.: transformando JSON em bytes)
+    std::string payloadStr = jsonPayload.dump();
+    std::vector<uint8_t> payload(payloadStr.begin(), payloadStr.end());
+
+    // 3) Monta o pacote (use o comando adequado, p.ex. DATA_PUSH ou outro)
+    auto packet = ProtocolAether::PacketBuilder::build(
+        CommandType::DATA_PUSH,      // ajuste para o seu comando
+        targetModule,                // módulo destino (ex.: módulo do cliente)
+        payload
+    );
+
+    // 4) Envia via channel
+    // IMPORTANTE: certifique-se de que sendResponse é thread-safe. Se não for,
+    // proteja com mutex ou use um mecanismo de enfileiramento dentro do channel.
+    channel->sendResponse(packet);
+
+    std::cout << "[ReverseSender] pacote enviado para device=" << deviceId << "\n";
 }

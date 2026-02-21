@@ -3,6 +3,7 @@
 #include "../../../core/eventbus/include/Event.hpp"
 #include "../../../protocols/aether/include/Packet.hpp"
 #include "../../../protocols/aether/common/IProtocolHandler.hpp"
+#include <../../../include/external/json.hpp>
 
 /**
  * @class PoseidonService
@@ -63,4 +64,12 @@ public:
      * @param packet dados do pacote recebido
      */
     static void handlePacket(const ProtocolAether::Packet& packet, const std::shared_ptr<IResponseChannel>& channel);
+    /**
+     * @brief Função que permite enviar uma dado TCP para um cliente conectado, buscando pelo ID externo definido durante
+     * o HANDSHAKE
+     * @param deviceId String contendo o nome do dispositivo a ser encontrado
+     * @param josn Json a ser disparado no Payload
+     * @param targetModule modulo, será descontinuado no futuro e ira virar o modulo de origem e não destino
+     */
+    static void sendReverseToDevice(const std::string& deviceId, const nlohmann::json& jsonPayload, uint16_t targetModule);
 };
