@@ -3,6 +3,7 @@
 #include <unordered_map>
 
 #include "../../protocols/aether/common/IProtocolHandler.hpp"
+#include "../../network/session/ConnSession.hpp"
 #include "include/Packet.hpp"
 
 /**
@@ -38,6 +39,17 @@ public:
         return 0xFF; // Router não é um módulo real, apenas retorna um codigo padrão
     }
 
+    /*
+    bool isIdentifyConnection(const std::shared_ptr<IResponseChannel>& channel) {
+        for (const auto& [deviceExternalId, session] : clients) {
+            if (session.channel == channel) {
+                return true; // Conexão já está registrada
+            }
+        }
+        return false;
+    }*/
+
+
     /**
      * @brief Chamado pelo Parser sempre que um pacote é considerado valido, decide quem deve receber este pacote
      * @param packet Pacote recebido
@@ -45,6 +57,11 @@ public:
      */
     void onPacket( const ProtocolAether::Packet& packet, std::shared_ptr<IResponseChannel> channel ) override
     {
+        /// ==================================================
+        ///                      ROUTER
+        /// ==================================================
+
+
         /// Busca o modulo correto para enviar o pacote
         auto it = std::find_if(
             modules.begin(),
@@ -98,6 +115,8 @@ private:
         std::shared_ptr<IModule> module;
     };
     std::vector<RegisteredModule> modules; /// Lista de modulos registrados
+    /*std::unordered_map<std::string, ConnSession::SessionInfo> clients;*/
+
 
     //std::vector<std::shared_ptr<IProtocolHandler>> modules; /// Lista de modulos registrados
 };

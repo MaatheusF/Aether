@@ -1,6 +1,7 @@
 #pragma once
 #include "TcpConnection.hpp"
 #include "../../protocols/aether/common/IProtocolHandler.hpp"
+#include "session/ConnSession.hpp"
 
 #include <atomic>
 #include <functional>
@@ -50,10 +51,11 @@ private:
     std::atomic<bool> isRunning;        /// Indica se o servidor está em execução
     std::thread acceptThread;           /// Thread para aceitar conexões de clientes
 
-    std::set<std::shared_ptr<TcpConnection>> connections;   /// Lista de Conexões ativas
-    OnClientConnected onClientConnected = nullptr;          /// Callback para quando um cliente se conecta
-    OnDataReceived onDataReceived = nullptr;                /// Callback para quando dados são recebidos
-    OnClientDisconnected onClientDisconnected = nullptr;    /// Callback para quando um cliente se desconecta
-    std::unique_ptr<ProtocolAether::Parser> parser;         /// Parser de pacotes
-    std::shared_ptr<IProtocolHandler> protocolHandler;      /// Esse manipulador será responsável por processar os pacotes recebidos e  enviar as respostas adequadas ao cliente.
+    std::set<std::shared_ptr<TcpConnection>> connections;                   /// Lista de Conexões ativas
+    std::unordered_map<int, std::shared_ptr<ConnSession>> sessions;         /// Sessão por socket fd
+    OnClientConnected onClientConnected = nullptr;                          /// Callback para quando um cliente se conecta
+    OnDataReceived onDataReceived = nullptr;                                /// Callback para quando dados são recebidos
+    OnClientDisconnected onClientDisconnected = nullptr;                    /// Callback para quando um cliente se desconecta
+    std::unique_ptr<ProtocolAether::Parser> parser;                         /// Parser de pacotes
+    std::shared_ptr<IProtocolHandler> protocolHandler;                      /// Esse manipulador será responsável por processar os pacotes recebidos e  enviar as respostas adequadas ao cliente.
 };

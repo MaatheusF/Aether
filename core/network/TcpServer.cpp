@@ -104,17 +104,37 @@ void TcpServer::acceptLoop()
         /// Adiciona a conexão à lista de conexões ativas
         connections.insert(conn);
 
+
+        /// Cria o canal de resposta e a sessão para este cliente
+        auto channel = std::make_shared<TcpResponseChannel>(conn);
+        auto session = std::make_shared<ConnSession>(channel);
+        sessions[clientSocket] = session;
+
+        /// Quando o handshake completar, o feed normal do parser é liberado
+        session->setOnHandshakeComplete([this, channel](std::vector<uint8_t>& bytes)
+        {
+            parser->feed(bytes, channel);
+        });
+
+        /// Quando o handshake falhar, encerra a conexão TCP
+        session->setOnHandshakeFailed([this, conn]()
+        {
+            std::cout << "[TcpServer] Encerrando conexão após falha no handshake fd=" << conn->getFd() << std::endl;
+            sessions.erase(conn->getFd());
+            connections.erase(conn);
+            shutdown(conn->getFd(), SHUT_RDWR);
+        });
+
+        /// Chama o callback de conexão de cliente
         if (onClientConnected)
         {
-            onClientConnected(clientSocket); /// Chama o callback de conexão de cliente
+            onClientConnected(clientSocket);
         }
 
         /** Define o callback para recebimento de bytes */
-        conn->setOnBytesReceived([this, conn](std::vector<uint8_t>& bytes)
+        conn->setOnBytesReceived([session](std::vector<uint8_t>& bytes)
         {
-            std::cout << "[TcpServer] onBytesReceived bytes=" << bytes.size() << std::endl;
-            auto channel = std::make_shared<TcpResponseChannel>(conn);  /// Cria o canal de resposta TCP
-            parser->feed(bytes, channel);                               /// Alimenta o parser com os bytes recebidos
+            session->feed(bytes); /// A sessão decide: handshake ou pipeline normal
         });
 
         /** Define o callback para desconexão do cliente */
@@ -124,6 +144,7 @@ void TcpServer::acceptLoop()
             {
                 onClientDisconnected(conn->getFd());
             }
+            sessions.erase(conn->getFd()); /// Remove a sessão ao desconectar
             connections.erase(conn);
         });
 

@@ -17,7 +17,10 @@ add_library(aether_core STATIC
         network/TcpConnection.hpp
         network/TcpResponseChannel.cpp
         network/TcpResponseChannel.hpp
+        network/SessionManager.cpp
+        network/SessionManager.hpp
         utils/logger.hpp
+        network/session/ConnSession.hpp
 )
 
 # Inclui todos os headers públicos do core
