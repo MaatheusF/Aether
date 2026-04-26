@@ -6,6 +6,7 @@
 #include "../../../core/eventbus/include/EventTypes.hpp"
 #include "../../../core/eventbus/include/EventBus.hpp"
 #include "PoseidonService.hpp"
+#include "../../ModulePoseidon/Schedule/ScheduleService.hpp"
 
 #include "../../../protocols/aether/include/CommandType.hpp"
 #include "../../../protocols/aether/include/PacketBuilder.hpp"
@@ -39,6 +40,9 @@ void ModulePoseidon::start()
     running = true;
     std::cout << "[Poseidon] Módulo inicializado." << std::endl;
     EventBus::getInstance().subscribe(this); // Inscreve-se para receber eventos do MainBus
+
+    std::cout << "[Poseidon] Inicializando Schedule..." << std::endl;
+    schedule_.start();
 }
 
 /**

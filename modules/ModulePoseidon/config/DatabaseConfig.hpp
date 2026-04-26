@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+namespace Poseidon {
+
 /**
  * @brief Configuração estática de banco de dados para o modulo Poseidon
  */
@@ -8,7 +10,7 @@ class DatabaseConfig {
 public:
     static constexpr const char* HOST     = "192.168.0.133";
     static constexpr int         PORT     = 5432;
-    static constexpr const char* USER     = "POSEIDON_APPLICATION";
+    static constexpr const char* USER     = "poseidon_application";
     static constexpr const char* PASSWORD = "favero10";
     static constexpr const char* DATABASE = "aetherdb";
     static constexpr const char* SCHEMA   = "poseidon";
@@ -23,3 +25,5 @@ public:
             + " options='-c search_path=" + SCHEMA + "'";
     }
 };
+
+} // namespace Poseidon

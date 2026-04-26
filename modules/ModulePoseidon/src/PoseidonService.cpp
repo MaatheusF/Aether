@@ -1,4 +1,4 @@
-#include "../include/PoseidonService.hpp"
+﻿#include "../include/PoseidonService.hpp"
 
 #include "../include/PoseidonMain.hpp"
 #include "../../../protocols/aether/include/CommandType.hpp"
@@ -126,7 +126,7 @@ std::pair<bool,std::string> PoseidonService::processSensorData(auto& json)
     }
 
     // Gerencia a conexão com o banco de dados
-    ConnectionPool pool(DatabaseConfig::connectionString(), 5);
+    ConnectionPool pool(Poseidon::DatabaseConfig::connectionString(), 5);
     auto conn = pool.acquire();
 
     if (!conn) {

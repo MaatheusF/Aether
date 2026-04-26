@@ -6,6 +6,7 @@
 
 #include "../../../core/eventbus/include/IModule.hpp"
 #include "../../../protocols/aether/common/IProtocolHandler.hpp"
+#include "../../ModulePoseidon/Schedule/ScheduleService.hpp"
 #include "PoseidonService.hpp"
 
 class ModulePoseidon : public IModule, public IProtocolHandler
@@ -64,4 +65,5 @@ public:
 private:
     std::atomic<bool> running;  /// Define o status do modulo (Rodando ou parado)
     PoseidonService service;    /// Define a classe de servico do modulo
+    PoseidonSchedule schedule_; /// Define a classe de Schedule do modulo
 };
