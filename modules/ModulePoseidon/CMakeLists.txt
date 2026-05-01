@@ -9,3 +9,5 @@ add_library(ModulePoseidon STATIC
 
 # Expõe o include para quem linkar com essa biblioteca
 target_include_directories(ModulePoseidon PUBLIC include)
+
+target_link_libraries(ModulePoseidon PUBLIC aether_core)

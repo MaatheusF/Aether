@@ -34,5 +34,16 @@ target_link_libraries(aether_core PUBLIC pthread)
 
 # Link com a biblioteca do PostgreSQL
 find_package(PostgreSQL REQUIRED)
-target_link_libraries(aether_core PRIVATE ${PostgreSQL_LIBRARIES})
-target_include_directories(aether_core PRIVATE ${PostgreSQL_INCLUDE_DIRS})
+target_include_directories(aether_core PUBLIC
+        utils
+        utils/include
+        eventbus/include
+        database/include
+        network
+        /usr/include/postgresql
+        ${PostgreSQL_INCLUDE_DIRS}
+)
+target_link_libraries(aether_core PUBLIC
+        pthread
+        ${PostgreSQL_LIBRARIES}
+)
