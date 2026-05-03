@@ -19,10 +19,12 @@ public:
      */
     static void Initialize(const std::string &filename)
     {
+        std::cerr << "[Daemon] Inicializando Sistema de log" << std::endl;
+
         logFile.open(filename, std::ios::out | std::ios::app);
         if (!logFile.is_open())
         {
-            std::cerr << "Falha ao abrir aquivo de log: " << filename << std::endl;
+            std::cerr << "[Daemon] Falha ao abrir aquivo de log: " << filename << std::endl;
             return;
         }
 
@@ -31,6 +33,8 @@ public:
 
         std::cout.rdbuf(&coutTee);  /// Aplica o redirecionamento
         std::cerr.rdbuf(&cerrTee);  /// Aplica o redirecionamento
+
+        std::cerr << "[Daemon] Sistema de log inicializado com Sucesso: " << std::endl;
     }
 
     /**

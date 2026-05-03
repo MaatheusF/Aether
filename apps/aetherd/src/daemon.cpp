@@ -22,7 +22,7 @@ class IModule; /// Declaração antecipada da classe IModule
  */
 int AetherDaemon::initializeAetherDaemon()
 {
-    std::cout << "[Daemon] Aether daemon inicializando..." << std::endl;
+    std::cout << "[Daemon] inicializando Aether daemon..." << std::endl;
 
     AetherCoreLogger::Initialize("/var/log/aether/aether_log"); /// Inicializa o sistema de logs do AetherCore
 
@@ -68,7 +68,7 @@ int AetherDaemon::initializeAetherDaemon()
  */
 void AetherDaemon::initializeModules()
 {
-    std::cout << "[Aetherd] Inicializando Modulos individuais." << std::endl;
+    std::cout << "[Daemon] Inicializando Modulos individuais." << std::endl;
 
     /// Carrega os Modulos Individuais
     loadedModules = createModules();
@@ -79,7 +79,7 @@ void AetherDaemon::initializeModules()
         modules.push_back(m.get()); // Adiciona ao vetor de ponteiros crus
     }
 
-    std::cout << "[Aetherd] Modulos individuais inicializados com sucesso." << std::endl;
+    std::cout << "[Daemon] Modulos individuais inicializados com sucesso." << std::endl;
 }
 
 /**
@@ -130,7 +130,7 @@ void AetherDaemon::initializeCliSocket()
         perror("listen");
     }
 
-    std::cout << "[Daemon] Daemon Socket CLI inicializado com sucesso." << std::endl;
+    std::cout << "[Daemon] Socket CLI inicializado com sucesso." << std::endl;
 }
 
 /**
@@ -165,7 +165,7 @@ void AetherDaemon::processCliCommands(const std::string& command)
  */
 void AetherDaemon::initializeTcpServer()
 {
-    std::cout << "[TcpServer] Inicializando TCP SERVER." << std::endl;
+    std::cout << "[Daemon] Inicializando TCP Server." << std::endl;
     tcpServer = std::make_unique<TcpServer>(9000); /// Cria o servidor TCP na porta 9000
     auto router = std::make_shared<ProtocolRouter>();
 
@@ -176,12 +176,12 @@ void AetherDaemon::initializeTcpServer()
         if (handler)
         {
             router->registerModule(handler, m);
-            std::cout << "[TcpServer] Módulo registrado no ProtocolRouter: 0x" << std::hex << static_cast<int>(handler->moduleId()) << std::dec << std::endl;
+            std::cout << "[Daemon] Módulo registrado no ProtocolRouter: 0x" << std::hex << static_cast<int>(handler->moduleId()) << std::dec << std::endl;
         }
     }
 
     tcpServer->setProtocolHandler(router);  /// Define o router como destino de todos os pacotes TCP
     tcpServer->start(); /// Inicia o servidor TCP
 
-    std::cout << "[TcpServer] Tcp Server inicializado" << std::endl;
+    std::cout << "[Daemon] Tcp Server inicializado com Sucesso" << std::endl;
 }
