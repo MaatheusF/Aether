@@ -6,6 +6,8 @@ add_executable(aetherd
         include/daemon.hpp
 )
 
+find_package(PostgreSQL REQUIRED)
+
 # Link com core e qualquer outra lib que existir
 target_link_libraries(aetherd
         PRIVATE aether_core
@@ -15,10 +17,15 @@ target_link_libraries(aetherd
 # Linka o módulo ao daemon
 target_link_libraries(aetherd PRIVATE aether_core ModuleTest)
 target_link_libraries(aetherd PRIVATE aether_core ModulePoseidon)
+target_link_libraries(aetherd PRIVATE ${PostgreSQL_LIBRARIES})
+
 
 # Inclui os headers do módulo
 target_include_directories(aetherd
         PRIVATE
         ${CMAKE_SOURCE_DIR}/modules/ModuleTest/include
         ${CMAKE_SOURCE_DIR}/modules/ModulePoseidon/include
+        ${PostgreSQL_INCLUDE_DIRS}
+        ${CMAKE_SOURCE_DIR}/include
+        ${CMAKE_SOURCE_DIR}
 )

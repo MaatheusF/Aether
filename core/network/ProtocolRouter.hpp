@@ -3,8 +3,10 @@
 #include <unordered_map>
 
 #include "../../protocols/aether/common/IProtocolHandler.hpp"
-#include "../../network/session/ConnSession.hpp"
-#include "include/Packet.hpp"
+//#include "../../network/session/ConnSession.hpp"
+#include "session/ConnSession.hpp"
+//#include "include/Packet.hpp"
+#include "protocols/aether/include/Packet.hpp"
 
 /**
  * Classe que implementa um Handler para gerenciar os pacotes recebidos via TCP e
@@ -68,6 +70,7 @@ public:
             modules.end(),
             [&](const auto& m)
             {
+                std::cout << "TESTE: " << packet.module << std::endl;
                 return m.handler->moduleId() == packet.module;
             }
         );

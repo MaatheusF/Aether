@@ -9,7 +9,8 @@
 #include "../config/DatabaseConfig.hpp"
 #include "../../../core/database/include/ConnectionPool.hpp"
 
-#include <../../../include/external/json.hpp>
+//#include <../../../include/external/json.hpp>
+#include "external/json.hpp"
 
 #include "../../../protocols/aether/common/ModuleId.hpp"
 
