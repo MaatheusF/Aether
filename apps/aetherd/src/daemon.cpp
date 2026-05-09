@@ -27,8 +27,8 @@ int AetherDaemon::initializeAetherDaemon()
     AetherCoreLogger::Initialize("/var/log/aether/aether_log"); /// Inicializa o sistema de logs do AetherCore
 
     initializeCliSocket(); /// Inicializa o socket de comunicação com o CLI
-    initializeTcpServer(); /// Inicializa o servidor TCP para comunicação externa
     initializeModules();   /// Inicializa os modulos do Aether
+    initializeTcpServer(); /// Inicializa o servidor TCP para comunicação externa
 
     std::cout << "[Daemon] Aether daemon executando com sucesso." << std::endl;
 
