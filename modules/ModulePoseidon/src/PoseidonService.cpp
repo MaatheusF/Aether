@@ -26,9 +26,9 @@ void PoseidonService::handleEvent(const Event& event)
 /**
  * @brief Função que recebe um packet payload e realiza o processamento dos dados do tipó DATA_PUSH
  * @param packet
+ * @param deviceId Codigo do Device, é declarado no channel pelo Handshake inicial a sessão
  * @JSON: Json a ser recebido:
  * {
- *   "device_name": "ESP32",
  *   "event":
  *     {
  *       "type": "sensor",
@@ -40,7 +40,6 @@ void PoseidonService::handleEvent(const Event& event)
  * }
  *
  * {
- *   "device_name": "1",
  *   "event":
  *     {
  *       "type": "relay",
@@ -51,7 +50,7 @@ void PoseidonService::handleEvent(const Event& event)
  * }
  * @return retorna um std::pair com um valor bool indicando se foi processado com sucesso e em caso de erro retorna a mensagem de erro, caso contrário retorna uma mensagem de sucesso.
  */
-std::pair<bool,std::string> PoseidonService::processJsonPacketDataPush(const ProtocolAether::Packet& packet)
+std::pair<bool,std::string> PoseidonService::processJsonPacketDataPush(const ProtocolAether::Packet& packet, const std::string& deviceId)
 {
     // Biblioteca para manipulação de JSON
     using json = nlohmann::json;
@@ -68,10 +67,10 @@ std::pair<bool,std::string> PoseidonService::processJsonPacketDataPush(const Pro
     }
 
     // Verifica se a TAG "device_name" existe no Json
-    if (!j.contains("device_name") || !j["device_name"].is_string())
-    {
-        return std::make_pair(false, "Elemento 'device_name' inválido ou ausente");
-    }
+    //if (!j.contains("device_name") || !j["device_name"].is_string())
+    //{
+    //    return std::make_pair(false, "Elemento 'device_name' inválido ou ausente");
+    //}
 
     // Verifica se a TAG "event" existe no Json
     if (!j.contains("event"))
@@ -88,7 +87,7 @@ std::pair<bool,std::string> PoseidonService::processJsonPacketDataPush(const Pro
     /// Roteamento
     if (j["event"]["type"] == "sensor")
     {
-        return processSensorData(j);
+        return processSensorData(j, deviceId);
     }
 
     if (j["event"]["type"] == "relay")
@@ -99,7 +98,7 @@ std::pair<bool,std::string> PoseidonService::processJsonPacketDataPush(const Pro
     return std::make_pair(false, "Ocorreu um erro ao processar o evento enviado ou o tipo de evento é desconhecido");
 }
 
-std::pair<bool,std::string> PoseidonService::processSensorData(auto& json)
+std::pair<bool,std::string> PoseidonService::processSensorData(auto& json, const std::string& deviceId)
 {
     // Biblioteca para manipulação de JSON
     using jsonData = nlohmann::json;
@@ -137,7 +136,7 @@ std::pair<bool,std::string> PoseidonService::processSensorData(auto& json)
 
     // Persiste os dados no banco de dados
     const char* paramValues[4];
-    std::string deviceName = j["device_name"];
+    const std::string& deviceName = deviceId;
     std::string sensorExternalId = j["event"]["sensor_external_id"];
     std::string sensorValue = std::to_string(j["event"]["value"].get<double>());
     std::string timestampStr = std::to_string(j["event"]["read_timestamp"].get<long>());
@@ -149,10 +148,10 @@ std::pair<bool,std::string> PoseidonService::processSensorData(auto& json)
 
     auto& sql = R"(
         INSERT INTO poseidon.dsrd_data_sensor_received
-	        (sensor_id, device_id, data_value, read_date)
+	        (device_id, sensor_id, data_value, read_date)
         VALUES (
-	        (SELECT id FROM poseidon.sens_sensor WHERE external_id = $2),
-	        (SELECT id FROM poseidon.devc_device WHERE device_name = $1),
+            (SELECT id FROM poseidon.devc_device WHERE device_name = $1::text),
+	        (SELECT id FROM poseidon.sens_sensor WHERE external_id = $2::text),
 	        $3,
 	        to_timestamp($4)
         )
@@ -192,10 +191,10 @@ void PoseidonService::handlePacket(const ProtocolAether::Packet& packet, const s
         auto connExternalId = SessionManager::instance().getDeviceExternalId(channel);
         std::cout << "[Poseidon] - Cliente conectado enviou um DATA_PUSH, Identificação: " << *connExternalId << std::endl;
 
-        sendReverseToDevice("IDESP32", json, static_cast<uint16_t>(ModuleId::MODULE_POSEIDON));
+        //sendReverseToDevice("IDESP32", json, static_cast<uint16_t>(ModuleId::MODULE_POSEIDON));
 
         // Realiza o processamento dos dados recebidos
-        auto returnValue = processJsonPacketDataPush(packet);
+        auto returnValue = processJsonPacketDataPush(packet, *connExternalId);
 
         json["data"] = nullptr;
         json["message"] = returnValue.second;

@@ -46,14 +46,15 @@ public:
      * }
      * @return retorna um std::pair com um valor bool indicando se foi processado com sucesso e em caso de erro retorna a mensagem de erro, caso contrário retorna uma mensagem de sucesso.
      */
-    static std::pair<bool,std::string> processJsonPacketDataPush(const ProtocolAether::Packet& packet);
+    static std::pair<bool,std::string> processJsonPacketDataPush(const ProtocolAether::Packet& packet, const std::string& deviceId);
 
     /**
      * @brief Função que recebe um JSON contendo dados do sensor, processa e persiste no banco de dados do Poseidon
      * @param json JSON contendo os dados do sensor a ser processado
      * @param event dados do evento recebido
+     * @param deviceId Codigo do Device, é declarado no channel pelo Handshake inicial a sessão
      */
-    static std::pair<bool, std::string> processSensorData(auto& json);
+    static std::pair<bool, std::string> processSensorData(auto& json, const std::string& deviceId);
     /**
      * @brief Função que recebe um JSON contendo dados da relé, processa e persiste no banco de dados do Poseidon
     * @param json JSON contendo os dados do relay a ser processado
