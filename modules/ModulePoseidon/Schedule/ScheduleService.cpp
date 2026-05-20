@@ -138,6 +138,7 @@ void PoseidonSchedule::loop()
                         }
                         jobUpdateDb(jobId);
                     }
+                    std::this_thread::sleep_for(std::chrono::seconds(5));
                 }
                 conn->freeResult(resultDb);
             }
