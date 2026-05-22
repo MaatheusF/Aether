@@ -96,6 +96,7 @@ void PoseidonSchedule::loop()
                     jcrs.cron_schedule_datetime,
                     jcrs.last_run_datetime,
                     jcrs.create_date,
+                    jcrs.run_now,
                     devc.device_name,
                     rely.external_id
                 FROM poseidon.jcrs_job_cron_schedule jcrs
@@ -116,6 +117,7 @@ void PoseidonSchedule::loop()
                     std::string jobType         = PQgetvalue(resultDb, i, PQfnumber(resultDb, "job_type"));
                     std::string jsonPayload     = PQgetvalue(resultDb, i, PQfnumber(resultDb, "payload"));
                     std::string deviceName      = PQgetvalue(resultDb, i, PQfnumber(resultDb, "device_name"));
+                    bool runNow                 = PQgetvalue(resultDb, i, PQfnumber(resultDb, "run_now"))[0] == 't';
 
                     auto cron = cron::make_cron(cronExpression);
                     auto baseTime = lastRunDatetime.empty()
@@ -123,7 +125,7 @@ void PoseidonSchedule::loop()
                         : stringToTimePoint(lastRunDatetime);
 
                     auto nextRun = cron::cron_next(cron, baseTime);
-                    if (nextRun <= now)
+                    if (nextRun <= now || runNow == true)
                     {
                         if (jobType == "RELAY_CHANGE_STATE")
                         {
@@ -172,7 +174,8 @@ void PoseidonSchedule::jobUpdateDb(const std::string& jobId)
 
     auto res = conn->queryParams(R"(
         UPDATE poseidon.jcrs_job_cron_schedule
-        SET last_run_datetime = NOW()
+        SET last_run_datetime = NOW(),
+        run_now = false
         WHERE id = $1;
     )", 1, paramValues);
 
