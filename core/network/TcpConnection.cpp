@@ -1,5 +1,6 @@
 #include "TcpConnection.hpp"
 
+#include <cstring>
 #include <unistd.h>
 #include <sys/socket.h>
 #include <iostream>
@@ -97,9 +98,24 @@ void TcpConnection::onSocketRead(const uint8_t* data, size_t len)
  */
 void TcpConnection::sendBytes(const std::vector<uint8_t>& data) const
 {
-    ssize_t bytesSent = ::send(socketFd, data.data(), data.size(), 0);  /// Envia os dados pelo socket
-    if (bytesSent < 0)
+    size_t totalSent = 0;
+
+    // Envia os dados em um loop para garantir que o buffer completo seja enviado
+    while (totalSent < data.size())
     {
-        std::cerr << "[TcpConncetion] Erro ao enviar dados para o cliente!" << std::endl;
+        ssize_t bytesSent = ::send(
+            socketFd,
+            data.data() + totalSent,
+            data.size() - totalSent,
+            0
+        );
+
+        if (bytesSent <= 0)
+        {
+            std::cerr << "[TcpConnection] Erro ao enviar dados! errno=" << errno << " (" << strerror(errno) << ")" << std::endl;
+            return;
+        }
+        totalSent += bytesSent;
     }
+    std::cout << "[TcpConnection] " << totalSent << " bytes enviados com sucesso" << std::endl;
 }
