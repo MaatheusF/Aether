@@ -38,7 +38,7 @@ namespace ProtocolAether
      */
     void Parser::feed(std::vector<uint8_t>& buffer, std::shared_ptr<IResponseChannel> channel)
     {
-        std::cout << "[Parser] feed() buffer size=" << buffer.size() << std::endl;
+        //std::cout << "[Parser] feed() buffer size=" << buffer.size() << std::endl;
         while (true)
         {
             Packet packet;  // Cria um novo pacote para armazenar os dados parseados

@@ -81,7 +81,7 @@ void TcpConnection::onSocketRead(const uint8_t* data, size_t len)
 
     if (onBytesReceived)
     {
-        std::cout << "[TcpConnection] chamando onBytesReceived" << std::endl;
+        //std::cout << "[TcpConnection] chamando onBytesReceived" << std::endl;
         onBytesReceived(recvBuffer); /// Passa o buffer completo para o callback
         recvBuffer.clear();          /// Limpa o buffer após o processamento
     }

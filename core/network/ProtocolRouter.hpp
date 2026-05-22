@@ -75,7 +75,6 @@ public:
                     std::cout << "[Router] Modulo com handler NULL ingorado" << std::endl;
                     return false;
                 }
-                std::cout << "TESTE: " << packet.module << std::endl;
                 return m.handler->moduleId() == packet.module;
             }
         );
