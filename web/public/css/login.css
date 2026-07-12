@@ -1,0 +1,376 @@
+
+/* =========================================================
+   AETHER — Login Screen
+   Tema: Organico / Fluido / Dark Nature
+   Fontes: Cormorant (titulo) + DM Sans (corpo)
+   ========================================================= */
+
+:root {
+    --bg-base:          #060e0c;
+    --bg-card:          rgba(8, 20, 17, 0.85);
+    --border-subtle:    rgba(80, 210, 170, 0.10);
+    --border-focus:     rgba(80, 210, 170, 0.45);
+    --accent:           #4ecba8;
+    --accent-dark:      #2a9d7f;
+    --accent-deeper:    #1a7060;
+    --text-primary:     #e4f4ef;
+    --text-secondary:   #5a9285;
+    --text-placeholder: #2e5c52;
+    --error-color:      #f87171;
+    --error-bg:         rgba(248, 113, 113, 0.07);
+
+    --font-display:     'Cormorant', serif;
+    --font-body:        'DM Sans', sans-serif;
+
+    --radius-card:      22px;
+    --radius-input:     11px;
+    --ease:             cubic-bezier(0.4, 0, 0.2, 1);
+    --transition:       0.28s var(--ease);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+    height: 100%;
+    background: var(--bg-base);
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+}
+
+/* --- Canvas -------------------------------------------- */
+#bg-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* --- Orbs de atmosfera --------------------------------- */
+.orb {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(90px);
+}
+
+.orb--1 {
+    width: 500px; height: 500px;
+    top: -160px; left: -140px;
+    background: radial-gradient(circle, rgba(40, 150, 110, 0.16) 0%, transparent 70%);
+    animation: orb-move 20s ease-in-out infinite alternate;
+}
+
+.orb--2 {
+    width: 380px; height: 380px;
+    bottom: -100px; right: -100px;
+    background: radial-gradient(circle, rgba(30, 100, 90, 0.14) 0%, transparent 70%);
+    animation: orb-move 26s ease-in-out infinite alternate-reverse;
+}
+
+.orb--3 {
+    width: 220px; height: 220px;
+    top: 45%; left: 55%;
+    background: radial-gradient(circle, rgba(78, 203, 168, 0.05) 0%, transparent 70%);
+    animation: orb-move 34s ease-in-out infinite alternate;
+}
+
+@keyframes orb-move {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(50px, 35px) scale(1.1); }
+}
+
+/* --- Cena ---------------------------------------------- */
+.scene {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1.5rem;
+}
+
+/* --- Card ---------------------------------------------- */
+.card {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 390px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-card);
+    padding: 2.5rem 2.25rem 2rem;
+    backdrop-filter: blur(28px) saturate(1.5);
+    -webkit-backdrop-filter: blur(28px) saturate(1.5);
+    box-shadow:
+        0 0 0 1px rgba(78, 203, 168, 0.05),
+        0 30px 70px rgba(0, 0, 0, 0.6),
+        0 0 60px rgba(40, 150, 110, 0.06) inset;
+    animation: card-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Linha de luz organica no topo */
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 55%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.45;
+    border-radius: 999px;
+}
+
+@keyframes card-in {
+    from { opacity: 0; transform: translateY(30px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+/* --- Header -------------------------------------------- */
+.card__header {
+    text-align: center;
+    margin-bottom: 2rem;
+    animation: fade-up 0.65s 0.12s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Contentor do SVG */
+.brand-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(78, 203, 168, 0.05);
+    border: 1px solid rgba(78, 203, 168, 0.14);
+    margin-bottom: 1.1rem;
+    animation: icon-breathe 5s ease-in-out infinite;
+}
+
+.brand-svg {
+    width: 36px;
+    height: 36px;
+    filter: drop-shadow(0 0 8px rgba(78, 203, 168, 0.35));
+}
+
+@keyframes icon-breathe {
+    0%, 100% { box-shadow: 0 0 0 0   rgba(78, 203, 168, 0.0); }
+    50%       { box-shadow: 0 0 0 10px rgba(78, 203, 168, 0.07); }
+}
+
+/* Nome Aether — Cormorant organico */
+.brand-name {
+    font-family: var(--font-display);
+    font-size: 2.6rem;
+    font-weight: 400;          /* Cormorant e belo no Regular */
+    font-style: italic;        /* Italico acentua as curvas organicas */
+    letter-spacing: 0.06em;
+    line-height: 1;
+    margin-bottom: 0.4rem;
+
+    background: linear-gradient(145deg, #c8ede3 0%, var(--accent) 55%, #7de8ca 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.brand-tagline {
+    font-size: 0.68rem;
+    font-weight: 300;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+/* --- Alerta de erro ------------------------------------ */
+.alert {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--error-bg);
+    border: 1px solid rgba(248, 113, 113, 0.2);
+    border-radius: 9px;
+    padding: 0.72rem 0.9rem;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #fca5a5;
+    margin-bottom: 1.4rem;
+    animation: fade-up 0.4s ease both;
+}
+
+.alert svg { flex-shrink: 0; }
+
+/* --- Formulario ---------------------------------------- */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    animation: fade-up 0.65s 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.form__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.42rem;
+}
+
+.form__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.42rem;
+    font-size: 0.76rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color var(--transition);
+}
+
+.form__group:focus-within .form__label {
+    color: var(--accent);
+}
+
+/* Wrapper com glow */
+.form__input-wrapper {
+    position: relative;
+}
+
+.form__input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-input);
+    padding: 0.78rem 1rem;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    outline: none;
+    caret-color: var(--accent);
+    transition:
+        border-color var(--transition),
+        background  var(--transition),
+        box-shadow  var(--transition);
+}
+
+.form__input::placeholder {
+    color: var(--text-placeholder);
+    font-weight: 300;
+}
+
+.form__input:focus {
+    background: rgba(78, 203, 168, 0.04);
+    border-color: var(--border-focus);
+    box-shadow:
+        0 0 0 3px rgba(78, 203, 168, 0.07),
+        0 0 18px rgba(78, 203, 168, 0.05);
+}
+
+/* Linha de luz inferior ao focar */
+.form__input-glow {
+    position: absolute;
+    bottom: -1px; left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    transition: width 0.45s var(--ease);
+    border-radius: 999px;
+}
+
+.form__input:focus ~ .form__input-glow { width: 75%; }
+
+/* --- Botao --------------------------------------------- */
+.form__submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    width: 100%;
+    margin-top: 0.4rem;
+    padding: 0.88rem 1.5rem;
+    background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent-deeper) 100%);
+    border: 1px solid rgba(78, 203, 168, 0.28);
+    border-radius: var(--radius-input);
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: #c8f0e6;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition:
+        background   var(--transition),
+        transform    var(--transition),
+        box-shadow   var(--transition),
+        border-color var(--transition);
+    box-shadow: 0 5px 22px rgba(42, 157, 127, 0.22);
+}
+
+/* Shimmer interno */
+.form__submit::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 55%);
+    opacity: 0;
+    transition: opacity var(--transition);
+}
+
+.form__submit:hover {
+    background: linear-gradient(135deg, #33b898 0%, #1e877a 100%);
+    border-color: rgba(78, 203, 168, 0.5);
+    box-shadow: 0 8px 32px rgba(42, 157, 127, 0.38);
+    transform: translateY(-1px);
+}
+
+.form__submit:hover::before { opacity: 1; }
+
+.form__submit:active {
+    transform: translateY(0) scale(0.99);
+    box-shadow: 0 3px 12px rgba(42, 157, 127, 0.25);
+}
+
+.form__submit-arrow {
+    transition: transform var(--transition);
+}
+
+.form__submit:hover .form__submit-arrow { transform: translateX(4px); }
+
+/* --- Rodape -------------------------------------------- */
+.card__footer {
+    margin-top: 1.75rem;
+    text-align: center;
+    animation: fade-up 0.65s 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.card__footer-text {
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(90, 146, 133, 0.35);
+}
+
+/* --- Keyframes ----------------------------------------- */
+@keyframes fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* --- Responsivo ---------------------------------------- */
+@media (max-width: 480px) {
+    .card { padding: 2rem 1.5rem 1.75rem; border-radius: 16px; }
+    .brand-name { font-size: 2.1rem; }
+    body { overflow: auto; }
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: rgba(78, 203, 168, 0.18); border-radius: 999px; }
+

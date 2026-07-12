@@ -1,0 +1,241 @@
+{# templates/security/login.html.twig #}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aether — Acesso</title>
+
+    {# Fontes: Cormorant (orgânica/elegante) + DM Sans (corpo limpo) #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+</head>
+<body>
+
+{# Orbs de atmosfera #}
+<div class="orb orb--1"></div>
+<div class="orb orb--2"></div>
+<div class="orb orb--3"></div>
+
+{# Canvas de partículas #}
+<canvas id="bg-canvas"></canvas>
+
+<div class="scene">
+    <div class="card">
+
+        {# --- Header / Marca --- #}
+        <header class="card__header">
+
+            {# Logo SVG organico: folha + gota d'agua integradas #}
+            <div class="brand-icon">
+                <svg
+                    class="brand-svg"
+                    viewBox="0 0 64 64"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                >
+                    {# Gota principal fluida #}
+                    <path
+                        d="M32 8
+                               C32 8, 14 28, 14 40
+                               C14 50.5 22.5 58 32 58
+                               C41.5 58 50 50.5 50 40
+                               C50 28 32 8 32 8Z"
+                        fill="url(#grad-drop)"
+                        opacity="0.9"
+                    />
+                    {# Nervura organica interna (folha/vida) #}
+                    <path
+                        d="M32 20 C32 20 24 34 26 46"
+                        stroke="url(#grad-vein)"
+                        stroke-width="1.2"
+                        stroke-linecap="round"
+                        opacity="0.7"
+                    />
+                    <path
+                        d="M32 20 C32 20 40 34 38 46"
+                        stroke="url(#grad-vein)"
+                        stroke-width="1.2"
+                        stroke-linecap="round"
+                        opacity="0.5"
+                    />
+                    {# Reflexo de luz interno #}
+                    <ellipse
+                        cx="26"
+                        cy="32"
+                        rx="3"
+                        ry="6"
+                        fill="white"
+                        opacity="0.15"
+                        transform="rotate(-15 26 32)"
+                    />
+
+                    {# Gradientes #}
+                    <defs>
+                        <linearGradient id="grad-drop" x1="14" y1="8" x2="50" y2="58" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%"   stop-color="#7dd9c0"/>
+                            <stop offset="55%"  stop-color="#3aaa8f"/>
+                            <stop offset="100%" stop-color="#1e7a72"/>
+                        </linearGradient>
+                        <linearGradient id="grad-vein" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+                            <stop offset="0%"   stop-color="#d4faf3"/>
+                            <stop offset="100%" stop-color="#5ee7c8" stop-opacity="0"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+
+            <h1 class="brand-name">Aether</h1>
+            <p class="brand-tagline">sistema de controle integrado</p>
+        </header>
+
+        {# --- Alerta de erro de autenticacao --- #}
+        {% if error %}
+            <div class="alert" role="alert">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+                    <circle cx="7.5" cy="7.5" r="6.5" stroke="#f87171" stroke-width="1.2"/>
+                    <path d="M7.5 4.5V8" stroke="#f87171" stroke-width="1.4" stroke-linecap="round"/>
+                    <circle cx="7.5" cy="10.5" r="0.75" fill="#f87171"/>
+                </svg>
+                <span>{{ error.messageKey | trans(error.messageData, 'security') }}</span>
+            </div>
+        {% endif %}
+
+        {# --- Formulario de login --- #}
+        <form class="form" method="post" action="{{ path('app_login') }}" novalidate>
+
+            {# CSRF Token obrigatorio do Symfony #}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            {# Campo: Usuario #}
+            <div class="form__group">
+                <label class="form__label" for="username">
+                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+                        <circle cx="6.5" cy="4" r="2.5" stroke="currentColor" stroke-width="1.2"/>
+                        <path d="M1.5 11.5C1.5 9.015 3.762 7 6.5 7C9.238 7 11.5 9.015 11.5 11.5"
+                              stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                    </svg>
+                    Usuario
+                </label>
+                <div class="form__input-wrapper">
+                    <input
+                        class="form__input"
+                        type="text"
+                        id="username"
+                        name="_username"
+                        value="{{ last_username }}"
+                        autocomplete="username"
+                        autofocus
+                        placeholder="Seu usuario"
+                        required
+                    >
+                    <span class="form__input-glow" aria-hidden="true"></span>
+                </div>
+            </div>
+
+            {# Campo: Senha #}
+            <div class="form__group">
+                <label class="form__label" for="password">
+                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+                        <rect x="2" y="5.5" width="9" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/>
+                        <path d="M4.5 5.5V3.5C4.5 2.119 5.119 1 6.5 1C7.881 1 8.5 2.119 8.5 3.5V5.5"
+                              stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                        <circle cx="6.5" cy="8.5" r="1" fill="currentColor" opacity="0.7"/>
+                    </svg>
+                    Senha
+                </label>
+                <div class="form__input-wrapper">
+                    <input
+                        class="form__input"
+                        type="password"
+                        id="password"
+                        name="_password"
+                        autocomplete="current-password"
+                        placeholder="Sua senha"
+                        required
+                    >
+                    <span class="form__input-glow" aria-hidden="true"></span>
+                </div>
+            </div>
+
+            {# Botao de submit #}
+            <button class="form__submit" type="submit">
+                Entrar
+                <svg class="form__submit-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M3 8H13M13 8L9 4M13 8L9 12"
+                          stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+
+        </form>
+
+        {# --- Rodape minimalista --- #}
+        <footer class="card__footer">
+            <span class="card__footer-text">Aether &mdash; Acesso Restrito</span>
+        </footer>
+
+    </div>
+</div>
+
+<script>
+    /* Partículas flutuantes suaves */
+    (function () {
+        const canvas = document.getElementById('bg-canvas');
+        const ctx    = canvas.getContext('2d');
+        let W, H, particles = [];
+
+        function resize() {
+            W = canvas.width  = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+        }
+
+        function Particle() {
+            this.reset = function () {
+                this.x    = Math.random() * W;
+                this.y    = Math.random() * H;
+                this.r    = Math.random() * 1.6 + 0.3;
+                this.vx   = (Math.random() - 0.5) * 0.22;
+                this.vy   = -Math.random() * 0.28 - 0.08;
+                this.life = Math.random();
+                this.max  = Math.random() * 0.35 + 0.08;
+            };
+            this.reset();
+        }
+
+        function init() {
+            particles = Array.from({ length: 80 }, () => new Particle());
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, W, H);
+            particles.forEach(p => {
+                p.x    += p.vx;
+                p.y    += p.vy;
+                p.life += 0.004;
+
+                const t  = Math.sin(p.life * Math.PI);
+                const a  = t * p.max;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(94, 231, 200, ${a})`;
+                ctx.fill();
+
+                if (p.y < -10) p.reset();
+            });
+            requestAnimationFrame(draw);
+        }
+
+        resize();
+        init();
+        draw();
+        window.addEventListener('resize', resize);
+    })();
+</script>
+
+</body>
+</html>
