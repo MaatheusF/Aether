@@ -14,6 +14,8 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 
 class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -21,9 +23,10 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'app_login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
-    {
-    }
+    public function __construct(
+        private UrlGeneratorInterface $urlGenerator,
+        private EntityManagerInterface $entityManager
+    ){}
 
     public function authenticate(Request $request): Passport
     {
@@ -41,6 +44,14 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        // Adiciona a data do login no banco de dados
+        $user = $token->getUser();
+        if ($user instanceof User) {
+            $user->setLastLogin(new \DateTimeImmutable('now', new \DateTimeZone('America/Sao_Paulo')));
+            $this->entityManager->flush();
+        }
+
+        // Direciona o usuario para a pagina inicial
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
