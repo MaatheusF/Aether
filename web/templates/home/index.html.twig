@@ -1,10 +1,6 @@
 {#
 Aether — Home / Painel
 ----------------------
-Arquivos:
-  - home.html.twig  (este arquivo)
-  - home.css         -> public/css/home.css
-  - home.js          -> public/js/home.js
 
 Este template espera receber do controller uma variável `modules`
 (array de objetos/hashes). Se ela não vier, uso uma lista de exemplo
@@ -72,10 +68,12 @@ módulos reais do sistema.
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
                 <span>Painel</span>
             </a>
+
+
             <a class="nav-item" href="#">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 15c2 2 4 2 6 0s4-2 6 0 4 2 6 0"/><path d="M2 10c2 2 4 2 6 0s4-2 6 0 4 2 6 0"/></svg>
                 <span>Aquário</span>
-            </a>
+            </a><!-- MODULOS INATIVOS
             <a class="nav-item" href="#">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v3M12 18.5v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2.5 12h3M18.5 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
                 <span>Iluminação</span>
@@ -91,7 +89,7 @@ módulos reais do sistema.
             <a class="nav-item" href="#">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 3v3M16 3v3"/></svg>
                 <span>Agendas</span>
-            </a>
+            </a>-->
         </nav>
 
         <div class="topbar-actions">
@@ -123,7 +121,7 @@ módulos reais do sistema.
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4.5M12 16h.01"/></svg>
                     Sobre o Aether
                 </a>
-                <a href="#" role="menuitem" class="danger">
+                <a href="/logout" role="menuitem" class="danger">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/><path d="M15 16l4-4-4-4"/><path d="M19 12H9"/></svg>
                     Sair
                 </a>
@@ -147,14 +145,16 @@ módulos reais do sistema.
 
     {# Lista de exemplo — substitua pela variável real vinda do controller #}
     {% set modules = modules|default([
-        { name: 'Aquário', slug: 'aquario', icon: 'wave', description: 'Temperatura, filtragem e alimentação automática.', status: 'ok', status_label: 'Online' },
-        { name: 'Iluminação', slug: 'iluminacao', icon: 'sun', description: 'Ciclos de luz das áreas internas e externas.', status: 'ok', status_label: 'Online' },
-        { name: 'Paludário', slug: 'paludario', icon: 'leaf', description: 'Umidade, névoa e irrigação do biotopo.', status: 'warn', status_label: 'Atenção' },
-        { name: 'Segurança', slug: 'seguranca', icon: 'shield', description: 'Câmeras, sensores e controle de acesso.', status: 'off', status_label: 'Desligado' },
-        { name: 'Agendas', slug: 'agendas', icon: 'calendar', description: 'Rotinas pessoais e automações programadas.', status: 'off', status_label: 'Desligado' },
-        { name: 'Irrigação', slug: 'irrigacao', icon: 'droplet', description: 'Zonas de rega do jardim e das estufas.', status: 'off', status_label: 'Desligado' },
-        { name: 'Arquivos', slug: 'arquivos', icon: 'folder', description: 'Backups, logs e documentos do sistema.', status: 'ok', status_label: 'Desligado' },
+        { name: 'Aquário', slug: 'aquario', icon: 'wave', description: 'Temperatura, filtragem e alimentação automática.', status: 'off', status_label: 'Desconhecido' }
     ]) %}
+
+    {# Lista de exemplo #}
+    {#    { name: 'Iluminação', slug: 'iluminacao', icon: 'sun', description: 'Ciclos de luz das áreas internas e externas.', status: 'ok', status_label: 'Online' },#}
+    {#    { name: 'Paludário', slug: 'paludario', icon: 'leaf', description: 'Umidade, névoa e irrigação do biotopo.', status: 'warn', status_label: 'Atenção' },#}
+    {#    { name: 'Segurança', slug: 'seguranca', icon: 'shield', description: 'Câmeras, sensores e controle de acesso.', status: 'off', status_label: 'Desligado' },#}
+    {#    { name: 'Agendas', slug: 'agendas', icon: 'calendar', description: 'Rotinas pessoais e automações programadas.', status: 'off', status_label: 'Desligado' },#}
+    {#    { name: 'Irrigação', slug: 'irrigacao', icon: 'droplet', description: 'Zonas de rega do jardim e das estufas.', status: 'off', status_label: 'Desligado' },#}
+    {#    { name: 'Arquivos', slug: 'arquivos', icon: 'folder', description: 'Backups, logs e documentos do sistema.', status: 'ok', status_label: 'Desligado' },#}
 
     <section class="modules-grid">
         {% for module in modules %}
