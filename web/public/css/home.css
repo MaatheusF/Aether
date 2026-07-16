@@ -75,6 +75,7 @@ button { font-family: inherit; }
     background: linear-gradient(180deg, rgba(10, 30, 28, 0.96), rgba(10, 30, 28, 0.9));
     border-bottom: 1px solid var(--panel-border);
     box-shadow: 0 1px 0 rgba(217, 180, 92, 0.08), 0 12px 30px -18px rgba(0,0,0,0.6);
+    overflow: visible;
 }
 
 .topbar-inner {
@@ -85,6 +86,7 @@ button { font-family: inherit; }
     display: flex;
     align-items: center;
     gap: 32px;
+    overflow: visible;
 }
 
 /* ---- marca ---- */
@@ -116,7 +118,7 @@ button { font-family: inherit; }
     align-items: center;
     gap: 4px;
     flex: 1;
-    overflow-x: auto;
+    overflow: visible;
     scrollbar-width: none;
 }
 .main-nav::-webkit-scrollbar { display: none; }
@@ -132,6 +134,25 @@ button { font-family: inherit; }
     color: var(--mist-dim);
     white-space: nowrap;
     transition: background 0.18s ease, color 0.18s ease;
+    /* allow dropdown menus inside nav items to position absolute relative to this element */
+    position: relative;
+    z-index: 10;
+}
+
+/* internal reset for buttons used as toggles inside nav-item */
+.nav-item > .nav-toggle {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
 }
 
 .nav-item svg { width: 17px; height: 17px; flex-shrink: 0; opacity: 0.85; }
@@ -205,8 +226,9 @@ button { font-family: inherit; }
     color: var(--amber-soft);
 }
 
-/* ---- dropdown de configurações ---- */
-.settings-menu {
+/* ---- dropdown menus (generic) ---- */
+.settings-menu,
+.dropdown-menu {
     position: absolute;
     top: calc(100% + 10px);
     right: 0;
@@ -220,40 +242,56 @@ button { font-family: inherit; }
     transform: translateY(-6px);
     pointer-events: none;
     transition: opacity 0.16s ease, transform 0.16s ease;
+    z-index: 1001;
 }
 
-.settings-menu.open {
+.settings-menu.open,
+.dropdown-menu.open {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
 }
 
-.settings-menu a {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 10px;
-    border-radius: 8px;
-    font-size: 0.84rem;
-    color: var(--mist-dim);
-    transition: background 0.15s ease, color 0.15s ease;
+/* When used inside a nav-item we prefer left-aligned dropdown to avoid overflow */
+.nav-item > .dropdown-menu,
+.nav-item > .settings-menu {
+    right: auto;
+    left: 0;
 }
 
-.settings-menu a:hover {
-    background: rgba(143, 196, 163, 0.1);
-    color: var(--mist);
-}
 
-.settings-menu a svg { width: 16px; height: 16px; opacity: 0.8; }
+.settings-menu a,
+.dropdown-menu a {
+     display: flex;
+     align-items: center;
+     gap: 10px;
+     padding: 9px 10px;
+     border-radius: 8px;
+     font-size: 0.84rem;
+     color: var(--mist-dim);
+     transition: background 0.15s ease, color 0.15s ease;
+ }
 
-.settings-menu .divider {
-    height: 1px;
-    margin: 6px 4px;
-    background: var(--panel-border);
-}
+ .settings-menu a:hover,
+ .dropdown-menu a:hover {
+     background: rgba(143, 196, 163, 0.1);
+     color: var(--mist);
+ }
 
-.settings-menu a.danger { color: #e3a690; }
-.settings-menu a.danger:hover { background: rgba(196, 90, 60, 0.12); color: #f3d0c4; }
+ .settings-menu a svg,
+ .dropdown-menu a svg { width: 16px; height: 16px; opacity: 0.8; }
+
+ .settings-menu .divider,
+ .dropdown-menu .divider {
+     height: 1px;
+     margin: 6px 4px;
+     background: var(--panel-border);
+ }
+
+ .settings-menu a.danger,
+ .dropdown-menu a.danger { color: #e3a690; }
+ .settings-menu a.danger:hover,
+ .dropdown-menu a.danger:hover { background: rgba(196, 90, 60, 0.12); color: #f3d0c4; }
 
 /* ============ CONTEÚDO PRINCIPAL ============ */
 
