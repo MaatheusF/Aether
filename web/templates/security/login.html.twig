@@ -5,160 +5,114 @@
 ========================================================================== #}
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Acesso · Aether</title>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+        <title>Acesso · Aether</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'aether-bg': '#0E1310',
-                        'aether-surface': '#141C18',
-                        'aether-border': '#22332A',
-                        'aether-broto': '#4EEE94',
-                        'aether-agua': '#00F5FF',
-                        'aether-ambar': '#FFB900',
-                    },
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        mono: ['"JetBrains Mono"', '"Share Tech Mono"', 'monospace'],
-                    },
+        <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'aether-bg': '#0E1310',
+                            'aether-surface': '#141C18',
+                            'aether-border': '#22332A',
+                            'aether-broto': '#4EEE94',
+                            'aether-agua': '#00F5FF',
+                            'aether-ambar': '#FFB900',
+                        },
+                        fontFamily: {
+                            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                            mono: ['"JetBrains Mono"', '"Share Tech Mono"', 'monospace'],
+                        },
+                    }
                 }
             }
-        }
-    </script>
+        </script>
+    </head>
+    <body class="page-login min-h-screen flex items-center justify-center px-4 font-sans text-slate-200">
+        <main class="w-full max-w-sm">
 
-    <style>
-        body {
-            background-color: #0E1310;
-            background-image:
-                radial-gradient(ellipse 70% 50% at 50% 0%, rgba(78, 238, 148, 0.10), transparent 60%),
-                radial-gradient(ellipse 60% 45% at 100% 100%, rgba(0, 245, 255, 0.07), transparent 60%);
-        }
-
-        .glass-card {
-            background-color: rgba(20, 28, 24, 0.6);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border: 1px solid #22332A;
-            box-shadow: 0 0 0 1px rgba(78, 238, 148, 0.06) inset, 0 30px 60px -30px rgba(0, 0, 0, 0.6);
-        }
-
-        /* Input de linha inferior — sem caixa fechada, ganha vida ao focar */
-        .line-input {
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid #22332A;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .line-input:focus {
-            outline: none;
-            border-bottom-color: #4EEE94;
-            box-shadow: 0 1px 0 0 rgba(78, 238, 148, 0.4);
-        }
-        .line-input:focus + .line-label,
-        .line-input:not(:placeholder-shown) + .line-label {
-            transform: translateY(-1.35rem) scale(0.8);
-        }
-        .line-input:focus + .line-label {
-            color: #4EEE94;
-        }
-        .line-label {
-            transition: transform 0.25s ease, color 0.25s ease;
-            transform-origin: left;
-        }
-
-        @keyframes vital-pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.6); opacity: 0.35; }
-        }
-        .vital-dot::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 999px;
-            background: inherit;
-            animation: vital-pulse 2.2s ease-in-out infinite;
-        }
-    </style>
-</head>
-<body class="min-h-screen flex items-center justify-center px-4 font-sans text-slate-200">
-
-<main class="w-full max-w-sm">
-
-    {# Cabeçalho / marca #}
-    <div class="text-center mb-8">
-        <div class="inline-flex items-center gap-2 mb-3">
-            <span class="relative w-2.5 h-2.5 rounded-full bg-aether-broto vital-dot"></span>
-            <span class="text-2xl font-extrabold tracking-tight text-slate-50">Aether</span>
-        </div>
-        <p class="text-sm text-slate-500">Acesso ao núcleo do ecossistema</p>
-    </div>
-
-    {# Card de login #}
-    <div class="glass-card rounded-2xl p-8">
-
-        {# Placeholder para mensagens flash do Symfony (erros de autenticação etc.) #}
-        {% for message in app.flashes('error')|default([]) %}
-            <div class="mb-5 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300 text-xs font-mono">
-                {{ message }}
-            </div>
-        {% endfor %}
-
-        <form method="post" action="{{ path('app_login')|default('#') }}" class="space-y-8">
-
-            {# Campo: Identificador #}
-            <div class="line-group relative">
-                <input type="text" name="_username" id="inputIdentificador" required
-                       class="line-input w-full py-2 text-sm text-slate-100 peer" placeholder=" ">
-                <label for="inputIdentificador"
-                       class="line-label absolute left-0 top-2 text-sm text-slate-500 pointer-events-none peer-focus:text-aether-broto">
-                    Identificador
-                </label>
+            {# Cabeçalho #}
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center gap-2 mb-3">
+                    <span class="relative w-2.5 h-2.5 rounded-full bg-aether-broto vital-dot"></span>
+                    <span class="text-2xl font-extrabold tracking-tight text-slate-50">Aether</span>
+                </div>
+                <p class="text-sm text-slate-500">Acesso ao núcleo do ecossistema</p>
             </div>
 
-            {# Campo: Chave de Acesso #}
-            <div class="line-group relative">
-                <input type="password" name="_password" id="inputChave" required
-                       class="line-input w-full py-2 text-sm text-slate-100 peer" placeholder=" ">
-                <label for="inputChave"
-                       class="line-label absolute left-0 top-2 text-sm text-slate-500 pointer-events-none peer-focus:text-aether-broto">
-                    Chave de Acesso
-                </label>
+            {# Card de login #}
+            <div class="glass-card rounded-2xl p-8">
+
+                {% if error %}
+                    <div class="mb-5 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300 text-xs font-mono">
+                        {# O filtro trans traduz o erro para o idioma do usuário (ex: "Senha inválida") #}
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                {% endif %}
+
+                {# Placeholder para mensagens do Symfony (erros de autenticação etc.) #}
+                {#{% for message in app.flashes('error')|default([]) %}#}
+                    <!--<div class="mb-5 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300 text-xs font-mono">
+                        {# {{ message }}#}
+                    </div>-->
+                {#{% endfor %}#}
+
+                <form method="post" action="{{ path('app_login') }}" class="space-y-8">
+
+                    {# Campo: Identificador #}
+                    <div class="line-group relative">
+                        <input type="text" name="username" id="inputIdentificador" required
+                               class="line-input w-full py-2 text-sm text-slate-100 peer" placeholder=" "
+                               value="{{ last_username|default('') }}">
+                        <label for="inputIdentificador"
+                               class="line-label absolute left-0 top-2 text-sm text-slate-500 pointer-events-none peer-focus:text-aether-broto">
+                            Identificador
+                        </label>
+                    </div>
+
+                    {# Campo: Chave de Acesso #}
+                    <div class="line-group relative">
+                        <input type="password" name="password" id="inputChave" required
+                               class="line-input w-full py-2 text-sm text-slate-100 peer" placeholder=" ">
+                        <label for="inputChave"
+                               class="line-label absolute left-0 top-2 text-sm text-slate-500 pointer-events-none peer-focus:text-aether-broto">
+                            Chave de Acesso
+                        </label>
+                    </div>
+
+                    {# CSRF Token #}
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <!-- DESABILITADO
+                    <div class="flex items-center justify-between text-xs text-slate-500">
+                        <label class="flex items-center gap-2 cursor-pointer select-none">
+                            <input type="checkbox" name="_remember_me"
+                                   class="w-3.5 h-3.5 rounded border-aether-border bg-transparent text-aether-broto focus:ring-0 focus:ring-offset-0">
+                            Manter sessão
+                        </label>
+                        <a href="#" class="hover:text-aether-agua transition-colors">Esqueci a chave</a>
+                    </div> -->
+
+                    <button type="submit"
+                            class="w-full py-3 rounded-xl bg-aether-broto/10 border border-aether-broto/40 text-aether-broto text-sm font-semibold tracking-wide hover:bg-aether-broto/20 hover:shadow-[0_0_24px_-6px_rgba(78,238,148,0.45)] transition-all duration-300">
+                        Acessar Ecossistema
+                    </button>
+                </form>
             </div>
 
-            {# CSRF token do Symfony — plugar quando integrar ao security.yaml #}
-            {# <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"> #}
-
-            <!-- DESABILITADO
-            <div class="flex items-center justify-between text-xs text-slate-500">
-                <label class="flex items-center gap-2 cursor-pointer select-none">
-                    <input type="checkbox" name="_remember_me"
-                           class="w-3.5 h-3.5 rounded border-aether-border bg-transparent text-aether-broto focus:ring-0 focus:ring-offset-0">
-                    Manter sessão
-                </label>
-                <a href="#" class="hover:text-aether-agua transition-colors">Esqueci a chave</a>
-            </div> -->
-
-            <button type="submit"
-                    class="w-full py-3 rounded-xl bg-aether-broto/10 border border-aether-broto/40 text-aether-broto text-sm font-semibold tracking-wide hover:bg-aether-broto/20 hover:shadow-[0_0_24px_-6px_rgba(78,238,148,0.45)] transition-all duration-300">
-                Acessar Ecossistema
-            </button>
-        </form>
-    </div>
-
-    <p class="text-center text-[11px] font-mono uppercase tracking-widest text-slate-600 mt-8">
-        Aether — Acesso Restrito
-    </p>
-</main>
-
-</body>
+            <p class="text-center text-[11px] font-mono uppercase tracking-widest text-slate-600 mt-8">
+                Core v{{ aether_version }} — Acesso Restrito
+            </p>
+        </main>
+    </body>
 </html>

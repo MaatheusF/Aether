@@ -9,13 +9,13 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    #[Route('/', name: 'app_main')]
     #[Route('/login', name: 'app_login')]
+    #[Route('/')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // Redireciona para home se o usuario ja estiver logado
         if ($this->getUser()) {
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_dashboard');
         }
 
         // Busca o nome de usuario utilizado no ultimo login
@@ -33,7 +33,6 @@ class SecurityController extends AbstractController
     public function logout(): void
     {
         // Interceptado pelo firewall do Symfony Security (logout: em security.yaml).
-        // Este método nunca é executado de fato.
         throw new \LogicException('Este método pode ficar vazio - será interceptado pela chave de logout configurada em security.yaml.');
     }
 }
