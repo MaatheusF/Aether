@@ -1,109 +1,164 @@
-{#
-    Aether — Tela de Login
-    ----------------------
-    Estilo: "biotopo digital" — um paludário noturno visto através do vidro.
-#}
+{# ==========================================================================
+   login.html.twig — Tela de login do Aether
+   Não estende base.html.twig (tela isolada, sem topbar/sidebar).
+   Glassmorphism sobre fundo musgo profundo, inputs de linha inferior.
+========================================================================== #}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aether — Acesso</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Acesso · Aether</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Manrope:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'aether-bg': '#0E1310',
+                        'aether-surface': '#141C18',
+                        'aether-border': '#22332A',
+                        'aether-broto': '#4EEE94',
+                        'aether-agua': '#00F5FF',
+                        'aether-ambar': '#FFB900',
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', '"Share Tech Mono"', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0E1310;
+            background-image:
+                radial-gradient(ellipse 70% 50% at 50% 0%, rgba(78, 238, 148, 0.10), transparent 60%),
+                radial-gradient(ellipse 60% 45% at 100% 100%, rgba(0, 245, 255, 0.07), transparent 60%);
+        }
+
+        .glass-card {
+            background-color: rgba(20, 28, 24, 0.6);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid #22332A;
+            box-shadow: 0 0 0 1px rgba(78, 238, 148, 0.06) inset, 0 30px 60px -30px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Input de linha inferior — sem caixa fechada, ganha vida ao focar */
+        .line-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #22332A;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .line-input:focus {
+            outline: none;
+            border-bottom-color: #4EEE94;
+            box-shadow: 0 1px 0 0 rgba(78, 238, 148, 0.4);
+        }
+        .line-input:focus + .line-label,
+        .line-input:not(:placeholder-shown) + .line-label {
+            transform: translateY(-1.35rem) scale(0.8);
+        }
+        .line-input:focus + .line-label {
+            color: #4EEE94;
+        }
+        .line-label {
+            transition: transform 0.25s ease, color 0.25s ease;
+            transform-origin: left;
+        }
+
+        @keyframes vital-pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.6); opacity: 0.35; }
+        }
+        .vital-dot::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 999px;
+            background: inherit;
+            animation: vital-pulse 2.2s ease-in-out infinite;
+        }
+    </style>
 </head>
-<body>
+<body class="min-h-screen flex items-center justify-center px-4 font-sans text-slate-200">
 
-{# ---------- Cena de fundo ---------- #}
-<div class="scene" aria-hidden="true">
-    <div class="caustics"></div>
+<main class="w-full max-w-sm">
 
-    <div class="ferns left">
-        <svg viewBox="0 0 300 420" xmlns="http://www.w3.org/2000/svg">
-            <g fill="#07130f">
-                <path class="frond" d="M40 420 C 30 300, 70 220, 20 140 C 60 180, 90 230, 95 300 C 100 230, 80 160, 110 90 C 115 170, 130 230, 120 320 C 140 250, 145 180, 175 120 C 165 210, 160 280, 150 380 C 150 400 100 420 40 420 Z"/>
-                <path class="frond" d="M170 420 C 160 320, 190 260, 160 190 C 190 220, 205 260, 205 320 C 215 260, 210 210, 235 160 C 235 230, 240 280, 230 360 C 250 310, 255 260, 275 220 C 265 280, 260 330, 250 400 C 245 415, 210 420, 170 420 Z" opacity="0.85"/>
-            </g>
-        </svg>
-    </div>
-
-    <div class="ferns right">
-        <svg viewBox="0 0 300 420" xmlns="http://www.w3.org/2000/svg">
-            <g fill="#07130f">
-                <path class="frond" d="M40 420 C 30 300, 70 220, 20 140 C 60 180, 90 230, 95 300 C 100 230, 80 160, 110 90 C 115 170, 130 230, 120 320 C 140 250, 145 180, 175 120 C 165 210, 160 280, 150 380 C 150 400 100 420 40 420 Z"/>
-                <path class="frond" d="M170 420 C 160 320, 190 260, 160 190 C 190 220, 205 260, 205 320 C 215 260, 210 210, 235 160 C 235 230, 240 280, 230 360 C 250 310, 255 260, 275 220 C 265 280, 260 330, 250 400 C 245 415, 210 420, 170 420 Z" opacity="0.85"/>
-            </g>
-        </svg>
-    </div>
-
-    <div class="fish fish-1">
-        <svg viewBox="0 0 64 30" xmlns="http://www.w3.org/2000/svg" fill="#0e2320">
-            <path d="M2 15 C 14 2, 40 2, 50 15 C 40 28, 14 28, 2 15 Z M50 15 L 62 6 L 58 15 L 62 24 Z"/>
-        </svg>
-    </div>
-    <div class="fish fish-2">
-        <svg viewBox="0 0 64 30" xmlns="http://www.w3.org/2000/svg" fill="#0e2320">
-            <path d="M2 15 C 14 2, 40 2, 50 15 C 40 28, 14 28, 2 15 Z M50 15 L 62 6 L 58 15 L 62 24 Z"/>
-        </svg>
-    </div>
-    <div class="fish fish-3">
-        <svg viewBox="0 0 64 30" xmlns="http://www.w3.org/2000/svg" fill="#0e2320">
-            <path d="M2 15 C 14 2, 40 2, 50 15 C 40 28, 14 28, 2 15 Z M50 15 L 62 6 L 58 15 L 62 24 Z"/>
-        </svg>
-    </div>
-
-    <div class="bubbles" id="bubbles"></div>
-    <div class="vignette"></div>
-</div>
-
-{# ---------- Painel de login ---------- #}
-<div class="stage">
-    <div class="panel">
-        <div class="brand">
-            <svg class="brand-mark" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="32" cy="32" r="30" fill="none" stroke="#d9b45c" stroke-width="1" opacity="0.45"/>
-                <circle cx="32" cy="32" r="23" fill="none" stroke="#8fc4a3" stroke-width="1" opacity="0.5"/>
-                <path d="M32 14 C 24 22, 24 32, 32 50 C 40 32, 40 22, 32 14 Z" fill="none" stroke="#eef4ef" stroke-width="1.4"/>
-                <path d="M32 20 C 32 28, 32 38, 32 46" stroke="#eef4ef" stroke-width="1" opacity="0.6"/>
-                <path d="M32 24 C 27 26, 25 29, 24 33" stroke="#8fc4a3" stroke-width="1" fill="none" opacity="0.8"/>
-                <path d="M32 30 C 37 32, 39 35, 40 39" stroke="#8fc4a3" stroke-width="1" fill="none" opacity="0.8"/>
-            </svg>
-
-            <h1 class="brand-title">A<em>e</em>ther</h1>
-            <p class="brand-subtitle">Conectando à Singularidade.</p>
+    {# Cabeçalho / marca #}
+    <div class="text-center mb-8">
+        <div class="inline-flex items-center gap-2 mb-3">
+            <span class="relative w-2.5 h-2.5 rounded-full bg-aether-broto vital-dot"></span>
+            <span class="text-2xl font-extrabold tracking-tight text-slate-50">Aether</span>
         </div>
-
-        {# Fluxo padrão do Symfony Security — ajuste os nomes conforme seu SecurityController2 #}
-        {% if error is defined and error %}
-            <div class="flash-error">
-                ⚠ {{ error.messageKey|trans(error.messageData, 'security')|default('  Usuário ou senha inválidos.') }}
-            </div>
-        {% endif %}
-
-        <form method="post" action="{{ path('app_login') }}">
-            <div class="field">
-                <label for="username">Usuário</label>
-                <input type="text" id="username" name="username" value="{{ last_username|default('') }}" placeholder="Digite seu usuario" autocomplete="username" required autofocus>
-            </div>
-
-            <div class="field">
-                <label for="password">Senha</label>
-                <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
-            </div>
-
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-            <button type="submit" class="submit-btn">Entrar</button>
-        </form>
-
-        <p class="footer-note">Aether<span class="dot"></span>Acesso Restrito</p>
+        <p class="text-sm text-slate-500">Acesso ao núcleo do ecossistema</p>
     </div>
-</div>
 
-<script src="{{ asset('js/login.js') }}"></script>
+    {# Card de login #}
+    <div class="glass-card rounded-2xl p-8">
+
+        {# Placeholder para mensagens flash do Symfony (erros de autenticação etc.) #}
+        {% for message in app.flashes('error')|default([]) %}
+            <div class="mb-5 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300 text-xs font-mono">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <form method="post" action="{{ path('app_login')|default('#') }}" class="space-y-8">
+
+            {# Campo: Identificador #}
+            <div class="line-group relative">
+                <input type="text" name="_username" id="inputIdentificador" required
+                       class="line-input w-full py-2 text-sm text-slate-100 peer" placeholder=" ">
+                <label for="inputIdentificador"
+                       class="line-label absolute left-0 top-2 text-sm text-slate-500 pointer-events-none peer-focus:text-aether-broto">
+                    Identificador
+                </label>
+            </div>
+
+            {# Campo: Chave de Acesso #}
+            <div class="line-group relative">
+                <input type="password" name="_password" id="inputChave" required
+                       class="line-input w-full py-2 text-sm text-slate-100 peer" placeholder=" ">
+                <label for="inputChave"
+                       class="line-label absolute left-0 top-2 text-sm text-slate-500 pointer-events-none peer-focus:text-aether-broto">
+                    Chave de Acesso
+                </label>
+            </div>
+
+            {# CSRF token do Symfony — plugar quando integrar ao security.yaml #}
+            {# <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"> #}
+
+            <!-- DESABILITADO
+            <div class="flex items-center justify-between text-xs text-slate-500">
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                    <input type="checkbox" name="_remember_me"
+                           class="w-3.5 h-3.5 rounded border-aether-border bg-transparent text-aether-broto focus:ring-0 focus:ring-offset-0">
+                    Manter sessão
+                </label>
+                <a href="#" class="hover:text-aether-agua transition-colors">Esqueci a chave</a>
+            </div> -->
+
+            <button type="submit"
+                    class="w-full py-3 rounded-xl bg-aether-broto/10 border border-aether-broto/40 text-aether-broto text-sm font-semibold tracking-wide hover:bg-aether-broto/20 hover:shadow-[0_0_24px_-6px_rgba(78,238,148,0.45)] transition-all duration-300">
+                Acessar Ecossistema
+            </button>
+        </form>
+    </div>
+
+    <p class="text-center text-[11px] font-mono uppercase tracking-widest text-slate-600 mt-8">
+        Aether — Acesso Restrito
+    </p>
+</main>
+
 </body>
 </html>

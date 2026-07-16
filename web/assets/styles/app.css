@@ -1,3 +1,87 @@
-body {
-    background-color: skyblue;
+/**
+ * ============================================================================
+ * AETHER — assets/styles/app.css
+ * Entrypoint CSS do Tailwind. Registre este arquivo no seu webpack.config.js
+ * (Encore.addStyleEntry('app', './assets/styles/app.css')) ou no entrypoint
+ * equivalente caso use Vite.
+ * ============================================================================
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   BASE
+   Ajustes globais mínimos — o resto da tipografia/cores vem do
+   tailwind.config.js e é aplicado via classes utilitárias nos templates.
+   ============================================================================ */
+@layer base {
+    body {
+        @apply bg-aether-bg text-slate-200 antialiased;
+    }
+}
+
+/* ============================================================================
+   COMPONENTS
+   Classes utilitárias customizadas usadas nos templates Twig. Centralizadas
+   aqui para não depender dos blocos <style> inline espalhados pelos arquivos
+   .html.twig (base.html.twig e login.html.twig podem remover seus <style>
+   locais assim que este arquivo estiver plugado no build).
+   ============================================================================ */
+@layer components {
+
+    /* ---- Bio-Dimming ----
+       Aplicar a classe "bio-dimming" na <body> via JS
+       (document.body.classList.toggle('bio-dimming')) para atenuar o brilho
+       de tudo marcado com "accent-glow" (status dots, botões de destaque). */
+    .bio-dimming .accent-glow {
+        opacity: 0.4;
+        transition: opacity 0.4s ease;
+    }
+    .accent-glow {
+        transition: opacity 0.4s ease;
+    }
+
+    /* ---- Indicador de status vital do Core ---- */
+    .core-pulse {
+        animation: core-pulse 2.4s ease-in-out infinite;
+    }
+
+    /* ---- Input "underline" da tela de login ---- */
+    .aether-input {
+        @apply bg-transparent border-0 border-b border-aether-border transition-colors;
+    }
+    .aether-input:focus {
+        @apply outline-none;
+        border-bottom-color: theme('colors.accent-green');
+    }
+
+    /* ---- Fundo com profundidade sutil (tela de login) ---- */
+    .aether-bg-depth {
+        background:
+            radial-gradient(circle at 20% 20%, rgb(78 238 148 / 0.06), transparent 40%),
+            radial-gradient(circle at 80% 70%, rgb(0 245 255 / 0.05), transparent 45%),
+            theme('colors.aether-bg');
+    }
+
+    /* ---- Estado "Pendente" (Zona 1 — Ações Rápidas dos módulos) ----
+       Aplicar/remover via JS enquanto se aguarda o ACK do hardware C++. */
+    .state-pending {
+        @apply opacity-50 cursor-wait;
+    }
+}
+
+/* ============================================================================
+   KEYFRAMES
+   ============================================================================ */
+@keyframes core-pulse {
+    0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgb(78 238 148 / 0.5);
+    }
+    50% {
+        opacity: 0.6;
+        box-shadow: 0 0 0 6px rgb(78 238 148 / 0);
+    }
 }
