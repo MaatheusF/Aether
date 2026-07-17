@@ -26,110 +26,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-    {# Tailwind via CDN — trocar por build (Vite/PostCSS) quando integrar ao Symfony AssetMapper/Webpack Encore #}
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'aether-bg': '#0E1310',
-                        'aether-bg-alt': '#0D1117',
-                        'aether-surface': '#141C18',
-                        'aether-border': '#22332A',
-                        'aether-broto': '#4EEE94',
-                        'aether-agua': '#00F5FF',
-                        'aether-ambar': '#FFB900',
-                        'aether-critico': '#FF5C5C',
-                    },
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        mono: ['"JetBrains Mono"', '"Share Tech Mono"', 'monospace'],
-                    },
-                    boxShadow: {
-                        'glow-broto': '0 0 24px -6px rgba(78, 238, 148, 0.45)',
-                        'glow-agua': '0 0 24px -6px rgba(0, 245, 255, 0.35)',
-                    },
-                }
-            }
-        }
-    </script>
-
-    {# Estilos globais que o Tailwind puro não cobre bem: glass, scrollbar, sliders, bio-dimming #}
-    <style>
-        body {
-            background-color: #0E1310;
-            background-image: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(78, 238, 148, 0.08), transparent),
-            radial-gradient(ellipse 60% 50% at 100% 100%, rgba(0, 245, 255, 0.05), transparent);
-        }
-
-        /* Vidro fosco das superfícies (cards, topbar, sidebar) */
-        .glass-surface {
-            background-color: rgba(20, 28, 24, 0.6);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid #22332A;
-        }
-
-        /* Scrollbar discreta, no tom do ecossistema */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #22332A; border-radius: 999px; }
-        ::-webkit-scrollbar-thumb:hover { background: #2f4636; }
-
-        /* Indicador de vitalidade do Core — pulso tipo batimento/fluxo de água */
-        @keyframes vital-pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.6); opacity: 0.35; }
-        }
-        .vital-dot::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 999px;
-            background: inherit;
-            animation: vital-pulse 2.2s ease-in-out infinite;
-        }
-
-        /* Slider biomórfico (usado nas telas de módulo) */
-        input[type="range"].bio-slider {
-            -webkit-appearance: none;
-            appearance: none;
-            height: 4px;
-            border-radius: 999px;
-            background: #22332A;
-        }
-        input[type="range"].bio-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px; height: 16px;
-            border-radius: 999px;
-            background: #4EEE94;
-            box-shadow: 0 0 10px rgba(78, 238, 148, 0.6);
-            cursor: pointer;
-            border: 2px solid #0E1310;
-        }
-        input[type="range"].bio-slider::-moz-range-thumb {
-            width: 16px; height: 16px;
-            border-radius: 999px;
-            background: #4EEE94;
-            box-shadow: 0 0 10px rgba(78, 238, 148, 0.6);
-            cursor: pointer;
-            border: 2px solid #0E1310;
-        }
-
-        /* -----------------------------------------------------------------
-           MODO BIO-DIMMING
-           Ativado via [data-bio-dim="true"] no <html> (toggle em JS no
-           topbar). Reduz o brilho das cores de destaque em ~40% para uso
-           noturno perto do ecossistema vivo, sem escurecer o texto legível.
-        ----------------------------------------------------------------- */
-        html[data-bio-dim="true"] .bio-dimmable {
-            opacity: 0.6;
-            filter: saturate(0.75) brightness(0.85);
-            transition: opacity 0.4s ease, filter 0.4s ease;
-        }
-        .bio-dimmable { transition: opacity 0.4s ease, filter 0.4s ease; }
-    </style>
+    {# Tailwind v4, compilado via PostCSS a partir de assets/styles/app.css (ver postcss.config.js) #}
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}">
 
     {% block stylesheets %}{% endblock %}
 </head>
@@ -173,24 +71,52 @@
             <button type="button" id="bio-dim-toggle"
                     class="flex items-center justify-center w-9 h-9 rounded-full border border-aether-border text-slate-400 hover:text-aether-ambar hover:border-aether-ambar/40 transition-colors"
                     title="Alternar Modo Bio-Dimming">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
+                <svg id="bio-dim-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4.5 h-4.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1.5M12 19.5V21M4.219 4.219l1.061 1.061M18.72 18.72l1.06 1.06M3 12h1.5M19.5 12H21M4.219 19.781l1.061-1.061M18.72 5.28l1.06-1.06M16.5 12a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0Z" />
                 </svg>
             </button>
 
             {# Notificações #}
             <button type="button" class="relative hidden sm:flex items-center justify-center w-9 h-9 rounded-full border border-aether-border text-slate-400 hover:text-slate-100 transition-colors">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
-                    <path d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" stroke-linecap="round" stroke-linejoin="round" />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4.5 h-4.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.85 23.85 0 0 0 5.454-1.31A8.97 8.97 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.97 8.97 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.26 24.26 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
                 </svg>
                 <span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-aether-critico"></span>
             </button>
 
-            {# Perfil #}
-            <button type="button" class="flex items-center gap-2 pl-1 pr-1 md:pr-3 py-1 rounded-full border border-aether-border hover:border-aether-broto/30 transition-colors">
-                <span class="w-7 h-7 rounded-full bg-gradient-to-br from-aether-broto/40 to-aether-agua/30 border border-aether-border"></span>
-                <span class="hidden md:inline text-xs font-medium text-slate-300">{{ app.user ? app.user.userIdentifier : 'Operador' }}</span>
-            </button>
+            {# Perfil + dropdown #}
+            <div class="relative" data-dropdown>
+                <button type="button" id="user-menu-btn" data-dropdown-trigger
+                        aria-haspopup="true" aria-expanded="false" aria-controls="user-menu-dropdown"
+                        class="flex items-center gap-2 pl-1 pr-1 md:pr-3 py-1 rounded-full border border-aether-border hover:border-aether-broto/30 transition-colors">
+                    <span class="w-7 h-7 rounded-full bg-gradient-to-br from-aether-broto/40 to-aether-agua/30 border border-aether-border"></span>
+                    <span class="hidden md:inline text-xs font-medium text-slate-300">{{ app.user ? app.user.username : 'Operador' }}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="hidden md:block w-3.5 h-3.5 text-slate-500">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                    </svg>
+                </button>
+
+                {# Painel do dropdown — oculto por padrão, controlado pelo initDropdown() no fim do arquivo #}
+                <div id="user-menu-dropdown" data-dropdown-panel
+                     class="hidden absolute right-0 mt-2 w-48 rounded-xl glass-surface glass-dropdown p-1.5 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.6)] origin-top-right">
+                    <a href="#"
+                       class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-slate-50 hover:bg-white/5 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4 h-4 text-slate-500">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.828c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.829c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.828c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-.255c.007-.378-.138-.75-.43-.991l-1.004-.829a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                        </svg>
+                        Configurações
+                    </a>
+                    <div class="my-1.5 h-px bg-aether-border"></div>
+                    <a href="{{ path('app_logout') }}"
+                       class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-aether-critico/90 hover:text-aether-critico hover:bg-aether-critico/10 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+                        </svg>
+                        Sair
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </header>
@@ -304,6 +230,8 @@
         overlay?.addEventListener('click', closeSidebar);
     })();
 </script>
+
+<script src="{{ asset('js/components/dropdown.js') }}"></script>
 
 {% block javascripts %}{% endblock %}
 </body>

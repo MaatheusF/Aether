@@ -5,40 +5,19 @@
 ========================================================================== #}
 <!DOCTYPE html>
 <html lang="pt-BR">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-        <title>Acesso · Aether</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Acesso · Aether</title>
 
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-        <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
-
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script>
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        colors: {
-                            'aether-bg': '#0E1310',
-                            'aether-surface': '#141C18',
-                            'aether-border': '#22332A',
-                            'aether-broto': '#4EEE94',
-                            'aether-agua': '#00F5FF',
-                            'aether-ambar': '#FFB900',
-                        },
-                        fontFamily: {
-                            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                            mono: ['"JetBrains Mono"', '"Share Tech Mono"', 'monospace'],
-                        },
-                    }
-                }
-            }
-        </script>
-    </head>
-    <body class="page-login min-h-screen flex items-center justify-center px-4 font-sans text-slate-200">
+    {# Tailwind v4, compilado via PostCSS a partir de assets/styles/app.css (ver postcss.config.js) #}
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+</head>
+<body class="min-h-screen flex items-center justify-center px-4 font-sans text-slate-200 login-bg">
         <main class="w-full max-w-sm">
 
             {# Cabeçalho #}
