@@ -23,9 +23,8 @@ target_link_libraries(aetherd PRIVATE ${PostgreSQL_LIBRARIES})
 # Inclui os headers do módulo
 target_include_directories(aetherd
         PRIVATE
-        ${CMAKE_SOURCE_DIR}/modules/ModuleTest/include
-        ${CMAKE_SOURCE_DIR}/modules/ModulePoseidon/include
-        ${PostgreSQL_INCLUDE_DIRS}
-        ${CMAKE_SOURCE_DIR}/include
-        ${CMAKE_SOURCE_DIR}
+        ${CMAKE_SOURCE_DIR}/aether-core/modules/ModuleTest/include
+        ${CMAKE_SOURCE_DIR}/aether-core/modules/ModulePoseidon/include
+        ${CMAKE_SOURCE_DIR}/aether-core/include
+        ${CMAKE_SOURCE_DIR}/aether-core
 )

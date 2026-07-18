@@ -75,13 +75,13 @@ make -j$(nproc)
 Exemplo:
 
 ```bash
-./apps/aetherd/aetherd
+.aether-core/apps/aetherd/aetherd
 ```
 
 ou
 
 ```bash
-./apps/aether_cli/aether_cli
+.aether-core/apps/aether_cli/aether_cli
 ```
 
 *(Os caminhos podem variar conforme os executáveis configurados no projeto.)*
@@ -172,9 +172,9 @@ Abrir a pasta raiz do projeto:
 Aether/
 │
 ├── CMakeLists.txt
-├── apps/
-├── core/
-├── modules/
+├── aether-core
+├──── core/
+├──── modules/
 └── ...
 ```
 
@@ -204,7 +204,7 @@ Selecionar o Target desejado.
 Exemplos:
 
 ```
-aetherd
+aetherd (Ponto inicial do Software)
 
 aether_cli
 ```
