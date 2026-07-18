@@ -32,24 +32,18 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3de95979-493c-4cb4-b400-dc05d93cf079" name="Changes" comment="refactor(repository): reorganize project structure">
-      <change afterPath="$PROJECT_DIR$/aether-core/api/CMakeLists.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aether-core/api/common/HttpResponse.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aether-core/api/common/HttpResponse.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aether-core/api/controllers/StatusController.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aether-core/api/controllers/StatusController.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aether-core/api/dto/StatusResponse.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aether-core/api/services/StatusService.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aether-core/api/services/StatusService.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aether-core/api/transport/rest/HttpServer.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aether-core/api/transport/rest/HttpServer.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aether-core/api/transport/rest/Router.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aether-core/api/transport/rest/Router.hpp" afterDir="false" />
+    <list default="true" id="3de95979-493c-4cb4-b400-dc05d93cf079" name="Changes" comment="Adiciona serializer usando JSON e retorno das tags do método /api/status">
+      <change afterPath="$PROJECT_DIR$/docs/api/deploy/API_ARCHITECTURE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/api/deploy/API_CODE_REFERENCE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/api/deploy/API_REST.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/api/deploy/API_USAGE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/api/deploy/CHANGELOG.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/api/deploy/QUICKSTART.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/api/deploy/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/api/deploy/VISUAL_SUMMARY.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/api/methods/status.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aether-core/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aether-core/apps/aetherd/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/aetherd/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aether-core/apps/aetherd/include/daemon.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/aetherd/include/daemon.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aether-core/apps/aetherd/src/daemon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/aetherd/src/daemon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/api/API_REST.md" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,12 +56,12 @@
   <component name="CopilotChats">
     <option name="panelChat">
       <chat>
-        <option name="activeSessionId" value="29eec354-2673-4cc6-b52d-d2f53ffd4010" />
+        <option name="activeSessionId" value="cd067fb7-9cdc-4e0f-92f9-384b1f414623" />
         <option name="sessions">
           <session>
             <option name="chatType" value="PANEL" />
             <option name="id" value="29eec354-2673-4cc6-b52d-d2f53ffd4010" />
-            <option name="modeId" value="Ask" />
+            <option name="modeId" value="Agent" />
             <option name="modelType" value="builtin_family" />
             <option name="modelValue" value="auto" />
             <option name="status" value="Completed" />
@@ -77,6 +71,14 @@
             <option name="chatType" value="PANEL" />
             <option name="id" value="247763bb-4fc9-4dff-86f6-05eb5c806ab6" />
             <option name="modeId" value="Agent" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="cd067fb7-9cdc-4e0f-92f9-384b1f414623" />
+            <option name="modeId" value="Ask" />
             <option name="modelType" value="builtin_family" />
             <option name="modelValue" value="auto" />
             <option name="targetType" value="LOCAL" />
@@ -151,6 +153,23 @@
   },
   &quot;editorReviewEnabled&quot;: false
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock://C:/projetos/Aether/aether-core/api/common/HttpResponse.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/projetos/Aether/aether-core/api/controllers/StatusController.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/projetos/Aether/aether-core/api/controllers/StatusController.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/projetos/Aether/aether-core/api/controllers/StatusController.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/projetos/Aether/aether-core/api/controllers/StatusController.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/projetos/Aether/aether-core/api/dto/StatusResponse.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/projetos/Aether/aether-core/api/dto/StatusResponse.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/projetos/Aether/aether-core/api/services/StatusService.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/projetos/Aether/aether-core/api/services/StatusService.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/projetos/Aether/aether-core/api/services/StatusService.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/projetos/Aether/aether-core/api/transport/rest/HttpServer.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/projetos/Aether/aether-core/api/transport/rest/HttpServer.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/projetos/Aether/aether-core/api/transport/rest/Router.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/projetos/Aether/aether-core/api/transport/rest/Router.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/projetos/Aether/aether-core/apps/aetherd/src/daemon.cpp" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -198,6 +217,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "RunOnceActivity.west.config.association.type.startup.service": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
@@ -219,6 +239,7 @@
       <recent name="C:\projetos\Aether\docs\web\frontend" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\projetos\Aether\docs\api\deploy" />
       <recent name="C:\projetos\Aether\docs\core" />
       <recent name="C:\projetos\Aether\docs" />
       <recent name="C:\projetos\Aether\docs\core\build" />
@@ -278,7 +299,7 @@
       <updated>1784339909909</updated>
       <workItem from="1784339912096" duration="1017000" />
       <workItem from="1784341311738" duration="3563000" />
-      <workItem from="1784349250118" duration="2868000" />
+      <workItem from="1784349250118" duration="12972000" />
     </task>
     <task id="LOCAL-00001" summary="Doc: Documentação inicial do Build e Run do Aether">
       <option name="closed" value="true" />
@@ -288,7 +309,39 @@
       <option name="project" value="LOCAL" />
       <updated>1784341865984</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Estrutura inicial do Http API Server">
+      <option name="closed" value="true" />
+      <created>1784352310996</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1784352310996</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Refatoração da estrutura usando boost">
+      <option name="closed" value="true" />
+      <created>1784356942483</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1784356942483</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Adiciona o roteamento do método DELETE_">
+      <option name="closed" value="true" />
+      <created>1784356989416</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1784356989416</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Adiciona serializer usando JSON e retorno das tags do método /api/status">
+      <option name="closed" value="true" />
+      <created>1784394514920</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1784394514920</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -312,7 +365,11 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Doc: Documentação inicial do Build e Run do Aether" />
-    <option name="LAST_COMMIT_MESSAGE" value="Doc: Documentação inicial do Build e Run do Aether" />
+    <MESSAGE value="Estrutura inicial do Http API Server" />
+    <MESSAGE value="Refatoração da estrutura usando boost" />
+    <MESSAGE value="Adiciona o roteamento do método DELETE_" />
+    <MESSAGE value="Adiciona serializer usando JSON e retorno das tags do método /api/status" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adiciona serializer usando JSON e retorno das tags do método /api/status" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
