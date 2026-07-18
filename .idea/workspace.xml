@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BackendCodeEditorMiscSettings">
+    <option name="/Default/Environment/Hierarchy/GeneratedFilesCacheKey/Timestamp/@EntryValue" value="5" type="long" />
+    <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue" value="true" type="bool" />
+  </component>
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
+  <component name="CMakeProjectFlavorService">
+    <option name="flavorId" value="CMakePlainProjectFlavor" />
+  </component>
+  <component name="CMakeReloadState">
+    <option name="reloaded" value="true" />
+  </component>
+  <component name="CMakeRunConfigurationManager">
+    <generated>
+      <config projectName="Aether" targetName="aetherd" />
+      <config projectName="Aether" targetName="aether_core" />
+      <config projectName="Aether" targetName="aether_protocol" />
+      <config projectName="Aether" targetName="aether" />
+      <config projectName="Aether" targetName="ModulePoseidon" />
+      <config projectName="Aether" targetName="ModuleTest" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3de95979-493c-4cb4-b400-dc05d93cf079" name="Changes" comment="Doc: Documentação inicial do Build e Run do Aether">
+      <change afterPath="$PROJECT_DIR$/aether-core/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/aetherd/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/aetherd/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/aetherd/include/commands/cmd_core_stop.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/aetherd/include/commands/cmd_core_stop.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/aetherd/include/daemon.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/aetherd/include/daemon.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/aetherd/src/commands/cmd_core_stop.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/aetherd/src/commands/cmd_core_stop.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/aetherd/src/daemon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/aetherd/src/daemon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/aetherd/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/aetherd/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cli/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/cli/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cli/include/cli_app.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/cli/include/cli_app.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cli/include/commands/cmd_help.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/cli/include/commands/cmd_help.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cli/include/commands/cmd_version.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/cli/include/commands/cmd_version.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cli/include/utils.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/cli/include/utils.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cli/src/cli_app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/cli/src/cli_app.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cli/src/commands/cmd_help.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/cli/src/commands/cmd_help.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cli/src/commands/cmd_version.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/cli/src/commands/cmd_version.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cli/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/cli/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cli/src/utils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/apps/cli/src/utils.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/database/include/ConnectionHandle.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/database/include/ConnectionHandle.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/database/include/ConnectionPool.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/database/include/ConnectionPool.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/database/include/PostgresDriver.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/database/include/PostgresDriver.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/database/src/ConnectionHandle.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/database/src/ConnectionHandle.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/database/src/ConnectionPool.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/database/src/ConnectionPool.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/database/src/PostgresDriver.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/database/src/PostgresDriver.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/eventbus/include/Event.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/eventbus/include/Event.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/eventbus/include/EventBus.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/eventbus/include/EventBus.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/eventbus/include/EventTypes.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/eventbus/include/EventTypes.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/eventbus/include/IModule.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/eventbus/include/IModule.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/eventbus/src/EventBus.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/eventbus/src/EventBus.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/network/ProtocolRouter.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/network/ProtocolRouter.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/network/SessionManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/network/SessionManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/network/SessionManager.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/network/SessionManager.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/network/TcpConnection.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/network/TcpConnection.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/network/TcpConnection.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/network/TcpConnection.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/network/TcpResponseChannel.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/network/TcpResponseChannel.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/network/TcpResponseChannel.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/network/TcpResponseChannel.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/network/TcpServer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/network/TcpServer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/network/TcpServer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/network/TcpServer.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/network/session/ConnSession.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/network/session/ConnSession.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/utils/logger.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/utils/logger.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/utils/logger.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/utils/logger.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/aether_core/001_create_table_ntch_network_connection_history.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/database/migrations/aether_core/001_create_table_ntch_network_connection_history.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/aether_core/002_create_table_amod_aether_module.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/database/migrations/aether_core/002_create_table_amod_aether_module.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/aether_core/003_add_device_external_id_to_device.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/database/migrations/aether_core/003_add_device_external_id_to_device.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/poseidon/001_create_table_devc_device.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/database/migrations/poseidon/001_create_table_devc_device.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/poseidon/002_create_table_styp_sensor_type.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/database/migrations/poseidon/002_create_table_styp_sensor_type.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/poseidon/003_create_table_sens_sensor.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/database/migrations/poseidon/003_create_table_sens_sensor.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/poseidon/004_create_table_dsrd_data_sensor_received.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/database/migrations/poseidon/004_create_table_dsrd_data_sensor_received.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/poseidon/005_add_description_to_sensor.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/database/migrations/poseidon/005_add_description_to_sensor.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/poseidon/006_add_external_id_to_sensor.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/database/migrations/poseidon/006_add_external_id_to_sensor.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/poseidon/007_create_table_rely_relay.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/database/migrations/poseidon/007_create_table_rely_relay.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/poseidon/008_create_table_jcrs_job_cron_schedule.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/database/migrations/poseidon/008_create_table_jcrs_job_cron_schedule.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/poseidon/009_create_table_jcrh_job_cron_history.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/database/migrations/poseidon/009_create_table_jcrh_job_cron_history.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/poseidon/010_add_run_now_to_jcrs_job_cron_schedule.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/database/migrations/poseidon/010_add_run_now_to_jcrs_job_cron_schedule.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/structure/001_create_roles.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/database/structure/001_create_roles.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/structure/002_create_schema_aether_core.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/database/structure/002_create_schema_aether_core.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/structure/003_create_schema_poseidon.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/database/structure/003_create_schema_poseidon.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/structure/004_create_role_poseidon_application.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/database/structure/004_create_role_poseidon_application.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/core/BuildAndRun.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/core/BuildAndRun.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/external/croncpp.h" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/include/external/croncpp.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/external/json.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/include/external/json.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/modules/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/ModulePoseidon/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/modules/ModulePoseidon/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/ModulePoseidon/Schedule/ScheduleService.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/modules/ModulePoseidon/Schedule/ScheduleService.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/ModulePoseidon/Schedule/ScheduleService.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/modules/ModulePoseidon/Schedule/ScheduleService.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/ModulePoseidon/config/DatabaseConfig.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/modules/ModulePoseidon/config/DatabaseConfig.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/ModulePoseidon/include/PoseidonMain.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/modules/ModulePoseidon/include/PoseidonMain.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/ModulePoseidon/include/PoseidonService.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/modules/ModulePoseidon/include/PoseidonService.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/ModulePoseidon/src/PoseidonMain.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/modules/ModulePoseidon/src/PoseidonMain.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/ModulePoseidon/src/PoseidonService.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/modules/ModulePoseidon/src/PoseidonService.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/ModuleTest/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/modules/ModuleTest/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/ModuleTest/include/ModuleTest.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/modules/ModuleTest/include/ModuleTest.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/ModuleTest/src/ModuleTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/modules/ModuleTest/src/ModuleTest.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/ModuleTest/storage/DatabaseConfig.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/modules/ModuleTest/storage/DatabaseConfig.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocols/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/protocols/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocols/aether/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/protocols/aether/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocols/aether/common/IProtocolHandler.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/protocols/aether/common/IProtocolHandler.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocols/aether/common/IResponseChannel.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/protocols/aether/common/IResponseChannel.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocols/aether/common/ModuleId.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/protocols/aether/common/ModuleId.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocols/aether/include/CommandType.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/protocols/aether/include/CommandType.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocols/aether/include/Packet.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/protocols/aether/include/Packet.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocols/aether/include/PacketBuilder.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/protocols/aether/include/PacketBuilder.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocols/aether/include/Parser.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/protocols/aether/include/Parser.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocols/aether/src/PacketBuilder.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/protocols/aether/src/PacketBuilder.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocols/aether/src/Parser.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/protocols/aether/src/Parser.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protocols/aether/src/dummy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/protocols/aether/src/dummy.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/.env" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/.env.dev" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/.env.dev" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/.env.test" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/.env.test" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/.idea/commandlinetools/Symfony_12_07_2026_18_13.xml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/.idea/commandlinetools/Symfony_12_07_2026_18_13.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/.idea/commandlinetools/schemas/frameworkDescriptionVersion1.1.4.xsd" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/.idea/commandlinetools/schemas/frameworkDescriptionVersion1.1.4.xsd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/.idea/web.iml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/.idea/web.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/assets/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/assets/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/assets/controllers.json" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/assets/controllers.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/assets/controllers/csrf_protection_controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/assets/controllers/csrf_protection_controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/assets/controllers/hello_controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/assets/controllers/hello_controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/assets/stimulus_bootstrap.js" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/assets/stimulus_bootstrap.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/assets/styles/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/assets/styles/app.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/assets/styles/pages/_base.css" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/assets/styles/pages/_base.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/assets/styles/pages/_base_old.css" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/assets/styles/pages/_base_old.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/assets/styles/pages/_login_old.css" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/assets/styles/pages/_login_old.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/bin/console" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/bin/console" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/bin/phpunit" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/bin/phpunit" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/compose.override.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/compose.override.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/bundles.php" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/bundles.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/asset_mapper.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/asset_mapper.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/cache.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/cache.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/csrf.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/csrf.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/debug.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/debug.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/doctrine.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/doctrine.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/doctrine_migrations.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/doctrine_migrations.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/framework.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/framework.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/mailer.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/mailer.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/messenger.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/messenger.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/monolog.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/monolog.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/notifier.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/notifier.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/property_info.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/property_info.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/routing.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/routing.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/security.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/security.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/translation.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/translation.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/twig.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/twig.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/ux_turbo.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/ux_turbo.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/validator.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/validator.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/packages/web_profiler.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/packages/web_profiler.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/preload.php" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/preload.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/reference.php" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/reference.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/routes.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/routes.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/routes/framework.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/routes/framework.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/routes/security.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/routes/security.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/routes/web_profiler.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/routes/web_profiler.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/services.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/config/services.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/database/functions/trg_user_updated_at.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/database/functions/trg_user_updated_at.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/database/migrations/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/database/migrations/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/database/migrations/00000001_create_user_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/database/migrations/00000001_create_user_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/database/migrations/00000002_seed_create_user_admin.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/database/migrations/00000002_seed_create_user_admin.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/database/triggers/touch_updated_at.sql" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/database/triggers/touch_updated_at.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/frontend-build-setup.md" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/frontend-build-setup.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/importmap.php" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/importmap.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/phpunit.dist.xml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/phpunit.dist.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/postcss.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/postcss.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/public/build/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/public/build/app.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/public/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/public/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/public/js/components/dropdown.js" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/public/js/components/dropdown.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/Controller/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/src/Controller/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/Controller/DashboardController.php" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/src/Controller/DashboardController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/Controller/ModuloController.php" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/src/Controller/ModuloController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/Controller/SecurityController.php" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/src/Controller/SecurityController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/Entity/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/src/Entity/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/Entity/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/src/Entity/User.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/Kernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/src/Kernel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/Repository/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/src/Repository/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/Repository/UserRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/src/Repository/UserRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/Security/LoginFormAuthenticator.php" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/src/Security/LoginFormAuthenticator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/Security/UserChecker.php" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/src/Security/UserChecker.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/symfony.lock" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/symfony.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/tailwind.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/templates/base.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/templates/base.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/templates/home/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/templates/home/index.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/templates/modulos/poseidon.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/templates/modulos/poseidon.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/templates/security/login.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/templates/security/login.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/tests/bootstrap.php" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/tests/bootstrap.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/translations/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/translations/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/translations/security.pt_BR.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/translations/security.pt_BR.yaml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="CopilotChats">
+    <option name="panelChat">
+      <chat>
+        <option name="activeSessionId" value="247763bb-4fc9-4dff-86f6-05eb5c806ab6" />
+        <option name="sessions">
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="29eec354-2673-4cc6-b52d-d2f53ffd4010" />
+            <option name="modeId" value="Ask" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="status" value="Completed" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="247763bb-4fc9-4dff-86f6-05eb5c806ab6" />
+            <option name="modeId" value="Agent" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+        </option>
+        <option name="type" value="PANEL" />
+      </chat>
+    </option>
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_C:/projetos/Aether" value="3GelRoX4YLKSWDwQM3h6iznIAS3" />
+    </persistenceIdMap>
+  </component>
+  <component name="CopilotUserSelectedModel">
+    <selectedModels>
+      <entry key="agent-panel" value="Auto" />
+      <entry key="chat-panel" value="Auto" />
+    </selectedModels>
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CMakeLists.txt" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;MaatheusF&quot;
+  }
+}</component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="reorganize-project" />
+                    <option name="lastUsedInstant" value="1784345550" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="master" />
+                    <option name="lastUsedInstant" value="1784345538" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/MaatheusF/Aether.git",
+    "accountId": "6b51d890-d6c5-4e59-bff8-ecfc148e3e33"
+  },
+  "editorReviewEnabled": false
+}]]></component>
+  <component name="ProjectApplicationVersion">
+    <option name="ide" value="CLion" />
+    <option name="majorVersion" value="2025" />
+    <option name="minorVersion" value="2.3" />
+    <option name="productBranch" value="Classic" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="3GelRoX4YLKSWDwQM3h6iznIAS3" />
+  <component name="ProjectSessionTemplates">
+    <option name="panelTemplate">
+      <template>
+        <option name="modeId" value="Ask" />
+        <option name="model">
+          <model>
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+          </model>
+        </option>
+        <option name="targetType" value="LOCAL" />
+      </template>
+    </option>
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "CMake Application.aether_core.executor": "Run",
+    "CMake Application.aetherd.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.RadMigrateCodeStyle": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "RunOnceActivity.west.config.association.type.startup.service": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "reorganize-project",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "C:/projetos/Aether/docs/web/frontend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "CPPToolchains",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\projetos\Aether\docs\web\frontend" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\projetos\Aether\docs\core" />
+      <recent name="C:\projetos\Aether\docs" />
+      <recent name="C:\projetos\Aether\docs\core\build" />
+    </key>
+  </component>
+  <component name="RunManager" selected="CMake Application.aetherd">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ModulePoseidon" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Aether" TARGET_NAME="ModulePoseidon" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ModuleTest" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Aether" TARGET_NAME="ModuleTest" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="aether" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Aether" TARGET_NAME="aether" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Aether" RUN_TARGET_NAME="aether">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="aether_core" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Aether" TARGET_NAME="aether_core" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="aether_protocol" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Aether" TARGET_NAME="aether_protocol" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="aetherd" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Aether" TARGET_NAME="aetherd" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Aether" RUN_TARGET_NAME="aetherd">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="CMake Application.aetherd" />
+      <item itemvalue="CMake Application.aether" />
+      <item itemvalue="CMake Application.aether_core" />
+      <item itemvalue="CMake Application.ModulePoseidon" />
+      <item itemvalue="CMake Application.ModuleTest" />
+      <item itemvalue="CMake Application.aether_protocol" />
+    </list>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3de95979-493c-4cb4-b400-dc05d93cf079" name="Changes" comment="" />
+      <created>1784339909909</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1784339909909</updated>
+      <workItem from="1784339912096" duration="1017000" />
+      <workItem from="1784341311738" duration="3563000" />
+    </task>
+    <task id="LOCAL-00001" summary="Doc: Documentação inicial do Build e Run do Aether">
+      <option name="closed" value="true" />
+      <created>1784341865984</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1784341865984</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VCPKGProject">
+    <isAutomaticCheckingOnLaunch value="false" />
+    <isAutomaticFoundErrors value="true" />
+    <isAutomaticReloadCMake value="true" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Doc: Documentação inicial do Build e Run do Aether" />
+    <option name="LAST_COMMIT_MESSAGE" value="Doc: Documentação inicial do Build e Run do Aether" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
+  </component>
+</project>
