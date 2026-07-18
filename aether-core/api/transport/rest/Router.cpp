@@ -2,16 +2,46 @@
 
 namespace Aether::Api
 {
-    HttpResponse Router::route(const std::string& method, const std::string& path)
+    /**
+     * Roteador principal que inspeciona o método HTTP
+     * e delega para o handler apropriado.
+     *
+     * Fluxo:
+     * 1. Recebe HttpRequest
+     * 2. Verifica request.method
+     * 3. Chama dispatchGet, dispatchPost, etc
+     * 4. Retorna HttpResponse
+     */
+    HttpResponse Router::dispatch(const HttpRequest& request)
     {
-        if (method == "GET" && path == "/api/test")
+        switch (request.method)
         {
-            return m_statusController.get();
+            case HttpMethod::GET:
+                return dispatchGet(request);
+            case HttpMethod::POST:
+                return dispatchPost(request);
+            case HttpMethod::PUT:
+                return dispatchPut(request);
+            case HttpMethod::DELETE_:
+                return dispatchDelete(request);
+            default:
+                return notFound();
         }
+    }
 
-        return {
-            404,
-            R"({"success":false, "message":"Method Not Found"})"
-        };
+    /**
+     * Retorna resposta 404 Not Found em JSON
+     */
+    HttpResponse Router::notFound() const
+    {
+        HttpResponse response;
+
+        response.status = 404;
+        response.body =
+            R"({"success":false,"message":"Not Found"})";
+        response.headers["Content-Type"] =
+            "application/json";
+
+        return response;
     }
 }

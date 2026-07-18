@@ -12,6 +12,7 @@
 #include "../../../core/utils/logger.hpp"
 #include "../../../core/network/ProtocolRouter.hpp"
 #include "api/transport/rest/HttpServer.hpp"
+#include "api/config/ApiConfig.hpp"
 
 #define SOCKET_PATH "/tmp/aetherd.socket"
 
@@ -194,7 +195,15 @@ void AetherDaemon::initializeTcpServer()
 void AetherDaemon::initializeApiServer()
 {
     std::cout << "[Daemon] Inicializando API Server." << std::endl;
-    Aether::Api::HttpServer server;
-    server.start(9001);
+
+    // Configurações da API
+    Aether::Api::ApiConfig apiConfig;
+    apiConfig.host = "0.0.0.0";  // Escuta em todas as interfaces
+    apiConfig.port = 9001;       // Porta da API
+
+    // Cria e inicia servidor HTTP
+    Aether::Api::HttpServer server(apiConfig);
+    server.start();
+
     std::cout << "[Daemon] API Server inicializada com Sucesso" << std::endl;
 }

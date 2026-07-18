@@ -1,85 +1,90 @@
 #include "HttpServer.hpp"
+#include "HttpSessions.hpp"
 
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <cstring>
 #include <iostream>
+#include <boost/asio/ip/address.hpp>
 
 namespace Aether::Api
 {
-    bool HttpServer::start(int port)
+    /**
+     * Inicializa o servidor HTTP
+     *
+     * Cria:
+     * - io_context para ASIO
+     * - acceptor TCP escutando em host:port
+     *
+     * O servidor não começa a escutar até start() ser chamado.
+     */
+    HttpServer::HttpServer(const ApiConfig& config)
+        : m_config(config),
+          m_ioContext(),
+          m_acceptor(
+              m_ioContext,
+              boost::asio::ip::tcp::endpoint(
+                  boost::asio::ip::make_address(config.host),
+                  config.port))
     {
-        int serverFd = socket(AF_INET, SOCK_STREAM, 0);
+    }
 
-        if (serverFd < 0)
+    /**
+     * Inicia servidor e começa a escutar por conexões
+     *
+     * Fluxo:
+     * 1. Printa mensagem de inicialização
+     * 2. Loop infinito chamando accept()
+     * 3. Para cada conexão:
+     *    - Cria HttpSession
+     *    - Executa session.run()
+     *    - Aguarda próxima conexão
+     *
+     * @note Método bloqueante. Para uso em produção com
+     *       múltiplas conexões reais, use threads ou ASIO async
+     */
+    void HttpServer::start()
+    {
+        std::cout << "HTTP Server iniciado em "
+                  << m_config.host << ":"
+                  << m_config.port << std::endl;
+
+        while (true)
         {
-            return false;
+            accept();
         }
+    }
 
-        sockaddr_in addr{};
-        addr.sin_family = AF_INET;
-        addr.sin_addr.s_addr = INADDR_ANY;
-        addr.sin_port = htons(port);
-
-        if (bind(serverFd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0)
+    /**
+     * Aceita uma conexão TCP e a processa
+     *
+     * Passos:
+     * 1. Cria socket TCP
+     * 2. Aceita conexão do acceptor
+     * 3. Cria HttpSession passando socket e router
+     * 4. Executa sessão (processa requisição e responde)
+     * 5. Retorna e aguarda próxima conexão
+     *
+     * Erros durante aceitação são capturados e logados
+     * sem interromper o servidor.
+     */
+    void HttpServer::accept()
+    {
+        try
         {
-            close(serverFd);
-            return false;
+            boost::asio::ip::tcp::socket socket(m_ioContext);
+
+            m_acceptor.accept(socket);
+
+            HttpSession session(
+                std::move(socket),
+                m_router);
+
+            session.run();
         }
-
-        listen(serverFd, 10);
-
-        std::cout << "HTTP Server iniciado na porta " << port << std::endl;
-
-        while(true)
+        catch (const std::exception& ex)
         {
-            int client = accept(serverFd, nullptr, nullptr);
-
-            if(client < 0)
-                continue;
-
-            char buffer[4096];
-
-            memset(buffer,0,sizeof(buffer));
-
-            read(client, buffer, sizeof(buffer));
-
-            std::string request(buffer);
-
-            std::string method;
-            std::string path;
-
-            auto p1 = request.find(' ');
-            auto p2 = request.find(' ', p1 + 1);
-
-            method = request.substr(0, p1);
-            path   = request.substr(p1 + 1, p2 - p1 - 1);
-
-            auto response = m_router.route(method, path);
-
-            std::string http;
-
-            http += "HTTP/1.1 ";
-            http += std::to_string(response.status);
-
-            if(response.status == 200)
-                http += " OK\r\n";
-            else
-                http += " ERROR\r\n";
-
-            http += "Content-Type: application/json\r\n";
-            http += "Content-Length: ";
-            http += std::to_string(response.body.size());
-            http += "\r\n";
-            http += "Connection: close\r\n";
-            http += "\r\n";
-            http += response.body;
-
-            write(client,
-                  http.c_str(),
-                  http.size());
-
-            close(client);
+            std::cerr
+                << "Erro ao aceitar conexão: "
+                << ex.what()
+                << std::endl;
         }
     }
 }

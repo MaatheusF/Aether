@@ -22,4 +22,7 @@ target_include_directories(aether_api
 target_link_libraries(aether_api
         PUBLIC
         aether_core
+        Boost::system
+        Boost::thread
 )
+

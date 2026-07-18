@@ -2,11 +2,14 @@
 
 namespace Aether::Api
 {
-    Dto::StatusResponse StatusService::getStatus()
+    /**
+     * Retorna um DTO com o status atual da API e do Aether_Core
+     */
+    Dto::StatusResponse StatusService::get()
     {
         return {
             true,
-            "Aether API Funcionando"
+            "Aether operando com sucesso!"
         };
     }
 }
