@@ -11,6 +11,7 @@
 #include "../../../core/network/TcpServer.hpp"
 #include "../../../core/utils/logger.hpp"
 #include "../../../core/network/ProtocolRouter.hpp"
+#include "api/transport/rest/HttpServer.hpp"
 
 #define SOCKET_PATH "/tmp/aetherd.socket"
 
@@ -29,6 +30,7 @@ int AetherDaemon::initializeAetherDaemon()
     initializeCliSocket(); /// Inicializa o socket de comunicação com o CLI
     initializeModules();   /// Inicializa os modulos do Aether
     initializeTcpServer(); /// Inicializa o servidor TCP para comunicação externa
+    initializeApiServer(); /// Inicializa o servidor de API HTTP
 
     std::cout << "[Daemon] Aether daemon executando com sucesso." << std::endl;
 
@@ -184,4 +186,15 @@ void AetherDaemon::initializeTcpServer()
     tcpServer->start(); /// Inicia o servidor TCP
 
     std::cout << "[Daemon] Tcp Server inicializado com Sucesso" << std::endl;
+}
+
+/**
+ * @brief Função que inicializa o servidor de API REST para comunicação WEB/Http
+ */
+void AetherDaemon::initializeApiServer()
+{
+    std::cout << "[Daemon] Inicializando API Server." << std::endl;
+    Aether::Api::HttpServer server;
+    server.start(9001);
+    std::cout << "[Daemon] API Server inicializada com Sucesso" << std::endl;
 }

@@ -37,6 +37,11 @@ private:
     void initializeTcpServer();
 
     /**
+     * @brief Função que inicializa o servidor de API REST para comunicação WEB/Http
+     */
+    void initializeApiServer();
+
+    /**
      * @brief Função que instancia todos os modulos do sistema Aether,
      * utilizado no Daemon para registrar os modulos na conexão TCP principalmente
      * @return retorna um elemento contendo todos os modulos criados
