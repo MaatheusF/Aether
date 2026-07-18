@@ -1,0 +1,278 @@
+# Design System — Aether
+
+> **Propósito deste arquivo:** referência única e auto-suficiente do visual do Aether. Se você colar este arquivo no início de outra conversa, o objetivo é que dê pra gerar um novo componente/tela consistente com o que já existe, sem precisar reexplicar nada.
+
+> **Stack:** Symfony (Twig) + Tailwind CSS v4 (PostCSS puro, sem Vite/Encore) — ver `docs/frontend-build-setup.md` para o pipeline de build.
+
+> **Estética:** Eco-Tech / Biopunk — um painel de controle doméstico que parece um paludário digital: escuro, orgânico, com iluminação de LED de cultivo em vez de alarmes industriais.
+
+---
+
+## 1. Princípios de design
+
+1. **Biológico, não industrial.** Onde um painel de fábrica usaria vermelho/amarelo/verde semáforo, o Aether usa estados que lembram um ecossistema vivo: *Estável* (folha), *Atenção* (seco), *Crítico* (toxina). Ver §5.6.
+2. **Vidro sobre musgo.** Toda superfície elevada (card, topbar, sidebar, dropdown) é glassmorphism — nunca uma cor sólida opaca.
+3. **Dados sempre em mono.** Qualquer valor numérico/técnico (temperatura, %, logs, timestamps) usa `font-mono`. Texto de interface usa `font-sans`. Essa troca de fonte é o que sinaliza "isto é um dado do hardware" vs "isto é rótulo de UI".
+4. **Hardware é assíncrono, e a UI admite isso.** Nenhum toggle finge que o comando foi instantâneo — existe sempre um estado visual "Pendente" entre o clique e a confirmação física (ver §5.5).
+5. **Mobile não é o desktop encolhido.** A navegação principal muda de lugar (topo → rodapé) e não só de tamanho — ver §3.
+
+---
+
+## 2. Tokens (`@theme` em `assets/styles/app.css`)
+
+### 2.1 Cores
+
+| Token Tailwind | Hex | Uso |
+|---|---|---|
+| `aether-bg` | `#0E1310` | Fundo principal (verde musgo profundo) |
+| `aether-bg-alt` | `#0D1117` | Alternativa de fundo (reservada, pouco usada ainda) |
+| `aether-surface` | `#141C18` | Base de cor das superfícies glass (sempre com alpha, ver §2.3) |
+| `aether-border` | `#22332A` | Toda borda sutil — cards, inputs, divisores |
+| `aether-broto` | `#4EEE94` | Verde de destaque — positivo/online/estável/foco |
+| `aether-agua` | `#00F5FF` | Azul de destaque — dados de água/temperatura, links secundários |
+| `aether-ambar` | `#FFB900` | Âmbar de destaque — atenção/pendente/luz |
+| `aether-critico` | `#FF5C5C` | Vermelho — crítico/erro/sair |
+
+**Regra de uso:** essas 4 cores de destaque (`broto`/`agua`/`ambar`/`critico`) têm **significado semântico fixo**, não são intercambiáveis por preferência estética:
+- `broto` = tudo certo, ativo, confirmado
+- `agua` = neutro/informativo, específico de dados aquáticos
+- `ambar` = aguardando, atenção, luz/energia
+- `critico` = falha, ação destrutiva (logout, deletar)
+
+### 2.2 Tipografia
+
+| Token | Valor | Uso |
+|---|---|---|
+| `font-sans` | `"Plus Jakarta Sans", sans-serif` | Todo texto de interface (padrão do `<body>`) |
+| `font-mono` | `"JetBrains Mono", "Share Tech Mono", monospace` | Dados numéricos, logs, badges de status, timestamps |
+
+Carregadas via Google Fonts `<link>` direto no `<head>` de cada template raiz (`base.html.twig`, `login.html.twig`) — não fazem parte do build CSS.
+
+### 2.3 Sombras
+
+| Token | Valor | Uso |
+|---|---|---|
+| `shadow-glow-broto` | `0 0 24px -6px rgba(78,238,148,.45)` | Hover de cards/botões em contexto "positivo" |
+| `shadow-glow-agua` | `0 0 24px -6px rgba(0,245,255,.35)` | Hover de cards/botões em contexto "água/Poseidon" |
+
+### 2.4 Raio de borda (escala usada, não tokenizada — aplicar direto)
+
+| Classe | Uso |
+|---|---|
+| `rounded-full` | Pills, badges, botões de ícone, avatar, toggles |
+| `rounded-xl` | Botões grandes, containers de input |
+| `rounded-2xl` | Cards, seções ("Zona N"), painel de dropdown |
+
+---
+
+## 3. Layout e breakpoints
+
+| Breakpoint Tailwind | Papel no Aether |
+|---|---|
+| (padrão, <768px) | Mobile: bottom nav fixa, sidebar vira drawer overlay, zonas empilham em 1 coluna |
+| `md:` (≥768px) | Menu superior horizontal volta a aparecer, bottom nav some, grids passam a 2-3 colunas |
+| `lg:` (≥1024px) | Sidebar esquerda vira fixa (não-drawer) quando a página é de módulo |
+
+### 3.1 Estrutura de página (herdada de `base.html.twig`)
+
+```
+<header>          topbar fixa, h-16, z-40, glass-surface
+<aside #sidebar>  só existe se layout_mode = 'sidebar'; w-64;
+                   mobile = drawer (-translate-x-full + overlay),
+                   lg: = fixa, abaixo da topbar
+<main>            padding-top 4rem (topbar), padding-bottom 4rem no mobile
+                   (bottom nav), lg:pl-64 se tiver sidebar
+<nav bottom>      só no mobile (md:hidden), h-16, fixed bottom-0
+```
+
+Dois blocos Twig controlam tudo isso e **devem ser sobrescritos por qualquer novo template que estenda `base.html.twig`**:
+
+```twig
+{% block layout_mode %}full{% endblock %}     {# 'full' ou 'sidebar' #}
+{% block module_active %}{% endblock %}        {# slug usado p/ destacar nav: 'poseidon', 'horus'... #}
+```
+
+Se `layout_mode` = `sidebar`, o template também deve preencher `{% block sidebar %}`.
+
+### 3.2 Grids de conteúdo
+
+Padrão usado em toda a listagem de cards (alertas, módulos):
+```html
+grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4   /* dashboard: módulos */
+grid grid-cols-1 md:grid-cols-3 gap-4                  /* dashboard: alertas */
+grid grid-cols-1 lg:grid-cols-3 gap-4                  /* zonas internas de módulo */
+```
+Regra geral: **1 coluna até o breakpoint em que o conteúdo realmente cabe confortável** — nunca forçar 2-3 colunas apertadas no mobile.
+
+---
+
+## 4. Estrutura de arquivos
+
+```
+assets/styles/
+├── app.css              ← fonte única: @theme + estilos globais/compartilhados
+└── pages/
+    └── base.css          ← estilos específicos de base.html.twig (padrão a repetir por template: pages/<nome>.css)
+
+templates/
+├── base.html.twig        ← esqueleto mestre (topbar, sidebar, bottom nav, dropdown genérico)
+├── login.html.twig       ← tela isolada, não estende base
+├── dashboard.html.twig   ← extends base, layout_mode = full
+└── modulos/
+    └── poseidon.html.twig ← extends base, layout_mode = sidebar
+
+src/Controller/
+├── SecurityController.php   ← app_login, app_logout
+├── DashboardController.php  ← app_dashboard
+└── ModuloController.php     ← app_modulo_poseidon (novos módulos = novos métodos aqui)
+```
+
+**Convenção para novo módulo (ex: Horus):** replicar o padrão do Poseidon — `templates/modulos/horus.html.twig` estendendo `base.html.twig`, método novo em `ModuloController`, rota `app_modulo_horus`, e (se precisar de CSS próprio) `assets/styles/pages/horus.css` importado em `app.css`.
+
+---
+
+## 5. Componentes
+
+### 5.1 Superfícies de vidro (glassmorphism)
+
+Duas variantes — **não inventar uma terceira**, escolher entre elas:
+
+| Classe | Blur | Uso |
+|---|---|---|
+| `.glass-surface` | 14px | Topbar, sidebar, cards de conteúdo (dashboard, zonas de módulo) |
+| `.glass-card` | 18px + sombra de profundidade | Só o card central da tela de login (precisa se destacar mais, é o único elemento da tela) |
+
+Ambas usam `background-color: rgba(20,28,24,.6)` + `border: 1px solid #22332A`.
+
+### 5.2 Topbar ("O Dossel")
+
+Fixa, `h-16`, `glass-surface`, 3 zonas:
+- **Esquerda:** logo "Aether" + `.vital-dot` (indicador de vitalidade do Core, ver §5.7) — sempre presente, em toda página.
+- **Centro** (`hidden md:flex`): nav de módulos globais, com estado ativo via comparação com `module_active`.
+- **Direita:** toggle Bio-Dimming (§5.8) → notificações → dropdown de perfil (§5.4).
+
+### 5.3 Sidebar dinâmica ("As Raízes")
+
+Só renderiza quando `layout_mode = sidebar`. Lista de links simples:
+```html
+<a class="px-3 py-2 rounded-lg {{ ativo ? 'bg-{cor}/10 text-{cor} font-medium' : 'text-slate-400 hover:text-slate-100 hover:bg-white/5' }}">
+```
+No mobile é um drawer (`-translate-x-full` + overlay `bg-black/60`), aberto por um botão flutuante `#sidebar-open-btn` que só existe quando há sidebar na página.
+
+### 5.4 Dropdown genérico (padrão reutilizável)
+
+**Não criar dropdown novo do zero** — usar sempre este padrão de atributos, o JS em `base.html.twig` (`initDropdowns()`) já cobre qualquer elemento marcado assim:
+
+```html
+<div class="relative" data-dropdown>
+    <button data-dropdown-trigger aria-haspopup="true" aria-expanded="false" aria-controls="ID_DO_PAINEL">...</button>
+    <div id="ID_DO_PAINEL" data-dropdown-panel class="hidden absolute right-0 mt-2 w-48 rounded-xl glass-surface p-1.5 ...">
+        <a class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-slate-50 hover:bg-white/5">Item</a>
+    </div>
+</div>
+```
+Comportamento já pronto: abre/fecha no clique, fecha ao clicar fora, fecha com `Esc`, fecha outros dropdowns abertos automaticamente. Item destrutivo (ex: "Sair") usa `text-aether-critico/90 hover:bg-aether-critico/10` em vez do cinza padrão.
+
+### 5.5 Toggles / switches (com estado "Pendente")
+
+Três estados visuais fixos — usar sempre os três, nunca só on/off:
+
+| Estado | Trilho | Thumb | Extra |
+|---|---|---|---|
+| **On** | `bg-aether-broto/30 border-aether-broto/50` | à direita, `bg-aether-broto` | — |
+| **Off** | `bg-white/5 border-aether-border` | à esquerda, `bg-slate-500` | — |
+| **Pendente** | `bg-aether-ambar/20 border-aether-ambar/40 opacity-70 cursor-wait` | — | `disabled`, ícone de spinner (`animate-spin`) ao lado do label, texto `pendente` em `text-aether-ambar` |
+
+O estado Pendente representa o intervalo entre o clique do usuário e a confirmação real do hardware (ACK do Core/ESP32 — ver `docs/payload-telemetria-poseidon.md` §3.4). **Todo novo atuador precisa implementar esse terceiro estado**, não só on/off.
+
+### 5.6 Cards de Alerta (estados biológicos)
+
+Três estados fixos, cada um com cor + borda esquerda + texto — nunca usar vermelho puro de alarme industrial:
+
+| Estado | Cor | Borda | Exemplo de uso |
+|---|---|---|---|
+| **Estável** | `aether-broto` | `border-l-2 !border-l-aether-broto` | Tudo dentro do esperado |
+| **Atenção** | `aether-ambar` | `border-l-2 !border-l-aether-ambar` | Degradação leve, ainda não é falha |
+| **Crítico** | `aether-critico` | `border-l-2 !border-l-aether-critico` | Falha real, precisa de ação |
+
+Estrutura: `glass-surface p-4 flex items-start gap-3`, ponto colorido (`w-2 h-2 rounded-full`) + eyebrow `text-[11px] font-mono uppercase` na cor do estado + texto em `text-sm text-slate-200`. Sempre envolvido pela classe `.bio-dimmable` (ver §5.8).
+
+### 5.7 Indicador de vitalidade (`.vital-dot`)
+
+Ponto colorido com halo pulsante (`@keyframes vital-pulse`, 2.2s). Usado em 3 lugares: topbar (Core geral), tela de login (marca), sidebar de módulo (conexão daquele módulo específico). **Um só padrão visual para "isto está vivo e conectado" em todo o sistema** — não criar variação nova para essa mesma ideia.
+
+### 5.8 Bio-Dimming
+
+Mecanismo global de baixa luminosidade noturna. Qualquer elemento que deva escurecer nesse modo recebe a classe `.bio-dimmable`; o toggle no topbar liga/desliga `[data-bio-dim="true"]` no `<html>` (persistido em `sessionStorage`), que aplica `opacity:.6; filter:saturate(.75) brightness(.85)` a tudo que tiver essa classe. **Regra prática:** qualquer cor de destaque brilhante (broto/agua/ambar) que apareça fora de texto pequeno — pontos, badges, cards de alerta — deve levar `.bio-dimmable`.
+
+### 5.9 Cards de módulo (dashboard)
+
+`glass-surface rounded-2xl p-5`, com:
+- Header: eyebrow mono + nome do módulo (`text-lg font-bold`) à esquerda, badge de status à direita (`rounded-full px-2 py-1 text-[11px] font-mono` + ponto, cor = `aether-broto`/10 se online, `aether-critico`/10 se alerta)
+- Rodapé: grid de 3 colunas de telemetria rápida (`border-t border-aether-border pt-3`), cada item = label mono uppercase `text-[10px] text-slate-500` + valor mono `text-sm` colorido por significado (água=agua, umidade=broto, luz=ambar)
+- Hover: `hover:shadow-glow-{cor} hover:border-{cor}/30 transition-all duration-300`
+
+### 5.10 Seções "Zona N" (páginas de módulo)
+
+`glass-surface rounded-2xl p-5 md:p-6`, sempre com um eyebrow no topo: `text-[11px] font-mono uppercase tracking-widest text-slate-500`, texto `Zona N · Nome`. É o container padrão para agrupar qualquer bloco funcional dentro de uma página de módulo (ações, telemetria, logs, e futuros).
+
+### 5.11 Placeholder de gráfico (Chart.js ainda não plugado)
+
+`rounded-xl border border-dashed border-aether-border h-48 flex flex-col items-center justify-center gap-2 text-slate-600`, com ícone + texto indicando o `id` do canvas esperado. Usar sempre que uma feature depender de dado ainda não integrado — deixa claro no próprio HTML o que falta plugar.
+
+### 5.12 Console de logs
+
+`bg-black/30 border border-aether-border rounded-xl p-4` com `font-mono text-xs`, cada linha `[HH:MM:SS] namespace.evento :: valor`, cor do "namespace" conforme o tipo de evento (broto=heartbeat ok, agua=leitura de sensor, ambar=aguardando ack).
+
+### 5.13 Inputs de linha inferior (login)
+
+Sem caixa fechada — só uma borda inferior que acende em foco. Classes `.line-input` + `.line-label`, label flutua para cima em `:focus`, `:not(:placeholder-shown)` **e** `:autofill`/`:-webkit-autofill` (os três precisam estar cobertos, autofill de navegador não dispara os dois primeiros de forma confiável). Cor de destaque (`aether-broto`) só aparece durante o foco ativo; preenchido-sem-foco fica em cinza.
+
+### 5.14 Botões
+
+| Tipo | Classe base | Uso |
+|---|---|---|
+| **Primário (CTA)** | `rounded-xl border border-aether-broto/40 bg-aether-broto/10 text-aether-broto` + hover `bg-aether-broto/20 shadow-glow-broto` | Ação principal de uma tela (ex: "Acessar Ecossistema") |
+| **Ícone** | `w-9 h-9 rounded-full border border-aether-border text-slate-400 hover:text-slate-100` | Ações secundárias da topbar (bio-dimming, notificações) |
+| **Pill de nav** | `px-3 py-1.5 rounded-full text-sm` | Links de navegação (topbar, sidebar) |
+
+### 5.15 Ícones
+
+Sempre **Heroicons outline**, `viewBox="0 0 24 24"`, `stroke-width="1.8"` (não usar a versão "solid"). Tamanho varia por contexto: `w-4`/`w-4.5` em badges e labels pequenos, `w-5` em nav, `w-6` em placeholders/estados vazios.
+
+---
+
+## 6. Convenções de nomenclatura
+
+| Prefixo/padrão | Significado |
+|---|---|
+| `aether-*` | Cor do design system (`@theme`) |
+| `glass-*` | Superfície glassmorphism |
+| `bio-*` | Relacionado ao mecanismo de Bio-Dimming ou aos sliders biomórficos |
+| `line-*` | Padrão de input de linha inferior (só usado no login por enquanto) |
+| `vital-*` | Indicador de vitalidade/pulso |
+| `data-dropdown*` | Hook de JS do dropdown genérico — nunca dar `id`/classe custom pra reimplementar esse comportamento |
+| Blocos Twig `layout_mode`, `module_active`, `sidebar`, `content` | Contrato entre `base.html.twig` e qualquer template filho |
+
+---
+
+## 7. Checklist para criar um novo componente/tela
+
+1. A tela estende `base.html.twig`? Definir `layout_mode` (`full` ou `sidebar`) e `module_active`.
+2. Tem alguma superfície elevada? Usar `.glass-surface` (ou `.glass-card` só se for tela isolada tipo login).
+3. Tem valor numérico/técnico? `font-mono`, nunca `font-sans`.
+4. Tem uma cor de destaque "brilhante" fora de texto pequeno? Adicionar `.bio-dimmable`.
+5. Tem uma ação que depende de confirmação de hardware? Implementar o terceiro estado "Pendente" (§5.5), não só on/off.
+6. Tem um status/alerta? Mapear pro vocabulário biológico (Estável/Atenção/Crítico), não pra semáforo genérico.
+7. Precisa de um menu suspenso? Usar o padrão `data-dropdown` (§5.4), não escrever JS novo.
+8. Vai ter CSS próprio da tela? Criar `assets/styles/pages/<nome>.css` e importar em `app.css` — nunca `<style>` inline no template nem link direto no `<head>`.
+9. Testar em mobile: a navegação principal deveria estar acessível pela bottom nav, e qualquer grid de 3 colunas deve colapsar pra 1 coluna.
+
+---
+
+## 8. Referências relacionadas
+
+- `docs/api-contract-core.md` — contrato HTTP Core C++ (formato de dados que alimenta os componentes de telemetria/status)
+- `docs/payload-telemetria-poseidon.md` — protocolo TCP do ESP32 (origem do estado "Pendente" dos toggles)
+- `docs/troubleshooting-conexao.md` — diagnóstico de queda de conexão entre as 3 camadas
+- `docs/frontend-build-setup.md` — pipeline PostCSS + Tailwind v4
