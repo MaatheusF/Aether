@@ -23,6 +23,7 @@ namespace Aether::Api
         j["message"] = dto.message;
 
         response.body = j.dump();
+        response.headers["Access-Control-Allow-Origin"] = "*";
         response.headers["Content-Type"] = "application/json";
 
         return response;
