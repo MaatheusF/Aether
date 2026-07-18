@@ -1,0 +1,72 @@
+body {
+    background-color: #0E1310;
+    background-image: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(78, 238, 148, 0.08), transparent),
+    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(0, 245, 255, 0.05), transparent);
+}
+
+/* Vidro fosco das superfícies (cards, topbar, sidebar) */
+.glass-surface {
+    background-color: rgba(20, 28, 24, 0.6);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid #22332A;
+}
+
+/* Scrollbar discreta, no tom do ecossistema */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #22332A; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #2f4636; }
+
+/* Indicador de vitalidade do Core — pulso tipo batimento/fluxo de água */
+@keyframes vital-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.6); opacity: 0.35; }
+}
+.vital-dot::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: inherit;
+    animation: vital-pulse 2.2s ease-in-out infinite;
+}
+
+/* Slider biomórfico (usado nas telas de módulo) */
+input[type="range"].bio-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 999px;
+    background: #22332A;
+}
+input[type="range"].bio-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 999px;
+    background: #4EEE94;
+    box-shadow: 0 0 10px rgba(78, 238, 148, 0.6);
+    cursor: pointer;
+    border: 2px solid #0E1310;
+}
+input[type="range"].bio-slider::-moz-range-thumb {
+    width: 16px; height: 16px;
+    border-radius: 999px;
+    background: #4EEE94;
+    box-shadow: 0 0 10px rgba(78, 238, 148, 0.6);
+    cursor: pointer;
+    border: 2px solid #0E1310;
+}
+
+/* -----------------------------------------------------------------
+   MODO BIO-DIMMING
+   Ativado via [data-bio-dim="true"] no <html> (toggle em JS no
+   topbar). Reduz o brilho das cores de destaque em ~40% para uso
+   noturno perto do ecossistema vivo, sem escurecer o texto legível.
+----------------------------------------------------------------- */
+html[data-bio-dim="true"] .bio-dimmable {
+    opacity: 0.6;
+    filter: saturate(0.75) brightness(0.85);
+    transition: opacity 0.4s ease, filter 0.4s ease;
+}
+.bio-dimmable { transition: opacity 0.4s ease, filter 0.4s ease; }
