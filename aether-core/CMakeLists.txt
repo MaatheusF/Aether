@@ -5,8 +5,11 @@ project(Aether)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+find_package(Boost REQUIRED COMPONENTS system thread)
+
 # Diretórios principais
 add_subdirectory(core)
 add_subdirectory(protocols)
 add_subdirectory(modules)
 add_subdirectory(apps)
+add_subdirectory(api)

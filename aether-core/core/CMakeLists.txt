@@ -20,6 +20,8 @@ add_library(aether_core STATIC
         network/SessionManager.cpp
         network/SessionManager.hpp
         utils/logger.hpp
+        utils/DateTime.cpp
+        utils/DateTime.hpp
         network/session/ConnSession.hpp
 )
 

@@ -18,6 +18,7 @@ target_link_libraries(aetherd
 target_link_libraries(aetherd PRIVATE aether_core ModuleTest)
 target_link_libraries(aetherd PRIVATE aether_core ModulePoseidon)
 target_link_libraries(aetherd PRIVATE ${PostgreSQL_LIBRARIES})
+target_link_libraries(aetherd PRIVATE aether_api)
 
 
 # Inclui os headers do módulo
