@@ -1,0 +1,5 @@
+# Falhas do Login
+Invalid credentials.: "Usuário ou senha inválidos."
+Username could not be found.: "Usuário não encontrado."
+Account is disabled.: "Sua conta está desativada."
+Too many failed login attempts, please try again later.: "Muitas tentativas de acesso. Aguarde alguns minutos."
