@@ -1,0 +1,97 @@
+{# ==========================================================================
+   login.html.twig — Tela de login do Aether
+   Não estende base.html.twig (tela isolada, sem topbar/sidebar).
+   Glassmorphism sobre fundo musgo profundo, inputs de linha inferior.
+========================================================================== #}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Acesso · Aether</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    {# Tailwind v4, compilado via PostCSS a partir de assets/styles/app.css (ver postcss.config.js) #}
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+</head>
+<body class="min-h-screen flex items-center justify-center px-4 font-sans text-slate-200 login-bg">
+        <main class="w-full max-w-sm">
+
+            {# Cabeçalho #}
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center gap-2 mb-3">
+                    <span class="relative w-2.5 h-2.5 rounded-full bg-aether-broto vital-dot"></span>
+                    <span class="text-2xl font-extrabold tracking-tight text-slate-50">Aether</span>
+                </div>
+                <p class="text-sm text-slate-500">Acesso ao núcleo do ecossistema</p>
+            </div>
+
+            {# Card de login #}
+            <div class="glass-card rounded-2xl p-8">
+
+                {% if error %}
+                    <div class="mb-5 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300 text-xs font-mono">
+                        {# O filtro trans traduz o erro para o idioma do usuário (ex: "Senha inválida") #}
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                {% endif %}
+
+                {# Placeholder para mensagens do Symfony (erros de autenticação etc.) #}
+                {#{% for message in app.flashes('error')|default([]) %}#}
+                    <!--<div class="mb-5 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300 text-xs font-mono">
+                        {# {{ message }}#}
+                    </div>-->
+                {#{% endfor %}#}
+
+                <form method="post" action="{{ path('app_login') }}" class="space-y-8">
+
+                    {# Campo: Identificador #}
+                    <div class="line-group relative">
+                        <input type="text" name="username" id="inputIdentificador" required
+                               class="line-input w-full py-2 text-sm text-slate-100 peer" placeholder=" "
+                               value="{{ last_username|default('') }}">
+                        <label for="inputIdentificador"
+                               class="line-label absolute left-0 top-2 text-sm text-slate-500 pointer-events-none peer-focus:text-aether-broto">
+                            Identificador
+                        </label>
+                    </div>
+
+                    {# Campo: Chave de Acesso #}
+                    <div class="line-group relative">
+                        <input type="password" name="password" id="inputChave" required
+                               class="line-input w-full py-2 text-sm text-slate-100 peer" placeholder=" ">
+                        <label for="inputChave"
+                               class="line-label absolute left-0 top-2 text-sm text-slate-500 pointer-events-none peer-focus:text-aether-broto">
+                            Chave de Acesso
+                        </label>
+                    </div>
+
+                    {# CSRF Token #}
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <!-- DESABILITADO
+                    <div class="flex items-center justify-between text-xs text-slate-500">
+                        <label class="flex items-center gap-2 cursor-pointer select-none">
+                            <input type="checkbox" name="_remember_me"
+                                   class="w-3.5 h-3.5 rounded border-aether-border bg-transparent text-aether-broto focus:ring-0 focus:ring-offset-0">
+                            Manter sessão
+                        </label>
+                        <a href="#" class="hover:text-aether-agua transition-colors">Esqueci a chave</a>
+                    </div> -->
+
+                    <button type="submit"
+                            class="w-full py-3 rounded-xl bg-aether-broto/10 border border-aether-broto/40 text-aether-broto text-sm font-semibold tracking-wide hover:bg-aether-broto/20 hover:shadow-[0_0_24px_-6px_rgba(78,238,148,0.45)] transition-all duration-300">
+                        Acessar Ecossistema
+                    </button>
+                </form>
+            </div>
+
+            <p class="text-center text-[11px] font-mono uppercase tracking-widest text-slate-600 mt-8">
+                Core v{{ aether_version }} — Acesso Restrito
+            </p>
+        </main>
+    </body>
+</html>

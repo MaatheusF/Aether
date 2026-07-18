@@ -1,0 +1,152 @@
+{% extends 'base.html.twig' %}
+
+{# ==========================================================================
+   dashboard.html.twig — Visão Macro do Ecossistema
+   layout_mode = 'full' → base.html.twig não renderiza a sidebar esquerda.
+========================================================================== #}
+
+{% block title %}Visão Geral{% endblock %}
+{% block layout_mode %}full{% endblock %}
+{% block module_active %}{% endblock %}
+
+{% block content %}
+
+    <div class="flex flex-col gap-8">
+
+        {# --------------------- Cabeçalho da página --------------------- #}
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+            <div>
+                <p class="text-xs font-mono uppercase tracking-widest text-aether-agua/70 mb-1">Core · Status Geral</p>
+                <h1 class="text-2xl md:text-3xl font-extrabold text-slate-50">Visão do Ecossistema</h1>
+            </div>
+            <p class="text-xs font-mono text-slate-500">
+                Última sincronia: <span class="text-slate-300">há 4s</span>
+            </p>
+        </div>
+
+        {# --------------------- Cards de Alerta (prioridade natural) --------------------- #}
+        {# Três estados possíveis: estavel / atencao / critico — trocar por loop com dados reais do Core #}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+            {# Estado: Estável (verde folha) #}
+            <div class="bio-dimmable relative overflow-hidden rounded-2xl glass-surface p-4 flex items-start gap-3 border-l-2 !border-l-aether-broto">
+                <span class="mt-1 w-2 h-2 rounded-full bg-aether-broto shrink-0"></span>
+                <div class="min-w-0">
+                    <p class="text-[11px] font-mono uppercase tracking-wider text-aether-broto/80">Estável</p>
+                    <p class="text-sm text-slate-200 mt-0.5">Fotoperíodo do Poseidon dentro do ciclo programado.</p>
+                </div>
+            </div>
+
+            {# Estado: Atenção (âmbar / seco) #}
+            <div class="bio-dimmable relative overflow-hidden rounded-2xl glass-surface p-4 flex items-start gap-3 border-l-2 !border-l-aether-ambar">
+                <span class="mt-1 w-2 h-2 rounded-full bg-aether-ambar shrink-0"></span>
+                <div class="min-w-0">
+                    <p class="text-[11px] font-mono uppercase tracking-wider text-aether-ambar/80">Atenção</p>
+                    <p class="text-sm text-slate-200 mt-0.5">Nível da água 6% abaixo do ideal (evaporação).</p>
+                </div>
+            </div>
+
+            {# Estado: Crítico (vermelho / toxina) #}
+            <div class="bio-dimmable relative overflow-hidden rounded-2xl glass-surface p-4 flex items-start gap-3 border-l-2 !border-l-aether-critico">
+                <span class="mt-1 w-2 h-2 rounded-full bg-aether-critico shrink-0"></span>
+                <div class="min-w-0">
+                    <p class="text-[11px] font-mono uppercase tracking-wider text-aether-critico/80">Crítico</p>
+                    <p class="text-sm text-slate-200 mt-0.5">Bomba de recirculação do Horus sem resposta.</p>
+                </div>
+            </div>
+        </div>
+
+        {# --------------------- Visual do Core: raiz/corrente conectando módulos --------------------- #}
+        <div class="glass-surface rounded-2xl p-5 md:p-6">
+            <p class="text-[11px] font-mono uppercase tracking-widest text-slate-500 mb-4">Fluxo do Core</p>
+            <svg viewBox="0 0 600 90" class="w-full h-16 md:h-20" preserveAspectRatio="none">
+                {# Linha central representando a corrente/raiz do Core #}
+                <path d="M0,45 C100,20 150,70 250,45 C350,20 400,70 500,45 C540,32 570,45 600,45"
+                      fill="none" stroke="#22332A" stroke-width="2"/>
+                <path d="M0,45 C100,20 150,70 250,45 C350,20 400,70 500,45 C540,32 570,45 600,45"
+                      fill="none" stroke="#4EEE94" stroke-width="2" stroke-dasharray="6 10" opacity="0.6">
+                    <animate attributeName="stroke-dashoffset" from="0" to="-32" dur="1.8s" repeatCount="indefinite"/>
+                </path>
+                {# Nós de ramificação — um por módulo, aceso se ONLINE #}
+                <circle cx="120" cy="34" r="5" fill="#4EEE94"/>
+                <circle cx="330" cy="30" r="5" fill="#00F5FF"/>
+                <circle cx="480" cy="58" r="5" fill="#22332A" stroke="#3a4a40" stroke-width="1"/>
+            </svg>
+        </div>
+
+        {# --------------------- Grid de módulos ativos --------------------- #}
+        <div>
+            <p class="text-[11px] font-mono uppercase tracking-widest text-slate-500 mb-3">Módulos</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+
+                {# ---- Card do módulo: Poseidon ---- #}
+                <a href="{{ path('app_modulo_poseidon') }}"
+                   class="group rounded-2xl glass-surface p-5 flex flex-col gap-4 hover:shadow-glow-agua hover:border-aether-agua/30 transition-all duration-300">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-xs font-mono text-slate-500 mb-1">MÓDULO · AQUÁRIO / PALUDÁRIO</p>
+                            <h2 class="text-lg font-bold text-slate-50">Poseidon</h2>
+                        </div>
+                        <span class="flex items-center gap-1.5 text-[11px] font-mono px-2 py-1 rounded-full bg-aether-broto/10 text-aether-broto">
+                            <span class="w-1.5 h-1.5 rounded-full bg-aether-broto"></span> ONLINE
+                        </span>
+                    </div>
+
+                    {# Telemetria rápida #}
+                    <div class="grid grid-cols-3 gap-2 pt-3 border-t border-aether-border">
+                        <div>
+                            <p class="text-[10px] font-mono text-slate-500 uppercase">Água</p>
+                            <p class="text-sm font-mono text-aether-agua">25.4°C</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-mono text-slate-500 uppercase">Umid.</p>
+                            <p class="text-sm font-mono text-aether-broto">78%</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-mono text-slate-500 uppercase">Luz</p>
+                            <p class="text-sm font-mono text-aether-ambar">6500K</p>
+                        </div>
+                    </div>
+                </a>
+
+                {# ---- Card do módulo: Horus ---- #}
+                <a href="#"
+                   class="group rounded-2xl glass-surface p-5 flex flex-col gap-4 hover:shadow-glow-broto hover:border-aether-broto/30 transition-all duration-300">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-xs font-mono text-slate-500 mb-1">MÓDULO · SEGURANÇA</p>
+                            <h2 class="text-lg font-bold text-slate-50">Horus</h2>
+                        </div>
+                        <span class="flex items-center gap-1.5 text-[11px] font-mono px-2 py-1 rounded-full bg-aether-critico/10 text-aether-critico">
+                            <span class="w-1.5 h-1.5 rounded-full bg-aether-critico"></span> ALERTA
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 pt-3 border-t border-aether-border">
+                        <div>
+                            <p class="text-[10px] font-mono text-slate-500 uppercase">Câmeras</p>
+                            <p class="text-sm font-mono text-slate-200">4/4</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-mono text-slate-500 uppercase">Sensores</p>
+                            <p class="text-sm font-mono text-slate-200">11/12</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-mono text-slate-500 uppercase">Bomba</p>
+                            <p class="text-sm font-mono text-aether-critico">falha</p>
+                        </div>
+                    </div>
+                </a>
+
+                {# ---- Card placeholder para próximos módulos ---- #}
+                <div class="rounded-2xl border border-dashed border-aether-border p-5 flex flex-col items-center justify-center text-center gap-2 text-slate-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                    <p class="text-xs font-mono">Novo módulo</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
