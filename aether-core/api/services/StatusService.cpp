@@ -1,4 +1,5 @@
 #include "../services/StatusService.hpp"
+#include "../core/utils/DateTime.hpp"
 
 namespace Aether::Api
 {
@@ -8,8 +9,10 @@ namespace Aether::Api
     Dto::StatusResponse StatusService::get()
     {
         return {
-            true,
-            "Aether operando com sucesso!"
+            "UP",
+            "Aether",
+            Aether::Core::Utils::DateTime::now_Iso8601(),
+            "Core is operational"
         };
     }
 }

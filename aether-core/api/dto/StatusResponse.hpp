@@ -15,7 +15,9 @@ namespace Aether::Api::Dto
      */
     struct StatusResponse
     {
-        bool status;            /**< Status da API (true = funcional, false = falha)*/
+        std::string status;     /**< Status da API ("UP" = funcional, "Down" = Existe alguma falha)*/
+        std::string name;       /**< Nome da API */
+        std::string timestamp;  /**< Timestamp da resposta */
         std::string message;    /**< Mensagem de status */
     };
 }
