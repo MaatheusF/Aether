@@ -1,8 +1,0 @@
-twig:
-    file_name_pattern: '*.twig'
-    globals:
-        aether_version: '%env(AETHER_VERSION)%'
-
-when@test:
-    twig:
-        strict_variables: true
