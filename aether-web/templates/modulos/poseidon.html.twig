@@ -89,12 +89,33 @@
             </span>
         </div>
 
+        {# --------------------- Aviso: dispositivo sem conexão --------------------- #}
+        {# Sem isso, os controles da Zona 1 pareceriam funcionais mesmo sem o
+           Core conseguir falar com o ESP32 — importante desde que um mesmo
+           módulo passou a ter dispositivos que podem estar offline enquanto
+           outros seguem online. #}
+        {% if dispositivo.status != 'online' %}
+            <div class="rounded-xl border p-3 flex items-center gap-2.5 text-sm
+                {{ dispositivo.status == 'alert' ? 'border-aether-critico/40 bg-aether-critico/[0.06] text-aether-critico' : 'border-aether-border bg-white/[0.02] text-slate-400' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4 h-4 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                </svg>
+                {% if dispositivo.status == 'alert' %}
+                    Este dispositivo reportou uma falha e pode não estar respondendo a comandos.
+                {% else %}
+                    Sem conexão com o Core — os controles abaixo estão indisponíveis e a telemetria pode estar desatualizada.
+                {% endif %}
+            </div>
+        {% endif %}
+
         {# =====================================================================
            ZONA 1 — Ações Rápidas
            Toggles e botões de parâmetros. Estado "Pendente" previsto para
            quando o clique aguarda confirmação do hardware via Core C++.
+           Fica visualmente desabilitada quando o dispositivo está offline —
+           ver aviso acima.
         ===================================================================== #}
-        <section class="glass-surface rounded-2xl p-5 md:p-6">
+        <section class="glass-surface rounded-2xl p-5 md:p-6 {{ dispositivo.status == 'offline' ? 'opacity-40 pointer-events-none' : '' }}">
             <p class="text-[11px] font-mono uppercase tracking-widest text-slate-500 mb-4">Zona 1 · Ações Rápidas</p>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

@@ -104,6 +104,27 @@ grid grid-cols-1 lg:grid-cols-3 gap-4                  /* zonas internas de mód
 ```
 Regra geral: **1 coluna até o breakpoint em que o conteúdo realmente cabe confortável** — nunca forçar 2-3 colunas apertadas no mobile.
 
+### 3.3 Módulos com múltiplos dispositivos
+
+Um módulo (Poseidon, e futuramente outros) pode ter mais de um ESP32 acoplado — ex: vários aquários/paludários rodando o mesmo módulo. Isso muda a rota e a sidebar:
+
+- **Rota:** `/modulos/{modulo}` sem device vira redirect pro primeiro dispositivo conhecido; a página real vive em `/modulos/{modulo}/{slug}` (nome de rota `app_modulo_{modulo}_dispositivo`). Nunca renderizar a página do módulo sem um dispositivo resolvido — se não houver nenhum cadastrado, mostrar o estado vazio (ver `modulos/poseidon.html.twig`), não uma tela quebrada.
+- **`slug` do dispositivo:** deve ser o mesmo valor usado como `device_name` no handshake TCP do Core (ver `docs/core/BuildAndRun.md`/`ConnSession`) — é o que amarra "o card que o usuário clicou" a "o ESP32 que o Core está falando".
+- **Sidebar:** ganha um bloco de **Seletor de dispositivo** acima dos submenus — lista todos os dispositivos do módulo com um ponto de status (`bg-aether-broto` online / `bg-aether-critico` alerta / `bg-slate-600` offline) e destaca o selecionado com o mesmo padrão visual dos submenus ativos (`bg-{cor}/10 text-{cor} font-medium`). Os submenus abaixo (Visão Geral/Iluminação/etc.) continuam sendo por-módulo, mas exibidos no contexto do dispositivo selecionado.
+- **Dashboard:** o card do módulo na grade principal deixa de ser único — vira um `{% for %}` sobre a lista de dispositivos, um card por device, todos linkando pra rota com o `slug` correspondente. Reaproveita exatamente o mesmo componente de card de módulo (`5.9` mais abaixo), só parametrizado.
+- **Fonte da lista de dispositivos:** nunca duplicar em mais de um controller. Um serviço dedicado (ex: `PoseidonDeviceProvider`) é a única fonte, injetado tanto no controller do dashboard quanto no do módulo — hoje pode retornar dados mock, depois passa a chamar o Core, sem os controllers/templates saberem a diferença.
+- **Estado offline/alerta desabilita a Zona 1:** quando `dispositivo.status != 'online'`, mostrar um aviso (`⚠` + texto) acima das zonas e aplicar `opacity-40 pointer-events-none` na seção de Ações Rápidas — nunca deixar toggles/sliders parecendo funcionais para um dispositivo sem conexão confirmada.
+
+### 3.4 Bottom nav mobile: "Mais" em vez de lotar a barra
+
+A bottom nav fica travada em no máximo **3 itens fixos** (Visão Geral + 1-2 destinos de uso diário) + um botão **"Mais"** (ícone de grade) que abre uma folha deslizando de baixo (`glass-surface`, `rounded-t-2xl`, overlay escuro atrás) listando os demais módulos. Todo módulo novo entra primeiro na folha "Mais" — só ganha um ícone fixo na barra se o uso justificar, e mesmo assim tirando espaço de outro item, nunca só adicionando mais um slot. Isso evita repetir o bug que motivou essa seção: um módulo existir no menu superior (desktop) e não ter nenhum caminho de acesso no mobile.
+
+Padrão de implementação: mesma lógica do drawer da sidebar (`-translate-x-full` ↔ removido, overlay com `hidden` ↔ removido) — só que no eixo vertical (`translate-y-[120%]` ↔ removido) e ancorado acima da própria bottom nav (`bottom-16`), não por cima dela.
+
+### 3.5 Faixa de resumo (dashboard)
+
+Bloco curto (`glass-surface rounded-2xl p-4 flex flex-wrap gap-x-8`) no topo do dashboard, acima dos Cards de Alerta, com 2-4 números-chave em `font-mono` (ex: dispositivos totais, online, alertas ativos). Vem de um cálculo simples no controller (nunca em Twig com filtros de array — mantém a lógica testável em PHP puro), não é um componente decorativo — deve refletir dado real assim que existir fonte pra isso.
+
 ---
 
 ## 4. Estrutura de arquivos
@@ -119,15 +140,19 @@ templates/
 ├── login.html.twig       ← tela isolada, não estende base
 ├── dashboard.html.twig   ← extends base, layout_mode = full
 └── modulos/
-    └── poseidon.html.twig ← extends base, layout_mode = sidebar
+    └── poseidon.html.twig ← extends base, layout_mode = sidebar, escopado por dispositivo (ver §3.3)
 
 src/Controller/
 ├── SecurityController.php   ← app_login, app_logout
-├── DashboardController.php  ← app_dashboard
-└── ModuloController.php     ← app_modulo_poseidon (novos módulos = novos métodos aqui)
+├── DashboardController.php  ← app_dashboard (injeta PoseidonDeviceProvider)
+└── ModuloController.php     ← app_modulo_poseidon (redirect) + app_modulo_poseidon_dispositivo
+
+src/Service/Poseidon/
+├── PoseidonDevice.php         ← value object (slug, nome, tipo, status, telemetria)
+└── PoseidonDeviceProvider.php ← fonte única da lista de dispositivos (mock hoje, API do Core depois)
 ```
 
-**Convenção para novo módulo (ex: Horus):** replicar o padrão do Poseidon — `templates/modulos/horus.html.twig` estendendo `base.html.twig`, método novo em `ModuloController`, rota `app_modulo_horus`, e (se precisar de CSS próprio) `assets/styles/pages/horus.css` importado em `app.css`.
+**Convenção para novo módulo (ex: Horus):** replicar o padrão do Poseidon — `templates/modulos/horus.html.twig` estendendo `base.html.twig`, controller com rota índice + rota por dispositivo, um `HorusDeviceProvider` próprio em `src/Service/Horus/`, e (se precisar de CSS próprio) `assets/styles/pages/horus.css` importado em `app.css`. Não reaproveitar `PoseidonDeviceProvider` pra outro módulo — cada módulo tem sua própria fonte de dispositivos, mesmo que a forma seja idêntica.
 
 ---
 
@@ -196,6 +221,10 @@ Três estados fixos, cada um com cor + borda esquerda + texto — nunca usar ver
 | **Crítico** | `aether-critico` | `border-l-2 !border-l-aether-critico` | Falha real, precisa de ação |
 
 Estrutura: `glass-surface p-4 flex items-start gap-3`, ponto colorido (`w-2 h-2 rounded-full`) + eyebrow `text-[11px] font-mono uppercase` na cor do estado + texto em `text-sm text-slate-200`. Sempre envolvido pela classe `.bio-dimmable` (ver §5.8).
+
+**Sempre nomear o dispositivo no eyebrow** (`Atenção · Aquário da Sala`, não só `Atenção`) — com um módulo podendo ter vários ESP32 (ver §3.3), um alerta sem o nome do dispositivo é ambíguo.
+
+**Cuidado com classe Tailwind dinâmica:** nunca monte a classe por interpolação (`bg-{{ variavel }}`) — o Tailwind só gera CSS para classes que aparecem por extenso em algum arquivo escaneado. Use sempre uma ternária Twig com a string completa por branch (`{{ nivel == 'critico' ? 'bg-aether-critico' : '...' }}`), como já é feito para `dispositivo.status` em outros componentes.
 
 ### 5.7 Indicador de vitalidade (`.vital-dot`)
 

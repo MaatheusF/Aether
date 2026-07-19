@@ -24,36 +24,42 @@
             </p>
         </div>
 
+        {# --------------------- Resumo rápido --------------------- #}
+        <div class="glass-surface rounded-2xl p-4 flex flex-wrap items-center gap-x-8 gap-y-3">
+            <div>
+                <p class="text-[10px] font-mono uppercase tracking-widest text-slate-500">Dispositivos</p>
+                <p class="text-lg font-mono text-slate-100">{{ resumo.dispositivos_total }}</p>
+            </div>
+            <div>
+                <p class="text-[10px] font-mono uppercase tracking-widest text-slate-500">Online</p>
+                <p class="text-lg font-mono text-aether-broto">{{ resumo.dispositivos_online }}</p>
+            </div>
+            <div>
+                <p class="text-[10px] font-mono uppercase tracking-widest text-slate-500">Alertas ativos</p>
+                <p class="text-lg font-mono text-aether-ambar">{{ alertas|length }}</p>
+            </div>
+        </div>
+
         {# --------------------- Cards de Alerta (prioridade natural) --------------------- #}
-        {# Três estados possíveis: estavel / atencao / critico — trocar por loop com dados reais do Core #}
+        {# Três estados possíveis: estavel / atencao / critico — 'alertas' vem do
+           DashboardController (mock hoje, Core depois); cada card referencia o
+           dispositivo específico, necessário desde que o Poseidon passou a
+           suportar mais de um ESP32 — sem isso, "nível da água baixo" é ambíguo. #}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-            {# Estado: Estável (verde folha) #}
-            <div class="bio-dimmable relative overflow-hidden rounded-2xl glass-surface p-4 flex items-start gap-3 border-l-2 !border-l-aether-broto">
-                <span class="mt-1 w-2 h-2 rounded-full bg-aether-broto shrink-0"></span>
-                <div class="min-w-0">
-                    <p class="text-[11px] font-mono uppercase tracking-wider text-aether-broto/80">Estável</p>
-                    <p class="text-sm text-slate-200 mt-0.5">Fotoperíodo do Poseidon dentro do ciclo programado.</p>
+            {% for alerta in alertas %}
+                <div class="bio-dimmable relative overflow-hidden rounded-2xl glass-surface p-4 flex items-start gap-3 border-l-2
+                    {{ alerta.nivel == 'critico' ? '!border-l-aether-critico' : (alerta.nivel == 'atencao' ? '!border-l-aether-ambar' : '!border-l-aether-broto') }}">
+                    <span class="mt-1 w-2 h-2 rounded-full shrink-0
+                        {{ alerta.nivel == 'critico' ? 'bg-aether-critico' : (alerta.nivel == 'atencao' ? 'bg-aether-ambar' : 'bg-aether-broto') }}"></span>
+                    <div class="min-w-0">
+                        <p class="text-[11px] font-mono uppercase tracking-wider
+                            {{ alerta.nivel == 'critico' ? 'text-aether-critico/80' : (alerta.nivel == 'atencao' ? 'text-aether-ambar/80' : 'text-aether-broto/80') }}">
+                            {{ alerta.nivel == 'critico' ? 'Crítico' : (alerta.nivel == 'atencao' ? 'Atenção' : 'Estável') }} · {{ alerta.dispositivo }}
+                        </p>
+                        <p class="text-sm text-slate-200 mt-0.5">{{ alerta.mensagem }}</p>
+                    </div>
                 </div>
-            </div>
-
-            {# Estado: Atenção (âmbar / seco) #}
-            <div class="bio-dimmable relative overflow-hidden rounded-2xl glass-surface p-4 flex items-start gap-3 border-l-2 !border-l-aether-ambar">
-                <span class="mt-1 w-2 h-2 rounded-full bg-aether-ambar shrink-0"></span>
-                <div class="min-w-0">
-                    <p class="text-[11px] font-mono uppercase tracking-wider text-aether-ambar/80">Atenção</p>
-                    <p class="text-sm text-slate-200 mt-0.5">Nível da água 6% abaixo do ideal (evaporação).</p>
-                </div>
-            </div>
-
-            {# Estado: Crítico (vermelho / toxina) #}
-            <div class="bio-dimmable relative overflow-hidden rounded-2xl glass-surface p-4 flex items-start gap-3 border-l-2 !border-l-aether-critico">
-                <span class="mt-1 w-2 h-2 rounded-full bg-aether-critico shrink-0"></span>
-                <div class="min-w-0">
-                    <p class="text-[11px] font-mono uppercase tracking-wider text-aether-critico/80">Crítico</p>
-                    <p class="text-sm text-slate-200 mt-0.5">Bomba de recirculação do Horus sem resposta.</p>
-                </div>
-            </div>
+            {% endfor %}
         </div>
 
         {# --------------------- Visual do Core: raiz/corrente conectando módulos --------------------- #}
