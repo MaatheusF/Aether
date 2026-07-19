@@ -34,7 +34,7 @@
 <body class="bg-aether-bg text-slate-200 font-sans min-h-screen antialiased">
 
 {# ======================= TOPBAR — "O Dossel" ======================= #}
-<header class="fixed top-0 inset-x-0 z-40 h-16 glass-surface">
+<header class="fixed top-0 inset-x-0 z-40 h-16 glass-fixed">
     <div class="h-full mx-auto max-w-[1600px] px-4 md:px-6 flex items-center justify-between gap-4">
 
         {# --- Esquerda: logo + vitalidade do Core --- #}
@@ -124,7 +124,7 @@
 {# ============ Botão flutuante para abrir a sidebar no mobile (só aparece em páginas com sidebar) ============ #}
 {% if block('layout_mode') == 'sidebar' %}
     <button type="button" id="sidebar-open-btn"
-            class="lg:hidden fixed z-30 top-[4.5rem] left-4 flex items-center gap-2 px-3 py-1.5 rounded-full glass-surface text-xs font-medium text-slate-300">
+            class="lg:hidden fixed z-30 top-[4.5rem] left-4 flex items-center gap-2 px-3 py-1.5 rounded-full glass-fixed text-xs font-medium text-slate-300">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4 h-4">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" />
         </svg>
@@ -143,7 +143,7 @@
         <aside id="sidebar"
                class="fixed z-50 lg:z-10 top-0 lg:top-16 left-0 h-full lg:h-[calc(100vh-4rem)] w-64 shrink-0
                       -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-out
-                      glass-surface lg:bg-aether-surface/40 lg:border-r lg:border-t-0 lg:border-b-0 lg:border-l-0
+                      glass-fixed lg:bg-aether-surface/40 lg:border-r lg:border-t-0 lg:border-b-0 lg:border-l-0
                       p-4 overflow-y-auto">
             <div class="flex items-center justify-between mb-6 lg:hidden">
                 <span class="text-xs font-mono uppercase tracking-widest text-slate-500">Submenus</span>
@@ -166,7 +166,7 @@
 </div>
 
 {# ======================= BOTTOM NAV — mobile, estilo app ======================= #}
-<nav class="md:hidden fixed bottom-0 inset-x-0 z-40 h-16 glass-surface flex items-stretch">
+<nav class="md:hidden fixed bottom-0 inset-x-0 z-40 h-16 glass-fixed flex items-stretch">
     <a href="{{ path('app_dashboard') }}" class="flex-1 flex flex-col items-center justify-center gap-1 {{ module_active|default('') == '' ? 'text-aether-broto' : 'text-slate-500' }}">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-5 h-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75" />
@@ -195,7 +195,7 @@
 {# --------------------- Folha "Mais módulos" (mobile) --------------------- #}
 <div id="mobile-more-overlay" class="md:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm hidden"></div>
 <div id="mobile-more-sheet"
-     class="md:hidden fixed z-50 inset-x-0 bottom-16 translate-y-[120%] transition-transform duration-300 ease-out glass-surface rounded-t-2xl p-4">
+     class="md:hidden fixed z-50 inset-x-0 bottom-16 translate-y-[120%] transition-transform duration-300 ease-out glass-fixed rounded-t-2xl p-4">
     <div class="flex items-center justify-between mb-3">
         <span class="text-xs font-mono uppercase tracking-widest text-slate-500">Módulos</span>
         <button type="button" id="mobile-more-close-btn" class="text-slate-400 hover:text-slate-100">

@@ -53,11 +53,24 @@ body {
    Superfícies em vidro fosco (glassmorphism)
 ========================================================================== */
 
-/* Cards, topbar e sidebar (base.html.twig e telas de módulo) */
+/* Cards, seções de conteúdo, dropdown — elementos que rolam com a página,
+   então o backdrop-filter só é calculado uma vez, na pintura inicial. */
 .glass-surface {
     background-color: rgba(20, 28, 24, 0.6);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
+    border: 1px solid #22332A;
+}
+
+/* Topbar, bottom nav, sidebar mobile, folha "Mais" — elementos POSITION:FIXED.
+   Propositalmente SEM backdrop-filter: um elemento fixo fica sempre na tela
+   enquanto o conteúdo desliza por trás, então o navegador teria que
+   recalcular o blur a cada frame de scroll (custo alto, principalmente em
+   GPUs de celular). Fundo opaco chega perto o suficiente do efeito visual
+   sem esse custo — ver docs/web/frontend/DesignSystem.md §5.1.
+*/
+.glass-fixed {
+    background-color: rgba(14, 19, 16, 0.92);
     border: 1px solid #22332A;
 }
 

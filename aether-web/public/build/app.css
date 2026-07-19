@@ -1282,6 +1282,10 @@ body {
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid #22332A;
 }
+.glass-fixed {
+  background-color: rgba(14, 19, 16, 0.92);
+  border: 1px solid #22332A;
+}
 .glass-card {
   background-color: rgba(20, 28, 24, 0.6);
   backdrop-filter: blur(18px);
