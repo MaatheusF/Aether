@@ -4,44 +4,88 @@
    modulos/poseidon.html.twig — Módulo Poseidon (Aquário / Paludário)
    layout_mode = 'sidebar' → base.html.twig renderiza a sidebar esquerda
    ("Raízes") preenchida abaixo, e ativa o botão de abrir drawer no mobile.
+
+   Variáveis esperadas (ver ModuloController::poseidonDispositivo):
+     - dispositivos : PoseidonDevice[]  — todos os dispositivos do módulo
+     - dispositivo   : PoseidonDevice|null — o selecionado nesta página
+       (null só quando não existe nenhum dispositivo cadastrado ainda)
 ========================================================================== #}
 
-{% block title %}Poseidon{% endblock %}
+{% block title %}{{ dispositivo ? dispositivo.nome : 'Poseidon' }}{% endblock %}
 {% block layout_mode %}sidebar{% endblock %}
 {% block module_active %}poseidon{% endblock %}
 
-{# --------------------- Sidebar: submenus do módulo Poseidon --------------------- #}
+{# --------------------- Sidebar: dispositivos + submenus --------------------- #}
 {% block sidebar %}
     <p class="text-[11px] font-mono uppercase tracking-widest text-aether-agua/70 mb-3 px-2">Poseidon</p>
-    <nav class="flex flex-col gap-1 text-sm">
-        <a href="#" class="px-3 py-2 rounded-lg bg-aether-agua/10 text-aether-agua font-medium">Visão Geral</a>
-        <a href="#" class="px-3 py-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-white/5 transition-colors">Iluminação</a>
-        <a href="#" class="px-3 py-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-white/5 transition-colors">Filtragem</a>
-        <a href="#" class="px-3 py-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-white/5 transition-colors">Clima</a>
-        <a href="#" class="px-3 py-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-white/5 transition-colors">Logs</a>
-    </nav>
 
-    <div class="mt-8 pt-4 border-t border-aether-border">
-        <p class="text-[10px] font-mono uppercase tracking-widest text-slate-600 mb-2 px-2">Status do módulo</p>
-        <div class="px-2 flex items-center gap-2 text-xs text-aether-broto">
-            <span class="relative w-1.5 h-1.5 rounded-full bg-aether-broto vital-dot"></span>
-            Conectado ao Core
+    {# --- Seletor de dispositivo — um Poseidon pode ter vários ESP32 acoplados --- #}
+    {% if dispositivos|length > 0 %}
+        <p class="text-[10px] font-mono uppercase tracking-widest text-slate-600 mb-2 px-2">Dispositivos</p>
+        <nav class="flex flex-col gap-1 text-sm mb-6">
+            {% for d in dispositivos %}
+                {% set ativo = dispositivo and d.slug == dispositivo.slug %}
+                <a href="{{ path('app_modulo_poseidon_dispositivo', { slug: d.slug }) }}"
+                   class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors {{ ativo ? 'bg-aether-agua/10 text-aether-agua font-medium' : 'text-slate-400 hover:text-slate-100 hover:bg-white/5' }}">
+                    <span class="w-1.5 h-1.5 rounded-full shrink-0 {{ d.status == 'online' ? 'bg-aether-broto' : (d.status == 'alert' ? 'bg-aether-critico' : 'bg-slate-600') }}"></span>
+                    <span class="truncate">{{ d.nome }}</span>
+                </a>
+            {% endfor %}
+        </nav>
+    {% endif %}
+
+    {# --- Submenus do dispositivo selecionado --- #}
+    {% if dispositivo %}
+        <p class="text-[10px] font-mono uppercase tracking-widest text-slate-600 mb-2 px-2">{{ dispositivo.nome }}</p>
+        <nav class="flex flex-col gap-1 text-sm">
+            <a href="#" class="px-3 py-2 rounded-lg bg-aether-agua/10 text-aether-agua font-medium">Visão Geral</a>
+            <a href="#" class="px-3 py-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-white/5 transition-colors">Iluminação</a>
+            <a href="#" class="px-3 py-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-white/5 transition-colors">Filtragem</a>
+            <a href="#" class="px-3 py-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-white/5 transition-colors">Clima</a>
+            <a href="#" class="px-3 py-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-white/5 transition-colors">Logs</a>
+        </nav>
+
+        <div class="mt-8 pt-4 border-t border-aether-border">
+            <p class="text-[10px] font-mono uppercase tracking-widest text-slate-600 mb-2 px-2">Status do dispositivo</p>
+            <div class="px-2 flex items-center gap-2 text-xs {{ dispositivo.status == 'online' ? 'text-aether-broto' : 'text-slate-500' }}">
+                {% if dispositivo.status == 'online' %}
+                    <span class="relative w-1.5 h-1.5 rounded-full bg-aether-broto vital-dot"></span>
+                    Conectado ao Core
+                {% else %}
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                    Sem conexão
+                {% endif %}
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
+
+    {% if dispositivo is null %}
+        {# --------------------- Estado vazio: nenhum dispositivo cadastrado --------------------- #}
+        <div class="glass-surface rounded-2xl p-8 flex flex-col items-center justify-center text-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-8 h-8 text-slate-600">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21c-4.97 0-9-3.5-9-8 0-3.5 3-6 4.5-9.5C9 6 10.5 3 12 3s3 3 4.5 4.5C18 11 21 9.5 21 13c0 4.5-4.03 8-9 8Z" />
+            </svg>
+            <p class="text-sm text-slate-400">Nenhum dispositivo Poseidon cadastrado ainda.</p>
+        </div>
+    {% else %}
 
     <div class="flex flex-col gap-6">
 
         {# --------------------- Cabeçalho --------------------- #}
         <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
             <div>
-                <p class="text-xs font-mono uppercase tracking-widest text-aether-agua/70 mb-1">Módulo · Poseidon</p>
-                <h1 class="text-2xl md:text-3xl font-extrabold text-slate-50">Aquário / Paludário</h1>
+                <p class="text-xs font-mono uppercase tracking-widest text-aether-agua/70 mb-1">
+                    Módulo · Poseidon {{ dispositivo.tipo == 'paludario' ? '· Paludário' : '· Aquário' }}
+                </p>
+                <h1 class="text-2xl md:text-3xl font-extrabold text-slate-50">{{ dispositivo.nome }}</h1>
             </div>
-            <span class="inline-flex w-fit items-center gap-1.5 text-[11px] font-mono px-2.5 py-1 rounded-full bg-aether-broto/10 text-aether-broto">
-                <span class="w-1.5 h-1.5 rounded-full bg-aether-broto"></span> ONLINE
+            <span class="inline-flex w-fit items-center gap-1.5 text-[11px] font-mono px-2.5 py-1 rounded-full
+                {{ dispositivo.status == 'online' ? 'bg-aether-broto/10 text-aether-broto' : (dispositivo.status == 'alert' ? 'bg-aether-critico/10 text-aether-critico' : 'bg-white/5 text-slate-500') }}">
+                <span class="w-1.5 h-1.5 rounded-full {{ dispositivo.status == 'online' ? 'bg-aether-broto' : (dispositivo.status == 'alert' ? 'bg-aether-critico' : 'bg-slate-500') }}"></span>
+                {{ dispositivo.status == 'online' ? 'ONLINE' : (dispositivo.status == 'alert' ? 'ALERTA' : 'OFFLINE') }}
             </span>
         </div>
 
@@ -62,6 +106,7 @@
                         <p class="text-[11px] font-mono text-aether-broto">ativa</p>
                     </div>
                     <button type="button" role="switch" aria-checked="true"
+                            data-relay="cascata" data-dispositivo="{{ dispositivo.slug }}"
                             class="relative w-11 h-6 rounded-full bg-aether-broto/30 border border-aether-broto/50 transition-colors">
                         <span class="absolute top-0.5 right-0.5 w-4.5 h-4.5 rounded-full bg-aether-broto shadow-glow-broto transition-all"></span>
                     </button>
@@ -74,6 +119,7 @@
                         <p class="text-[11px] font-mono text-slate-500">inativa</p>
                     </div>
                     <button type="button" role="switch" aria-checked="false"
+                            data-relay="nevoa" data-dispositivo="{{ dispositivo.slug }}"
                             class="relative w-11 h-6 rounded-full bg-white/5 border border-aether-border transition-colors">
                         <span class="absolute top-0.5 left-0.5 w-4.5 h-4.5 rounded-full bg-slate-500 transition-all"></span>
                     </button>
@@ -91,6 +137,7 @@
                         </p>
                     </div>
                     <button type="button" role="switch" aria-checked="true" disabled
+                            data-relay="bombeamento" data-dispositivo="{{ dispositivo.slug }}"
                             class="relative w-11 h-6 rounded-full bg-aether-ambar/20 border border-aether-ambar/40 opacity-70 cursor-wait">
                         <span class="absolute top-0.5 right-0.5 w-4.5 h-4.5 rounded-full bg-aether-ambar/80"></span>
                     </button>
@@ -126,7 +173,9 @@
         {# =====================================================================
            ZONA 2 — Telemetria
            Placeholders tracejados para gráficos fluidos (Chart.js) de
-           temperatura e umidade.
+           temperatura e umidade. IDs dos canvas incluem o slug do
+           dispositivo — necessário porque a mesma página de módulo pode
+           futuramente renderizar gráficos de mais de um dispositivo.
         ===================================================================== #}
         <section class="glass-surface rounded-2xl p-5 md:p-6">
             <p class="text-[11px] font-mono uppercase tracking-widest text-slate-500 mb-4">Zona 2 · Telemetria</p>
@@ -138,7 +187,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.5 8 8l4 4 5.5-6.5M21 8v5.5m0 0h-5.5" />
                     </svg>
                     <p class="text-xs font-mono text-center px-4">
-                        Gráfico de Temperatura (água / ar)<br><span class="text-slate-700">canvas Chart.js — id="chart-temperatura"</span>
+                        Gráfico de Temperatura (água / ar)<br>
+                        <span class="text-slate-700">canvas Chart.js — id="chart-temperatura-{{ dispositivo.slug }}"</span>
                     </p>
                 </div>
 
@@ -148,7 +198,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 21c-4.5-4.5-7.5-8-7.5-11.5A7.5 7.5 0 0 1 12 2a7.5 7.5 0 0 1 7.5 7.5c0 3.5-3 7-7.5 11.5Z" />
                     </svg>
                     <p class="text-xs font-mono text-center px-4">
-                        Umidade do Solo (círculos concêntricos)<br><span class="text-slate-700">canvas Chart.js — id="chart-umidade"</span>
+                        Umidade do Solo (círculos concêntricos)<br>
+                        <span class="text-slate-700">canvas Chart.js — id="chart-umidade-{{ dispositivo.slug }}"</span>
                     </p>
                 </div>
             </div>
@@ -156,7 +207,8 @@
 
         {# =====================================================================
            ZONA 3 — Console de Logs
-           Terminal simulando o fluxo de dados brutos do Core C++.
+           Terminal simulando o fluxo de dados brutos do Core C++, filtrado
+           para o dispositivo selecionado.
         ===================================================================== #}
         <section class="glass-surface rounded-2xl p-5 md:p-6">
             <div class="flex items-center justify-between mb-3">
@@ -166,18 +218,19 @@
                 </span>
             </div>
 
+            {# Cada linha representa um pacote recebido do Core PARA ESTE dispositivo —
+               substituir por loop Twig/JS filtrando pelo device_name = dispositivo.slug #}
             <div class="rounded-xl bg-black/30 border border-aether-border p-4 h-48 overflow-y-auto font-mono text-xs leading-relaxed">
-                {# Cada linha representa um pacote recebido do Core — substituir por loop Twig com dados reais #}
-                <p class="text-slate-600">[12:04:01] <span class="text-aether-broto">poseidon.core</span> :: heartbeat ok</p>
-                <p class="text-slate-600">[12:04:03] <span class="text-aether-agua">sensor.temp_agua</span> :: 25.4°C</p>
-                <p class="text-slate-600">[12:04:03] <span class="text-aether-agua">sensor.umidade</span> :: 78%</p>
-                <p class="text-slate-600">[12:04:06] <span class="text-aether-ambar">actuator.bomba</span> :: aguardando ack...</p>
-                <p class="text-slate-600">[12:04:07] <span class="text-aether-broto">poseidon.core</span> :: heartbeat ok</p>
-                <p class="text-slate-500">[12:04:09] sensor.luz :: 6500K / 72%</p>
-                <p class="text-slate-600">[12:04:11] <span class="text-aether-broto">poseidon.core</span> :: heartbeat ok</p>
+                <p class="text-slate-600">[12:04:01] <span class="text-aether-agua">{{ dispositivo.slug }}</span> :: heartbeat ok</p>
+                <p class="text-slate-600">[12:04:03] <span class="text-aether-agua">{{ dispositivo.slug }}</span> :: sensor.temp_agua :: {{ dispositivo.telemetria.temp_agua|default('--') }}</p>
+                <p class="text-slate-600">[12:04:03] <span class="text-aether-agua">{{ dispositivo.slug }}</span> :: sensor.umidade :: {{ dispositivo.telemetria.umidade|default('--') }}</p>
+                <p class="text-slate-600">[12:04:06] <span class="text-aether-ambar">{{ dispositivo.slug }}</span> :: actuator.bomba :: aguardando ack...</p>
+                <p class="text-slate-600">[12:04:07] <span class="text-aether-broto">{{ dispositivo.slug }}</span> :: heartbeat ok</p>
             </div>
         </section>
 
     </div>
+
+    {% endif %}
 
 {% endblock %}

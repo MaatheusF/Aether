@@ -79,35 +79,41 @@
             <p class="text-[11px] font-mono uppercase tracking-widest text-slate-500 mb-3">Módulos</p>
             <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
 
-                {# ---- Card do módulo: Poseidon ---- #}
-                <a href="{{ path('app_modulo_poseidon') }}"
-                   class="group rounded-2xl glass-surface p-5 flex flex-col gap-4 hover:shadow-glow-agua hover:border-aether-agua/30 transition-all duration-300">
-                    <div class="flex items-start justify-between">
-                        <div>
-                            <p class="text-xs font-mono text-slate-500 mb-1">MÓDULO · AQUÁRIO / PALUDÁRIO</p>
-                            <h2 class="text-lg font-bold text-slate-50">Poseidon</h2>
+                {# ---- Cards do módulo Poseidon — um por dispositivo (ESP32) acoplado ---- #}
+                {% for d in dispositivos_poseidon %}
+                    <a href="{{ path('app_modulo_poseidon_dispositivo', { slug: d.slug }) }}"
+                       class="group rounded-2xl glass-surface p-5 flex flex-col gap-4 hover:shadow-glow-agua hover:border-aether-agua/30 transition-all duration-300">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-xs font-mono text-slate-500 mb-1">
+                                    POSEIDON · {{ d.tipo == 'paludario' ? 'PALUDÁRIO' : 'AQUÁRIO' }}
+                                </p>
+                                <h2 class="text-lg font-bold text-slate-50">{{ d.nome }}</h2>
+                            </div>
+                            <span class="flex items-center gap-1.5 text-[11px] font-mono px-2 py-1 rounded-full
+                                {{ d.status == 'online' ? 'bg-aether-broto/10 text-aether-broto' : (d.status == 'alert' ? 'bg-aether-critico/10 text-aether-critico' : 'bg-white/5 text-slate-500') }}">
+                                <span class="w-1.5 h-1.5 rounded-full {{ d.status == 'online' ? 'bg-aether-broto' : (d.status == 'alert' ? 'bg-aether-critico' : 'bg-slate-500') }}"></span>
+                                {{ d.status == 'online' ? 'ONLINE' : (d.status == 'alert' ? 'ALERTA' : 'OFFLINE') }}
+                            </span>
                         </div>
-                        <span class="flex items-center gap-1.5 text-[11px] font-mono px-2 py-1 rounded-full bg-aether-broto/10 text-aether-broto">
-                            <span class="w-1.5 h-1.5 rounded-full bg-aether-broto"></span> ONLINE
-                        </span>
-                    </div>
 
-                    {# Telemetria rápida #}
-                    <div class="grid grid-cols-3 gap-2 pt-3 border-t border-aether-border">
-                        <div>
-                            <p class="text-[10px] font-mono text-slate-500 uppercase">Água</p>
-                            <p class="text-sm font-mono text-aether-agua">25.4°C</p>
+                        {# Telemetria rápida #}
+                        <div class="grid grid-cols-3 gap-2 pt-3 border-t border-aether-border">
+                            <div>
+                                <p class="text-[10px] font-mono text-slate-500 uppercase">Água</p>
+                                <p class="text-sm font-mono text-aether-agua">{{ d.telemetria.temp_agua|default('--') }}</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-mono text-slate-500 uppercase">Umid.</p>
+                                <p class="text-sm font-mono text-aether-broto">{{ d.telemetria.umidade|default('--') }}</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-mono text-slate-500 uppercase">Luz</p>
+                                <p class="text-sm font-mono text-aether-ambar">{{ d.telemetria.luz|default('--') }}</p>
+                            </div>
                         </div>
-                        <div>
-                            <p class="text-[10px] font-mono text-slate-500 uppercase">Umid.</p>
-                            <p class="text-sm font-mono text-aether-broto">78%</p>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-mono text-slate-500 uppercase">Luz</p>
-                            <p class="text-sm font-mono text-aether-ambar">6500K</p>
-                        </div>
-                    </div>
-                </a>
+                    </a>
+                {% endfor %}
 
                 {# ---- Card do módulo: Horus ---- #}
                 <a href="#"

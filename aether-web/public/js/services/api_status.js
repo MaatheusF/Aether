@@ -1,7 +1,7 @@
 /* Função que consulta o status do Core */
 async function getCoreStatus() {
     try {
-        const response = await fetch('http://192.168.0.133:9001/api/status');
+        const response = await fetch(`${window.AETHER_CORE_BASE_URL}/api/status`);
         if (!response.ok) {
             throw new Error('Core unavailable');
         }
