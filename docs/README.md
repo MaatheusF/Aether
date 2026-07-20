@@ -1,62 +1,47 @@
+# Documentação — Aether
+
+> Este índice reflete os arquivos que realmente existem no repositório.
+> Seções com apenas 1-2 documentos ainda estão em construção — os demais
+> arquivos planejados serão adicionados conforme o projeto avança.
+
+```
 docs/
 │
-├── README.md                 # Índice da documentação
-├── Architecture.md           # Visão geral do sistema
-├── Build.md                  # Compilação
-├── Configuration.md          # Configurações
-├── Roadmap.md                # Funcionalidades futuras
-├── Contributing.md           # Como contribuir
+├── README.md                        # Este índice
 │
 ├── core/
-│   ├── Overview.md
-│   ├── EventBus.md
-│   ├── Database.md
-│   ├── Logger.md
-│   ├── Network.md
-│   ├── Storage.md
-│   └── ProtocolRouter.md
-│
-├── modules/
-│   ├── Overview.md
-│   ├── CreatingModule.md
-│   ├── Lifecycle.md
-│   ├── Poseidon.md
-│   └── Test.md
-│
-├── protocol/
-│   ├── Overview.md
-│   ├── Header.md
-│   ├── Handshake.md
-│   ├── Commands.md
-│   ├── Payloads.md
-│   ├── ErrorCodes.md
-│   └── Versioning.md
+│   └── BuildAndRun.md                # Setup do ambiente (CLion + servidor remoto) e build do Aether Core
 │
 ├── api/
-│   ├── CoreAPI.md
-│   ├── REST.md
-│   └── WebSocket.md           # Caso utilize futuramente
+│   ├── deploy/                       # Documentação da API HTTP do Aether Core
+│   │   ├── README.md                 # Índice / ponto de entrada da doc da API
+│   │   ├── QUICKSTART.md             # Subir a API em 1 minuto
+│   │   ├── API_USAGE.md              # Guia prático de uso
+│   │   ├── API_ARCHITECTURE.md       # Arquitetura interna da API
+│   │   ├── API_CODE_REFERENCE.md     # Referência de código
+│   │   ├── API_REST.md               # Referência dos endpoints REST
+│   │   ├── CHANGELOG.md              # Histórico de mudanças da API
+│   │   └── VISUAL_SUMMARY.md         # Resumo visual
+│   └── methods/
+│       └── status.md                 # GET /api/status
 │
-├── web/
-│   ├── Overview.md
-│   ├── Authentication.md
-│   ├── Permissions.md
-│   ├── Controllers.md
-│   └── Templates.md
-│
-├── database/
-│   ├── Schema.md
-│   ├── Migrations.md
-│   └── ERD.md
-│
-├── decisions/
-│   ├── 0001-eventbus.md
-│   ├── 0002-postgresql.md
-│   ├── 0003-symfony.md
-│   └── ...
-│
-└── diagrams/
-├── architecture.drawio
-├── eventbus.drawio
-├── startup.drawio
-└── protocol.drawio
+└── web/
+    ├── Deploy.md                     # Setup do ambiente de desenvolvimento da interface Web
+    └── frontend/
+        └── DesignSystem.md           # Design System (Eco-Tech / Biopunk) — referência de UI
+
+database/                             # Scripts SQL (core + web) — ver database/README.md
+```
+
+## Pendências identificadas
+
+- `docs/api/deploy/` concentra 8 arquivos sobre a mesma API — vale considerar
+  consolidar em menos arquivos ou mover para `docs/api/` diretamente, já que
+  o nível `deploy/` não corresponde ao conteúdo (é documentação de uso da
+  API, não de deploy).
+- Não há documentação própria dos módulos (`Poseidon`, `Horus`) nem do
+  protocolo entre Core e Web — apenas menções indiretas dentro de outros
+  documentos.
+- Não há documentação de schema/ER do banco — ver `database/README.md` para
+  a convenção dos scripts, mas falta um documento descrevendo o modelo de
+  dados em si.

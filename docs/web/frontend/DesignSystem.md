@@ -1,8 +1,10 @@
 # Design System — Aether
 
-> **Propósito deste arquivo:** referência única e auto-suficiente do visual do Aether. Se você colar este arquivo no início de outra conversa, o objetivo é que dê pra gerar um novo componente/tela consistente com o que já existe, sem precisar reexplicar nada.
+> https://markdownlivepreview.dev/
 
-> **Stack:** Symfony (Twig) + Tailwind CSS v4 (PostCSS puro, sem Vite/Encore) — ver `docs/frontend-build-setup.md` para o pipeline de build.
+> **Propósito deste arquivo:** referência única e auto-suficiente do visual do Aether. Ao colocar este arquivo no início de uma conversa de IA, o objetivo é que dê pra gerar um novo componente/tela consistente com o que já existe, sem precisar reexplicar nada. Alem disso aqui está descrito a folha de estilo para manter o padrão de layout.
+
+> **Stack:** Symfony (Twig) + Tailwind CSS v4 (PostCSS puro, sem Vite/Encore) — ver `aether-web/frontend-build-setup.md` para o pipeline de build.
 
 > **Estética:** Eco-Tech / Biopunk — um painel de controle doméstico que parece um paludário digital: escuro, orgânico, com iluminação de LED de cultivo em vez de alarmes industriais.
 
