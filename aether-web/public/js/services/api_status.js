@@ -1,3 +1,7 @@
+/* Elementos do DOM que exibe o status do Core */
+const dot_status = document.getElementById("core-status-dot");
+const label_status = document.getElementById("core-status-label");
+
 /* Função que consulta o status do Core */
 async function getCoreStatus() {
     try {
@@ -17,8 +21,6 @@ async function getCoreStatus() {
 
 /* Função que atualiza a exibição status do Core no Front */
 function setCoreStatus(status) {
-    const dot_status = document.getElementById("core-status-dot");
-    const label_status = document.getElementById("core-status-label");
 
     if(status.status === "UP") {
         dot_status.classList.remove("bg-aether-critico");
