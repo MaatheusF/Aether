@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\Horus\HorusStatusProvider;
 use App\Service\Poseidon\PoseidonDeviceProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,12 +13,13 @@ class ModuloController extends AbstractController
 {
     public function __construct(
         private readonly PoseidonDeviceProvider $poseidonDevices,
+        private readonly HorusStatusProvider $horusStatus,
     ) {
     }
 
     /**
      * /modulos/poseidon — sem dispositivo especificado.
-     * Redireciona pro primeiro dispositivo conhecido, pra sempre existir
+     * Redireciona pro primeiro dispositivo conhecido, para sempre existir
      * uma URL válida e "compartilhável" mesmo quando o link não vem com slug
      * (ex: clique vindo do menu superior, que não sabe qual dispositivo
      * o usuário estava vendo por último).
@@ -58,6 +60,19 @@ class ModuloController extends AbstractController
         return $this->render('modulos/poseidon.html.twig', [
             'dispositivos' => $this->poseidonDevices->listar(),
             'dispositivo' => $dispositivo,
+        ]);
+    }
+
+    /**
+     * /modulos/horus — módulo de segurança (portão + câmeras).
+     * Sem seletor de dispositivo: ao contrário do Poseidon, o Horus é uma
+     * instância única por instalação (ver HorusStatus).
+     */
+    #[Route('/modulos/horus', name: 'app_modulo_horus')]
+    public function horus(): Response
+    {
+        return $this->render('modulos/horus.html.twig', [
+            'horus' => $this->horusStatus->obter(),
         ]);
     }
 }

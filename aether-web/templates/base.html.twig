@@ -56,7 +56,7 @@
                class="px-3 py-1.5 rounded-full transition-colors {{ module_active|default('') == 'poseidon' ? 'text-aether-agua bg-aether-agua/10' : 'text-slate-400 hover:text-slate-100 hover:bg-white/5' }}">
                 Poseidon
             </a>
-            <a href="#"
+            <a href="{{ path('app_modulo_horus') }}"
                class="px-3 py-1.5 rounded-full transition-colors {{ module_active|default('') == 'horus' ? 'text-aether-ambar bg-aether-ambar/10' : 'text-slate-400 hover:text-slate-100 hover:bg-white/5' }}">
                 Horus
             </a>
@@ -205,7 +205,7 @@
         </button>
     </div>
     <nav class="flex flex-col gap-1 text-sm pb-[env(safe-area-inset-bottom)]">
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg {{ module_active|default('') == 'horus' ? 'bg-aether-ambar/10 text-aether-ambar' : 'text-slate-300 hover:bg-white/5' }}">
+        <a href="{{ path('app_modulo_horus') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg {{ module_active|default('') == 'horus' ? 'bg-aether-ambar/10 text-aether-ambar' : 'text-slate-300 hover:bg-white/5' }}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-5 h-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
             </svg>

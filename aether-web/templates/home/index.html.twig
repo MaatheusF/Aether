@@ -136,42 +136,73 @@
             </div>
 
             {# ---- Seção: Horus ---- #}
-            {# Ainda mock — sem HorusDeviceProvider por enquanto. Quando existir,
-               segue exatamente o mesmo padrão da seção Poseidon acima. #}
+            {# Só existe UM Horus por instalação (não há vários dispositivos
+               como no Poseidon — câmeras/portão/sensores são todos partes do
+               mesmo módulo) — por isso ocupa a linha inteira em vez de entrar
+               num grid de cards, o que sobra espaço pra mais indicadores lado
+               a lado em vez de espremidos num card estreito. #}
             <div>
                 <div class="flex items-center justify-between mb-3">
                     <p class="text-[11px] font-mono uppercase tracking-widest text-aether-ambar/70">Horus</p>
-                    <p class="text-[11px] font-mono text-slate-600">1 dispositivo</p>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                    <a href="#"
-                       class="group rounded-2xl glass-surface p-5 flex flex-col gap-4 hover:shadow-glow-broto hover:border-aether-broto/30 transition-all duration-300">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <p class="text-xs font-mono text-slate-500 mb-1">SEGURANÇA</p>
-                                <h2 class="text-lg font-bold text-slate-50">Horus</h2>
-                            </div>
-                            <span class="flex items-center gap-1.5 text-[11px] font-mono px-2 py-1 rounded-full bg-aether-critico/10 text-aether-critico">
-                                <span class="w-1.5 h-1.5 rounded-full bg-aether-critico"></span> ALERTA
+                <a href="{{ path('app_modulo_horus') }}"
+                   class="group block rounded-2xl glass-surface p-5 hover:shadow-glow-broto hover:border-aether-broto/30 transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <p class="text-xs font-mono text-slate-500 mb-1">SEGURANÇA</p>
+                            <h2 class="text-lg font-bold text-slate-50">Horus</h2>
+                        </div>
+                        <span class="flex items-center gap-1.5 text-[11px] font-mono px-2 py-1 rounded-full
+                            {{ horus.status == 'online' ? 'bg-aether-broto/10 text-aether-broto' : (horus.status == 'alert' ? 'bg-aether-ambar/10 text-aether-ambar' : 'bg-white/5 text-slate-500') }}">
+                            <span class="w-1.5 h-1.5 rounded-full {{ horus.status == 'online' ? 'bg-aether-broto' : (horus.status == 'alert' ? 'bg-aether-ambar' : 'bg-slate-500') }}"></span>
+                            {{ horus.status == 'online' ? 'ONLINE' : (horus.status == 'alert' ? 'ALERTA' : 'OFFLINE') }}
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-aether-border">
+                        {# Câmeras ativas/disponíveis #}
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center justify-center w-9 h-9 rounded-lg bg-white/5 text-slate-400 shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="w-4.5 h-4.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5V6a1.5 1.5 0 0 0-1.5-1.5H4.5A1.5 1.5 0 0 0 3 6v9a1.5 1.5 0 0 0 1.5 1.5h9A1.5 1.5 0 0 0 15 15v-4.5Zm0 0 4.72-2.36a.75.75 0 0 1 1.08.67v7.38a.75.75 0 0 1-1.08.67L15 13.5" />
+                                </svg>
                             </span>
+                            <div>
+                                <p class="text-[10px] font-mono uppercase text-slate-500">Câmeras</p>
+                                <p class="text-sm font-mono text-slate-100">{{ horus.camerasAtivas }}<span class="text-slate-500 text-sm">/{{ horus.camerasTotal }}</span></p>
+                            </div>
                         </div>
 
-                        <div class="grid grid-cols-3 gap-2 pt-3 border-t border-aether-border">
+                        {# Dispositivos ativos/disponíveis #}
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center justify-center w-9 h-9 rounded-lg bg-white/5 text-slate-400 shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="w-4.5 h-4.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5M15.75 3v1.5M3 8.25h18M5.25 5.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25Z" />
+                                </svg>
+                            </span>
                             <div>
-                                <p class="text-[10px] font-mono text-slate-500 uppercase">Câmeras</p>
-                                <p class="text-sm font-mono text-slate-200">4/4</p>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-mono text-slate-500 uppercase">Sensores</p>
-                                <p class="text-sm font-mono text-slate-200">11/12</p>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-mono text-slate-500 uppercase">Bomba</p>
-                                <p class="text-sm font-mono text-aether-critico">falha</p>
+                                <p class="text-[10px] font-mono uppercase text-slate-500">Dispositivos</p>
+                                <p class="text-sm font-mono text-slate-100">{{ horus.dispositivosAtivos }}<span class="text-slate-500 text-sm">/{{ horus.dispositivosTotal }}</span></p>
                             </div>
                         </div>
-                    </a>
-                </div>
+
+                        {# Portão: travado/destravado #}
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center justify-center w-9 h-9 rounded-lg shrink-0
+                                {{ horus.portaoEstado == 'travado' ? 'bg-aether-broto/10 text-aether-broto' : 'bg-aether-ambar/10 text-aether-ambar' }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="w-4.5 h-4.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9.75V6a3.75 3.75 0 1 1 7.5 0M6.75 21h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75A2.25 2.25 0 0 0 6.75 21Z" />
+                                </svg>
+                            </span>
+                            <div>
+                                <p class="text-[10px] font-mono uppercase text-slate-500">Portão</p>
+                                <p class="text-sm font-mono {{ horus.portaoEstado == 'travado' ? 'text-aether-broto' : 'text-aether-ambar' }}">
+                                    {{ horus.portaoEstado == 'travado' ? 'Travado' : 'Destravado' }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
             </div>
 
             {# ---- Novo módulo ---- #}

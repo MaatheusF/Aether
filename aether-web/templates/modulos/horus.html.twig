@@ -1,0 +1,162 @@
+{% extends 'base.html.twig' %}
+
+{# ==========================================================================
+   modulos/horus.html.twig — Módulo Horus (Segurança)
+   layout_mode = 'sidebar' → base.html.twig renderiza a sidebar esquerda
+   ("Raízes"). Ao contrário do Poseidon, NÃO tem seletor de dispositivo —
+   o Horus é uma instância única por instalação (portão + câmeras + sensores
+   fazem parte do mesmo módulo, não de dispositivos separados).
+
+   Variável esperada (ver ModuloController::horus):
+     - horus : HorusStatus
+========================================================================== #}
+
+{% block title %}Horus{% endblock %}
+{% block layout_mode %}sidebar{% endblock %}
+{% block module_active %}horus{% endblock %}
+
+{# --------------------- Sidebar: submenus do módulo --------------------- #}
+{% block sidebar %}
+    <p class="text-[11px] font-mono uppercase tracking-widest text-aether-ambar/70 mb-3 px-2">Horus</p>
+
+    <nav class="flex flex-col gap-1 text-sm">
+        <a href="{{ path('app_modulo_horus') }}" class="px-3 py-2 rounded-lg bg-aether-ambar/10 text-aether-ambar font-medium">Visão Geral</a>
+        <a href="#" class="px-3 py-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-white/5 transition-colors">Portão</a>
+        <a href="#" class="px-3 py-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-white/5 transition-colors">Câmeras</a>
+        <a href="#" class="px-3 py-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-white/5 transition-colors">Configurações</a>
+        <a href="#" class="px-3 py-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-white/5 transition-colors">Logs</a>
+    </nav>
+
+    <div class="mt-8 pt-4 border-t border-aether-border">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-slate-600 mb-2 px-2">Status do módulo</p>
+        <div class="px-2 flex items-center gap-2 text-xs {{ horus.status != 'offline' ? 'text-aether-broto' : 'text-slate-500' }}">
+            {% if horus.status != 'offline' %}
+                <span class="relative w-1.5 h-1.5 rounded-full bg-aether-broto vital-dot"></span>
+                Conectado ao Core
+            {% else %}
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                Sem conexão
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <div class="flex flex-col gap-6">
+
+        {# --------------------- Cabeçalho --------------------- #}
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+            <div>
+                <p class="text-xs font-mono uppercase tracking-widest text-aether-ambar/70 mb-1">Módulo · Horus · Segurança</p>
+                <h1 class="text-2xl md:text-3xl font-extrabold text-slate-50">Horus</h1>
+            </div>
+            <span class="inline-flex w-fit items-center gap-1.5 text-[11px] font-mono px-2.5 py-1 rounded-full
+                {{ horus.status == 'online' ? 'bg-aether-broto/10 text-aether-broto' : (horus.status == 'alert' ? 'bg-aether-ambar/10 text-aether-ambar' : 'bg-white/5 text-slate-500') }}">
+                <span class="w-1.5 h-1.5 rounded-full {{ horus.status == 'online' ? 'bg-aether-broto' : (horus.status == 'alert' ? 'bg-aether-ambar' : 'bg-slate-500') }}"></span>
+                {{ horus.status == 'online' ? 'ONLINE' : (horus.status == 'alert' ? 'ALERTA' : 'OFFLINE') }}
+            </span>
+        </div>
+
+        {# =====================================================================
+           ZONA 1 — Controle de Acesso
+           O portão é a ação mais crítica do módulo, por isso vem em destaque
+           próprio (não misturado com toggles genéricos como no Poseidon) —
+           com um estado "Pendente" previsto pra quando o clique aguarda
+           confirmação física do atuador, mesmo padrão do Poseidon.
+        ===================================================================== #}
+        <section class="glass-surface rounded-2xl p-5 md:p-6">
+            <p class="text-[11px] font-mono uppercase tracking-widest text-slate-500 mb-4">Zona 1 · Controle de Acesso</p>
+
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 rounded-xl border
+                {{ horus.portaoEstado == 'travado' ? 'border-aether-border' : 'border-aether-ambar/40 bg-aether-ambar/[0.04]' }}">
+                <div class="flex items-center gap-3">
+                    <span class="flex items-center justify-center w-11 h-11 rounded-xl shrink-0
+                        {{ horus.portaoEstado == 'travado' ? 'bg-aether-broto/10 text-aether-broto' : 'bg-aether-ambar/10 text-aether-ambar' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9.75V6a3.75 3.75 0 1 1 7.5 0M6.75 21h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75A2.25 2.25 0 0 0 6.75 21Z" />
+                        </svg>
+                    </span>
+                    <div>
+                        <p class="text-sm font-medium text-slate-200">Portão Principal</p>
+                        <p class="text-[11px] font-mono {{ horus.portaoEstado == 'travado' ? 'text-aether-broto' : 'text-aether-ambar' }}">
+                            {{ horus.portaoEstado == 'travado' ? 'Travado' : 'Destravado' }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button type="button" role="switch" aria-checked="{{ horus.portaoEstado == 'travado' ? 'true' : 'false' }}"
+                            data-atuador="portao"
+                            class="relative w-11 h-6 rounded-full transition-colors
+                                {{ horus.portaoEstado == 'travado' ? 'bg-aether-broto/30 border border-aether-broto/50' : 'bg-white/5 border border-aether-border' }}">
+                        <span class="absolute top-0.5 w-4.5 h-4.5 rounded-full transition-all
+                            {{ horus.portaoEstado == 'travado' ? 'right-0.5 bg-aether-broto shadow-glow-broto' : 'left-0.5 bg-slate-500' }}"></span>
+                    </button>
+
+                    <!--
+                    <button type="button" data-acao="abrir-portao"
+                            class="px-3 py-2 rounded-lg text-xs font-medium text-slate-300 border border-aether-border hover:bg-white/5 transition-colors whitespace-nowrap">
+                        Abrir por 10s
+                    </button> -->
+                </div>
+            </div>
+
+            <p class="text-[11px] font-mono text-slate-500 mt-4">
+                {{ horus.dispositivosAtivos }} de {{ horus.dispositivosTotal }} dispositivos conectados ao módulo.
+            </p>
+        </section>
+
+        {# =====================================================================
+           ZONA 2 — Câmeras de Segurança
+           Placeholders — plugar o player (RTSP/HLS) de cada câmera aqui.
+        ===================================================================== #}
+        <section class="glass-surface rounded-2xl p-5 md:p-6">
+            <div class="flex items-center justify-between mb-4">
+                <p class="text-[11px] font-mono uppercase tracking-widest text-slate-500">Zona 2 · Câmeras de Segurança</p>
+                <p class="text-[11px] font-mono text-slate-600">{{ horus.camerasAtivas }}/{{ horus.camerasTotal }} ativas</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {% set cameras = ['Entrada', 'Garagem', 'Quintal', 'Portão'] %}
+                {% for nome in cameras %}
+                    <div class="rounded-xl border border-dashed border-aether-border aspect-video flex flex-col items-center justify-center gap-2 text-slate-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5V6a1.5 1.5 0 0 0-1.5-1.5h-9A1.5 1.5 0 0 0 3 6v9a1.5 1.5 0 0 0 1.5 1.5h9a1.5 1.5 0 0 0 1.5-1.5v-4.5Zm0 0 4.72-2.36a.75.75 0 0 1 1.08.67v7.38a.75.75 0 0 1-1.08.67L15 13.5" />
+                        </svg>
+                        <p class="text-xs font-mono text-center px-4">
+                            Câmera · {{ nome }}<br>
+                            <span class="text-slate-700">player — id="cam-{{ nome|lower }}"</span>
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        {# =====================================================================
+           ZONA 3 — Console de Logs (dispositivos plugados)
+           Mesmo padrão de terminal do Poseidon, com eventos do módulo Horus.
+        ===================================================================== #}
+        <section class="glass-surface rounded-2xl p-5 md:p-6">
+            <div class="flex items-center justify-between mb-3">
+                <p class="text-[11px] font-mono uppercase tracking-widest text-slate-500">Zona 3 · Console de Logs</p>
+                <span class="flex items-center gap-1.5 text-[10px] font-mono text-aether-broto">
+                    <span class="relative w-1.5 h-1.5 rounded-full bg-aether-broto vital-dot"></span> stream ativo
+                </span>
+            </div>
+
+            {# Cada linha representa um evento recebido do Core (conexão/desconexão
+               de dispositivo, mudança do portão, falha de câmera) — substituir
+               por loop Twig/JS com dados reais assim que existirem. #}
+            <div class="rounded-xl bg-black/30 border border-aether-border p-4 h-48 overflow-y-auto font-mono text-xs leading-relaxed">
+                <p class="text-slate-600">[13:10:02] <span class="text-aether-broto">horus.core</span> :: heartbeat ok</p>
+                <p class="text-slate-600">[13:09:41] <span class="text-aether-ambar">portao.principal</span> :: destravado (via API)</p>
+                <p class="text-slate-600">[13:07:15] <span class="text-aether-agua">cam.garagem</span> :: reconectada</p>
+                <p class="text-slate-600">[13:02:03] <span class="text-aether-critico">sensor.janela_02</span> :: sem resposta há 5min</p>
+                <p class="text-slate-600">[12:58:47] <span class="text-aether-broto">horus.core</span> :: heartbeat ok</p>
+            </div>
+        </section>
+
+    </div>
+
+{% endblock %}
