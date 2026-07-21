@@ -1,6 +1,6 @@
 # Documentação — Aether
 
-> Este índice reflete os arquivos que realmente existem no repositório.
+> Este índice reflete os arquivos que existem no repositório.
 > Seções com apenas 1-2 documentos ainda estão em construção — os demais
 > arquivos planejados serão adicionados conforme o projeto avança.
 
@@ -19,9 +19,7 @@ docs/
 │   │   ├── API_USAGE.md              # Guia prático de uso
 │   │   ├── API_ARCHITECTURE.md       # Arquitetura interna da API
 │   │   ├── API_CODE_REFERENCE.md     # Referência de código
-│   │   ├── API_REST.md               # Referência dos endpoints REST
-│   │   ├── CHANGELOG.md              # Histórico de mudanças da API
-│   │   └── VISUAL_SUMMARY.md         # Resumo visual
+│   │   └── API_REST.md               # Referência dos endpoints REST
 │   └── methods/
 │       └── status.md                 # GET /api/status
 │

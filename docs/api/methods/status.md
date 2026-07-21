@@ -21,7 +21,7 @@ HTTP 200
 
 ## Campos
 
-| Campo | Tipo | Descrição | Observações                                                                   |
-|-------|------|-----------|-------------------------------------------------------------------------------|
-| status | string | Estado do Core | Retorna "UP" quando a API estiver funcional e "Down" quando estiver com falha |
-| timestamp | string | Data/hora UTC em ISO 8601 | Retorna a data/hora do retorno da requisição em Zulu                          |
+| Campo | Tipo | Descrição | Observações                                                                              |
+|-------|------|-----------|------------------------------------------------------------------------------------------|
+| status | string | Estado do Core | Retorna "UP" quando a API estiver funcional e "Down" quando algum item estiver com falha |
+| timestamp | string | Data/hora UTC em ISO 8601 | Retorna a data/hora do retorno da requisição em Zulu                                     |
