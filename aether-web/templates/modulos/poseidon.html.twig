@@ -72,185 +72,185 @@
         </div>
     {% else %}
 
-    <div class="flex flex-col gap-6">
+        <div class="flex flex-col gap-6">
 
-        {# --------------------- Cabeçalho --------------------- #}
-        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
-            <div>
-                <p class="text-xs font-mono uppercase tracking-widest text-aether-agua/70 mb-1">
-                    Módulo · Poseidon {{ dispositivo.tipo == 'paludario' ? '· Paludário' : '· Aquário' }}
-                </p>
-                <h1 class="text-2xl md:text-3xl font-extrabold text-slate-50">{{ dispositivo.nome }}</h1>
-            </div>
-            <span class="inline-flex w-fit items-center gap-1.5 text-[11px] font-mono px-2.5 py-1 rounded-full
+            {# --------------------- Cabeçalho --------------------- #}
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+                <div>
+                    <p class="text-xs font-mono uppercase tracking-widest text-aether-agua/70 mb-1">
+                        Módulo · Poseidon {{ dispositivo.tipo == 'paludario' ? '· Paludário' : '· Aquário' }}
+                    </p>
+                    <h1 class="text-2xl md:text-3xl font-extrabold text-slate-50">{{ dispositivo.nome }}</h1>
+                </div>
+                <span class="inline-flex w-fit items-center gap-1.5 text-[11px] font-mono px-2.5 py-1 rounded-full
                 {{ dispositivo.status == 'online' ? 'bg-aether-broto/10 text-aether-broto' : (dispositivo.status == 'alert' ? 'bg-aether-critico/10 text-aether-critico' : 'bg-white/5 text-slate-500') }}">
                 <span class="w-1.5 h-1.5 rounded-full {{ dispositivo.status == 'online' ? 'bg-aether-broto' : (dispositivo.status == 'alert' ? 'bg-aether-critico' : 'bg-slate-500') }}"></span>
                 {{ dispositivo.status == 'online' ? 'ONLINE' : (dispositivo.status == 'alert' ? 'ALERTA' : 'OFFLINE') }}
             </span>
-        </div>
+            </div>
 
-        {# --------------------- Aviso: dispositivo sem conexão --------------------- #}
-        {# Sem isso, os controles da Zona 1 pareceriam funcionais mesmo sem o
+            {# --------------------- Aviso: dispositivo sem conexão --------------------- #}
+            {# Sem isso, os controles da Zona 1 pareceriam funcionais mesmo sem o
            Core conseguir falar com o ESP32 — importante desde que um mesmo
            módulo passou a ter dispositivos que podem estar offline enquanto
            outros seguem online. #}
-        {% if dispositivo.status != 'online' %}
-            <div class="rounded-xl border p-3 flex items-center gap-2.5 text-sm
+            {% if dispositivo.status != 'online' %}
+                <div class="rounded-xl border p-3 flex items-center gap-2.5 text-sm
                 {{ dispositivo.status == 'alert' ? 'border-aether-critico/40 bg-aether-critico/[0.06] text-aether-critico' : 'border-aether-border bg-white/[0.02] text-slate-400' }}">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4 h-4 shrink-0">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
-                </svg>
-                {% if dispositivo.status == 'alert' %}
-                    Este dispositivo reportou uma falha e pode não estar respondendo a comandos.
-                {% else %}
-                    Sem conexão com o Core — os controles abaixo estão indisponíveis e a telemetria pode estar desatualizada.
-                {% endif %}
-            </div>
-        {% endif %}
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4 h-4 shrink-0">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                    </svg>
+                    {% if dispositivo.status == 'alert' %}
+                        Este dispositivo reportou uma falha e pode não estar respondendo a comandos.
+                    {% else %}
+                        Sem conexão com o Core — os controles abaixo estão indisponíveis e a telemetria pode estar desatualizada.
+                    {% endif %}
+                </div>
+            {% endif %}
 
-        {# =====================================================================
+            {# =====================================================================
            ZONA 1 — Ações Rápidas
            Toggles e botões de parâmetros. Estado "Pendente" previsto para
            quando o clique aguarda confirmação do hardware via Core C++.
            Fica visualmente desabilitada quando o dispositivo está offline —
            ver aviso acima.
         ===================================================================== #}
-        <section class="glass-surface rounded-2xl p-5 md:p-6 {{ dispositivo.status == 'offline' ? 'opacity-40 pointer-events-none' : '' }}">
-            <p class="text-[11px] font-mono uppercase tracking-widest text-slate-500 mb-4">Zona 1 · Ações Rápidas</p>
+            <section class="glass-surface rounded-2xl p-5 md:p-6 {{ dispositivo.status == 'offline' ? 'opacity-40 pointer-events-none' : '' }}">
+                <p class="text-[11px] font-mono uppercase tracking-widest text-slate-500 mb-4">Zona 1 · Ações Rápidas</p>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-                {# Toggle: Cascata — estado normal (ligado) #}
-                <div class="flex items-center justify-between p-3 rounded-xl border border-aether-border">
+                    {# Toggle: Cascata — estado normal (ligado) #}
+                    <div class="flex items-center justify-between p-3 rounded-xl border border-aether-border">
+                        <div>
+                            <p class="text-sm font-medium text-slate-200">Cascata</p>
+                            <p class="text-[11px] font-mono text-aether-broto">ativa</p>
+                        </div>
+                        <button type="button" role="switch" aria-checked="true"
+                                data-modulo="poseidon" data-atuador="cascata" data-dispositivo="{{ dispositivo.slug }}"
+                                class="relative w-11 h-6 rounded-full bg-aether-broto/30 border border-aether-broto/50 transition-colors">
+                            <span class="absolute top-0.5 right-0.5 w-4.5 h-4.5 rounded-full bg-aether-broto shadow-glow-broto transition-all"></span>
+                        </button>
+                    </div>
+
+                    {# Toggle: Névoa — estado desligado #}
+                    <div class="flex items-center justify-between p-3 rounded-xl border border-aether-border">
+                        <div>
+                            <p class="text-sm font-medium text-slate-200">Névoa</p>
+                            <p class="text-[11px] font-mono text-slate-500">inativa</p>
+                        </div>
+                        <button type="button" role="switch" aria-checked="false"
+                                data-modulo="poseidon" data-atuador="nevoa" data-dispositivo="{{ dispositivo.slug }}"
+                                class="relative w-11 h-6 rounded-full bg-white/5 border border-aether-border transition-colors">
+                            <span class="absolute top-0.5 left-0.5 w-4.5 h-4.5 rounded-full bg-slate-500 transition-all"></span>
+                        </button>
+                    </div>
+
+                    {# Toggle: Bombeamento — estado "Pendente" (aguardando confirmação do C++) #}
+                    <div class="flex items-center justify-between p-3 rounded-xl border border-aether-ambar/40 bg-aether-ambar/[0.04]">
+                        <div>
+                            <p class="text-sm font-medium text-slate-200">Bombeamento</p>
+                            <p class="text-[11px] font-mono text-aether-ambar flex items-center gap-1">
+                                <svg class="w-3 h-3 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" d="M12 3a9 9 0 1 0 9 9" />
+                                </svg>
+                                pendente
+                            </p>
+                        </div>
+                        <button type="button" role="switch" aria-checked="true" disabled
+                                data-modulo="poseidon" data-atuador="bombeamento" data-dispositivo="{{ dispositivo.slug }}"
+                                class="relative w-11 h-6 rounded-full bg-aether-ambar/20 border border-aether-ambar/40 opacity-70 cursor-wait">
+                            <span class="absolute top-0.5 right-0.5 w-4.5 h-4.5 rounded-full bg-aether-ambar/80"></span>
+                        </button>
+                    </div>
+                </div>
+
+                {# Sliders biomórficos de iluminação #}
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6 pt-5 border-t border-aether-border">
                     <div>
-                        <p class="text-sm font-medium text-slate-200">Cascata</p>
-                        <p class="text-[11px] font-mono text-aether-broto">ativa</p>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="text-xs font-medium text-slate-300">LED 6500K</label>
+                            <span class="text-[11px] font-mono text-aether-agua">72%</span>
+                        </div>
+                        <input type="range" class="bio-slider w-full" min="0" max="100" value="72">
                     </div>
-                    <button type="button" role="switch" aria-checked="true"
-                            data-relay="cascata" data-dispositivo="{{ dispositivo.slug }}"
-                            class="relative w-11 h-6 rounded-full bg-aether-broto/30 border border-aether-broto/50 transition-colors">
-                        <span class="absolute top-0.5 right-0.5 w-4.5 h-4.5 rounded-full bg-aether-broto shadow-glow-broto transition-all"></span>
-                    </button>
-                </div>
-
-                {# Toggle: Névoa — estado desligado #}
-                <div class="flex items-center justify-between p-3 rounded-xl border border-aether-border">
                     <div>
-                        <p class="text-sm font-medium text-slate-200">Névoa</p>
-                        <p class="text-[11px] font-mono text-slate-500">inativa</p>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="text-xs font-medium text-slate-300">Grow (Fotossíntese)</label>
+                            <span class="text-[11px] font-mono text-aether-broto">54%</span>
+                        </div>
+                        <input type="range" class="bio-slider w-full" min="0" max="100" value="54">
                     </div>
-                    <button type="button" role="switch" aria-checked="false"
-                            data-relay="nevoa" data-dispositivo="{{ dispositivo.slug }}"
-                            class="relative w-11 h-6 rounded-full bg-white/5 border border-aether-border transition-colors">
-                        <span class="absolute top-0.5 left-0.5 w-4.5 h-4.5 rounded-full bg-slate-500 transition-all"></span>
-                    </button>
-                </div>
-
-                {# Toggle: Bombeamento — estado "Pendente" (aguardando confirmação do C++) #}
-                <div class="flex items-center justify-between p-3 rounded-xl border border-aether-ambar/40 bg-aether-ambar/[0.04]">
                     <div>
-                        <p class="text-sm font-medium text-slate-200">Bombeamento</p>
-                        <p class="text-[11px] font-mono text-aether-ambar flex items-center gap-1">
-                            <svg class="w-3 h-3 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" d="M12 3a9 9 0 1 0 9 9" />
-                            </svg>
-                            pendente
-                        </p>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="text-xs font-medium text-slate-300">RGB Ambiente</label>
+                            <span class="text-[11px] font-mono text-aether-ambar">30%</span>
+                        </div>
+                        <input type="range" class="bio-slider w-full" min="0" max="100" value="30">
                     </div>
-                    <button type="button" role="switch" aria-checked="true" disabled
-                            data-relay="bombeamento" data-dispositivo="{{ dispositivo.slug }}"
-                            class="relative w-11 h-6 rounded-full bg-aether-ambar/20 border border-aether-ambar/40 opacity-70 cursor-wait">
-                        <span class="absolute top-0.5 right-0.5 w-4.5 h-4.5 rounded-full bg-aether-ambar/80"></span>
-                    </button>
                 </div>
-            </div>
+            </section>
 
-            {# Sliders biomórficos de iluminação #}
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6 pt-5 border-t border-aether-border">
-                <div>
-                    <div class="flex items-center justify-between mb-2">
-                        <label class="text-xs font-medium text-slate-300">LED 6500K</label>
-                        <span class="text-[11px] font-mono text-aether-agua">72%</span>
-                    </div>
-                    <input type="range" class="bio-slider w-full" min="0" max="100" value="72">
-                </div>
-                <div>
-                    <div class="flex items-center justify-between mb-2">
-                        <label class="text-xs font-medium text-slate-300">Grow (Fotossíntese)</label>
-                        <span class="text-[11px] font-mono text-aether-broto">54%</span>
-                    </div>
-                    <input type="range" class="bio-slider w-full" min="0" max="100" value="54">
-                </div>
-                <div>
-                    <div class="flex items-center justify-between mb-2">
-                        <label class="text-xs font-medium text-slate-300">RGB Ambiente</label>
-                        <span class="text-[11px] font-mono text-aether-ambar">30%</span>
-                    </div>
-                    <input type="range" class="bio-slider w-full" min="0" max="100" value="30">
-                </div>
-            </div>
-        </section>
-
-        {# =====================================================================
+            {# =====================================================================
            ZONA 2 — Telemetria
            Placeholders tracejados para gráficos fluidos (Chart.js) de
            temperatura e umidade. IDs dos canvas incluem o slug do
            dispositivo — necessário porque a mesma página de módulo pode
            futuramente renderizar gráficos de mais de um dispositivo.
         ===================================================================== #}
-        <section class="glass-surface rounded-2xl p-5 md:p-6">
-            <p class="text-[11px] font-mono uppercase tracking-widest text-slate-500 mb-4">Zona 2 · Telemetria</p>
+            <section class="glass-surface rounded-2xl p-5 md:p-6">
+                <p class="text-[11px] font-mono uppercase tracking-widest text-slate-500 mb-4">Zona 2 · Telemetria</p>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {# Placeholder: gráfico de temperatura — plugar Chart.js aqui #}
-                <div class="rounded-xl border border-dashed border-aether-border h-48 flex flex-col items-center justify-center gap-2 text-slate-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.5 8 8l4 4 5.5-6.5M21 8v5.5m0 0h-5.5" />
-                    </svg>
-                    <p class="text-xs font-mono text-center px-4">
-                        Gráfico de Temperatura (água / ar)<br>
-                        <span class="text-slate-700">canvas Chart.js — id="chart-temperatura-{{ dispositivo.slug }}"</span>
-                    </p>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    {# Placeholder: gráfico de temperatura — plugar Chart.js aqui #}
+                    <div class="rounded-xl border border-dashed border-aether-border h-48 flex flex-col items-center justify-center gap-2 text-slate-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.5 8 8l4 4 5.5-6.5M21 8v5.5m0 0h-5.5" />
+                        </svg>
+                        <p class="text-xs font-mono text-center px-4">
+                            Gráfico de Temperatura (água / ar)<br>
+                            <span class="text-slate-700">canvas Chart.js — id="chart-temperatura-{{ dispositivo.slug }}"</span>
+                        </p>
+                    </div>
+
+                    {# Placeholder: gráfico de umidade — plugar Chart.js aqui #}
+                    <div class="rounded-xl border border-dashed border-aether-border h-48 flex flex-col items-center justify-center gap-2 text-slate-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21c-4.5-4.5-7.5-8-7.5-11.5A7.5 7.5 0 0 1 12 2a7.5 7.5 0 0 1 7.5 7.5c0 3.5-3 7-7.5 11.5Z" />
+                        </svg>
+                        <p class="text-xs font-mono text-center px-4">
+                            Umidade do Solo (círculos concêntricos)<br>
+                            <span class="text-slate-700">canvas Chart.js — id="chart-umidade-{{ dispositivo.slug }}"</span>
+                        </p>
+                    </div>
                 </div>
+            </section>
 
-                {# Placeholder: gráfico de umidade — plugar Chart.js aqui #}
-                <div class="rounded-xl border border-dashed border-aether-border h-48 flex flex-col items-center justify-center gap-2 text-slate-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 21c-4.5-4.5-7.5-8-7.5-11.5A7.5 7.5 0 0 1 12 2a7.5 7.5 0 0 1 7.5 7.5c0 3.5-3 7-7.5 11.5Z" />
-                    </svg>
-                    <p class="text-xs font-mono text-center px-4">
-                        Umidade do Solo (círculos concêntricos)<br>
-                        <span class="text-slate-700">canvas Chart.js — id="chart-umidade-{{ dispositivo.slug }}"</span>
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        {# =====================================================================
+            {# =====================================================================
            ZONA 3 — Console de Logs
            Terminal simulando o fluxo de dados brutos do Core C++, filtrado
            para o dispositivo selecionado.
         ===================================================================== #}
-        <section class="glass-surface rounded-2xl p-5 md:p-6">
-            <div class="flex items-center justify-between mb-3">
-                <p class="text-[11px] font-mono uppercase tracking-widest text-slate-500">Zona 3 · Console de Logs</p>
-                <span class="flex items-center gap-1.5 text-[10px] font-mono text-aether-broto">
+            <section class="glass-surface rounded-2xl p-5 md:p-6">
+                <div class="flex items-center justify-between mb-3">
+                    <p class="text-[11px] font-mono uppercase tracking-widest text-slate-500">Zona 3 · Console de Logs</p>
+                    <span class="flex items-center gap-1.5 text-[10px] font-mono text-aether-broto">
                     <span class="relative w-1.5 h-1.5 rounded-full bg-aether-broto vital-dot"></span> stream ativo
                 </span>
-            </div>
+                </div>
 
-            {# Cada linha representa um pacote recebido do Core PARA ESTE dispositivo —
+                {# Cada linha representa um pacote recebido do Core PARA ESTE dispositivo —
                substituir por loop Twig/JS filtrando pelo device_name = dispositivo.slug #}
-            <div class="rounded-xl bg-black/30 border border-aether-border p-4 h-48 overflow-y-auto font-mono text-xs leading-relaxed">
-                <p class="text-slate-600">[12:04:01] <span class="text-aether-agua">{{ dispositivo.slug }}</span> :: heartbeat ok</p>
-                <p class="text-slate-600">[12:04:03] <span class="text-aether-agua">{{ dispositivo.slug }}</span> :: sensor.temp_agua :: {{ dispositivo.telemetria.temp_agua|default('--') }}</p>
-                <p class="text-slate-600">[12:04:03] <span class="text-aether-agua">{{ dispositivo.slug }}</span> :: sensor.umidade :: {{ dispositivo.telemetria.umidade|default('--') }}</p>
-                <p class="text-slate-600">[12:04:06] <span class="text-aether-ambar">{{ dispositivo.slug }}</span> :: actuator.bomba :: aguardando ack...</p>
-                <p class="text-slate-600">[12:04:07] <span class="text-aether-broto">{{ dispositivo.slug }}</span> :: heartbeat ok</p>
-            </div>
-        </section>
+                <div class="rounded-xl bg-black/30 border border-aether-border p-4 h-48 overflow-y-auto font-mono text-xs leading-relaxed">
+                    <p class="text-slate-600">[12:04:01] <span class="text-aether-agua">{{ dispositivo.slug }}</span> :: heartbeat ok</p>
+                    <p class="text-slate-600">[12:04:03] <span class="text-aether-agua">{{ dispositivo.slug }}</span> :: sensor.temp_agua :: {{ dispositivo.telemetria.temp_agua|default('--') }}</p>
+                    <p class="text-slate-600">[12:04:03] <span class="text-aether-agua">{{ dispositivo.slug }}</span> :: sensor.umidade :: {{ dispositivo.telemetria.umidade|default('--') }}</p>
+                    <p class="text-slate-600">[12:04:06] <span class="text-aether-ambar">{{ dispositivo.slug }}</span> :: actuator.bomba :: aguardando ack...</p>
+                    <p class="text-slate-600">[12:04:07] <span class="text-aether-broto">{{ dispositivo.slug }}</span> :: heartbeat ok</p>
+                </div>
+            </section>
 
-    </div>
+        </div>
 
     {% endif %}
 

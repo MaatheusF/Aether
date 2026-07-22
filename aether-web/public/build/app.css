@@ -630,12 +630,6 @@
       border-color: color-mix(in oklab, var(--color-aether-ambar) 40%, transparent);
     }
   }
-  .border-aether-ambar\/50 {
-    border-color: color-mix(in srgb, #FFB900 50%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      border-color: color-mix(in oklab, var(--color-aether-ambar) 50%, transparent);
-    }
-  }
   .border-aether-border {
     border-color: var(--color-aether-border);
   }
@@ -691,12 +685,6 @@
     background-color: color-mix(in srgb, #FFB900 20%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in oklab, var(--color-aether-ambar) 20%, transparent);
-    }
-  }
-  .bg-aether-ambar\/30 {
-    background-color: color-mix(in srgb, #FFB900 30%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      background-color: color-mix(in oklab, var(--color-aether-ambar) 30%, transparent);
     }
   }
   .bg-aether-ambar\/80 {
@@ -1191,9 +1179,6 @@
     .sm\:flex-row {
       flex-direction: row;
     }
-    .sm\:items-center {
-      align-items: center;
-    }
     .sm\:items-end {
       align-items: flex-end;
     }
@@ -1434,6 +1419,17 @@ input:-webkit-autofill:active {
 input:autofill {
   background-color: transparent !important;
   color: #f1f5f9 !important;
+}
+@keyframes atuador-erro-flash {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 92, 92, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(255, 92, 92, 0.5);
+  }
+}
+.atuador-erro {
+  animation: atuador-erro-flash 0.6s ease-in-out 2;
 }
 @property --tw-translate-x {
   syntax: "*";

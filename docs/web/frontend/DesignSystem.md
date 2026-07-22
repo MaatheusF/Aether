@@ -241,6 +241,18 @@ Três estados visuais fixos — usar sempre os três, nunca só on/off:
 
 O estado Pendente representa o intervalo entre o clique do usuário e a confirmação real do hardware (ACK do Core/ESP32 — ver `docs/payload-telemetria-poseidon.md` §3.4). **Todo novo atuador precisa implementar esse terceiro estado**, não só on/off.
 
+**Acionamento:** `public/js/services/atuador_control.js` cobre TODO toggle de atuador do sistema, de qualquer módulo — não escrever um handler de clique novo por módulo. Um `<button role="switch">` vira interativo automaticamente se tiver:
+
+```
+data-modulo="poseidon|horus|..."     — slug do módulo (monta a URL)
+data-atuador="cascata|portao|..."     — nome do atuador dentro do módulo
+data-dispositivo="{{ slug }}"          — SÓ em módulo multi-dispositivo (§3.3.1); omitir em instância única (§3.3.2)
+```
+
+Fluxo: clique → pendente (imediato, sem esperar rede) → `POST /api/modulos/{modulo}[/dispositivos/{slug}]/atuadores/{atuador}` → Core responde 202 → polling no status até resolver → aplica estado real, ou reverte + sinaliza erro se não confirmar em 15s. Um toggle `disabled` no HTML nunca recebe o listener — é assim que o bombeamento do Poseidon fica permanentemente no visual "Pendente" como demonstração, sem interferência do JS.
+
+**Erro de acionamento não usa Tailwind:** a classe `.atuador-erro` (flash vermelho no toggle quando a requisição falha ou expira) é CSS puro em `app.css`, não uma combinação de utilities do Tailwind. Motivo: é aplicada/removida dinamicamente via `classList` no JS — uma classe Tailwind só existe no CSS compilado se aparecer *por extenso* em algum arquivo que o Tailwind escaneia, e um `.js` fora do padrão de conteúdo não garante isso. Regra geral: **qualquer classe que o JS vai adicionar/remover em runtime deve ser CSS puro**, nunca uma utility Tailwind nova que só existiria se o JS a "inventasse" (mesma armadilha de `bg-{{ variavel }}` no Twig, ver §5.6 abaixo — só que essa não dá pra resolver com ternária, porque não é renderização server-side).
+
 ### 5.6 Cards de Alerta (estados biológicos)
 
 Três estados fixos, cada um com cor + borda esquerda + texto — nunca usar vermelho puro de alarme industrial:
