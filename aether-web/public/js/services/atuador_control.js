@@ -49,12 +49,40 @@
         pending: 'absolute top-0.5 right-0.5 w-4.5 h-4.5 rounded-full transition-all bg-aether-ambar/80',
     };
 
+    function aplicarEstadoGrupo(botao, estado) {
+        // Além do próprio toggle, atualiza qualquer elemento "satélite" (label,
+        // ícone, borda do card) marcado dentro do mesmo grupo — texto/classe
+        // completos vêm dos data-texto-on/off e data-classe-on/off de CADA
+        // elemento, nunca montados por interpolação (mesmo motivo de sempre:
+        // o Tailwind só gera CSS pra classe que aparece por extenso em algum
+        // arquivo escaneado — aqui ela aparece, só que como valor de atributo
+        // em vez de dentro de `class=""`, o que o Tailwind também escaneia).
+        const grupo = botao.closest('[data-atuador-grupo]');
+        if (!grupo) return;
+
+        grupo.querySelectorAll('[data-classe-on]').forEach((el) => {
+            const nova = estado === 'on' ? el.dataset.classeOn : el.dataset.classeOff;
+            if (nova) el.className = nova;
+        });
+        grupo.querySelectorAll('[data-texto-on]').forEach((el) => {
+            const novo = estado === 'on' ? el.dataset.textoOn : el.dataset.textoOff;
+            if (novo !== undefined) el.textContent = novo;
+        });
+    }
+
     function aplicarEstado(botao, estado) {
         const thumb = botao.querySelector('span');
         botao.className = TRACK[estado];
         if (thumb) thumb.className = THUMB[estado];
         botao.setAttribute('aria-checked', estado === 'on' ? 'true' : 'false');
         botao.disabled = estado === 'pending';
+
+        // Label/ícone/container só atualizam quando o estado é definitivo
+        // (on/off) — durante "pending" eles continuam mostrando o último
+        // estado confirmado, já que ainda não sabemos qual vai ser o real.
+        if (estado !== 'pending') {
+            aplicarEstadoGrupo(botao, estado);
+        }
     }
 
     function montarUrlAtuador(modulo, atuador, dispositivo) {

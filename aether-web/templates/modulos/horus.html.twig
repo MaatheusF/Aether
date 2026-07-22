@@ -68,10 +68,15 @@
         <section class="glass-surface rounded-2xl p-5 md:p-6">
             <p class="text-[11px] font-mono uppercase tracking-widest text-slate-500 mb-4">Zona 1 · Controle de Acesso</p>
 
-            <div class="flex items-center justify-between gap-2 p-4 rounded-xl border
+            <div data-atuador-grupo
+                 data-classe-on="flex items-center justify-between gap-2 p-4 rounded-xl border border-aether-border"
+                 data-classe-off="flex items-center justify-between gap-2 p-4 rounded-xl border border-aether-ambar/40 bg-aether-ambar/[0.04]"
+                 class="flex items-center justify-between gap-2 p-4 rounded-xl border
                 {{ horus.portaoEstado == 'travado' ? 'border-aether-border' : 'border-aether-ambar/40 bg-aether-ambar/[0.04]' }}">
                 <div class="flex items-center gap-2">
-                    <span class="flex items-center justify-center w-11 h-11 rounded-xl shrink-0
+                    <span data-classe-on="flex items-center justify-center w-11 h-11 rounded-xl shrink-0 bg-aether-broto/10 text-aether-broto"
+                          data-classe-off="flex items-center justify-center w-11 h-11 rounded-xl shrink-0 bg-aether-ambar/10 text-aether-ambar"
+                          class="flex items-center justify-center w-11 h-11 rounded-xl shrink-0
                         {{ horus.portaoEstado == 'travado' ? 'bg-aether-broto/10 text-aether-broto' : 'bg-aether-ambar/10 text-aether-ambar' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="w-5 h-5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9.75V6a3.75 3.75 0 1 1 7.5 0M6.75 21h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75A2.25 2.25 0 0 0 6.75 21Z" />
@@ -79,7 +84,10 @@
                     </span>
                     <div>
                         <p class="text-sm font-medium text-slate-200">Portão Principal</p>
-                        <p class="text-[11px] font-mono {{ horus.portaoEstado == 'travado' ? 'text-aether-broto' : 'text-aether-ambar' }}">
+                        <p data-texto-on="Travado" data-texto-off="Destravado"
+                           data-classe-on="text-[11px] font-mono text-aether-broto"
+                           data-classe-off="text-[11px] font-mono text-aether-ambar"
+                           class="text-[11px] font-mono {{ horus.portaoEstado == 'travado' ? 'text-aether-broto' : 'text-aether-ambar' }}">
                             {{ horus.portaoEstado == 'travado' ? 'Travado' : 'Destravado' }}
                         </p>
                     </div>

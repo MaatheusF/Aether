@@ -251,6 +251,19 @@ data-dispositivo="{{ slug }}"          — SÓ em módulo multi-dispositivo (§3
 
 Fluxo: clique → pendente (imediato, sem esperar rede) → `POST /api/modulos/{modulo}[/dispositivos/{slug}]/atuadores/{atuador}` → Core responde 202 → polling no status até resolver → aplica estado real, ou reverte + sinaliza erro se não confirmar em 15s. Um toggle `disabled` no HTML nunca recebe o listener — é assim que o bombeamento do Poseidon fica permanentemente no visual "Pendente" como demonstração, sem interferência do JS.
 
+**Elementos satélite (label, ícone, borda do card):** o JS só atualiza o próprio botão por padrão. Qualquer texto/cor ao redor que também deva mudar com o estado (ex: o texto "Travado"/"Destravado", a cor do ícone do cadeado, a borda âmbar do card do portão) precisa ser marcado explicitamente — não é automático:
+
+```
+<div data-atuador-grupo>                         ← ancestral comum (o JS sobe até aqui a partir do botão)
+  <span data-classe-on="..." data-classe-off="..." class="...">     ← classe completa troca por estado
+  <p data-texto-on="Travado" data-texto-off="Destravado"
+     data-classe-on="..." data-classe-off="..." class="...">Travado</p>  ← texto E classe trocam juntos
+  <button role="switch" data-modulo="..." data-atuador="...">...</button>
+</div>
+```
+
+`data-classe-on`/`data-classe-off` sempre a string **completa** da classe (nunca só a parte que muda) — o `className` é substituído por inteiro. Os satélites só atualizam quando o estado é definitivo (`on`/`off`); durante `pending` continuam mostrando o último estado confirmado.
+
 **Erro de acionamento não usa Tailwind:** a classe `.atuador-erro` (flash vermelho no toggle quando a requisição falha ou expira) é CSS puro em `app.css`, não uma combinação de utilities do Tailwind. Motivo: é aplicada/removida dinamicamente via `classList` no JS — uma classe Tailwind só existe no CSS compilado se aparecer *por extenso* em algum arquivo que o Tailwind escaneia, e um `.js` fora do padrão de conteúdo não garante isso. Regra geral: **qualquer classe que o JS vai adicionar/remover em runtime deve ser CSS puro**, nunca uma utility Tailwind nova que só existiria se o JS a "inventasse" (mesma armadilha de `bg-{{ variavel }}` no Twig, ver §5.6 abaixo — só que essa não dá pra resolver com ternária, porque não é renderização server-side).
 
 ### 5.6 Cards de Alerta (estados biológicos)
