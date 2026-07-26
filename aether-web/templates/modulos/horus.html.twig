@@ -114,6 +114,14 @@
                             class="px-3 py-2 rounded-lg text-xs font-medium text-slate-300 border border-aether-border hover:bg-white/5 transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-wait">
                         Atuar
                     </button>
+
+                    {# TEMPORÁRIO: botão de debug, envia direto pro servidor de
+                       debug do ESP32 via Symfony (ver GateDebugController).
+                       Remover quando o fluxo oficial acima estiver funcional. #}
+                    <button type="button" id="btn-debug-portao" data-cooldown-ms="4000"
+                            class="px-3 py-2 rounded-lg text-xs font-medium text-aether-ambar border border-aether-ambar/40 hover:bg-aether-ambar/10 transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-wait">
+                        Debug: Abrir
+                    </button>
                 </div>
             </div>
 
@@ -195,4 +203,32 @@
 
 {% block javascripts %}
     <script src="{{ asset('js/services/camera_snapshot.js') }}"></script>
+
+    {# TEMPORÁRIO: ver botão #btn-debug-portao acima. #}
+    <script>
+        (function () {
+            const botao = document.getElementById('btn-debug-portao');
+            if (!botao) return;
+
+            botao.addEventListener('click', async () => {
+                const textoOriginal = botao.textContent;
+                botao.disabled = true;
+                botao.textContent = 'Enviando...';
+
+                try {
+                    const resp = await fetch('{{ path('app_horus_portao_debug_abrir') }}', { method: 'POST' });
+                    if (!resp.ok) throw new Error(`Symfony respondeu ${resp.status}`);
+                } catch (erro) {
+                    console.error('Erro ao enviar comando de debug ao portao:', erro);
+                    botao.classList.add('atuador-erro');
+                    setTimeout(() => botao.classList.remove('atuador-erro'), 1300);
+                } finally {
+                    setTimeout(() => {
+                        botao.disabled = false;
+                        botao.textContent = textoOriginal;
+                    }, Number(botao.dataset.cooldownMs) || 4000);
+                }
+            });
+        })();
+    </script>
 {% endblock %}
