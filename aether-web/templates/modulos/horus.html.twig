@@ -93,20 +93,27 @@
                     </div>
                 </div>
 
-                <div class="flex items-center gap-2">
-                    <button type="button" role="switch" aria-checked="{{ horus.portaoEstado == 'travado' ? 'true' : 'false' }}"
-                            data-modulo="horus" data-atuador="portao"
-                            class="relative w-11 h-6 rounded-full transition-colors
-                                {{ horus.portaoEstado == 'travado' ? 'bg-aether-broto/30 border border-aether-broto/50' : 'bg-white/5 border border-aether-border' }}">
-                        <span class="absolute top-0.5 w-4.5 h-4.5 rounded-full transition-all
-                            {{ horus.portaoEstado == 'travado' ? 'right-0.5 bg-aether-broto shadow-glow-broto' : 'left-0.5 bg-slate-500' }}"></span>
-                    </button>
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-mono uppercase tracking-wide text-slate-600">Trava</span>
+                        <button type="button" role="switch" aria-checked="{{ horus.portaoEstado == 'travado' ? 'true' : 'false' }}"
+                                aria-label="Travamento do portão principal"
+                                data-modulo="horus" data-atuador="portao"
+                                class="relative w-11 h-6 rounded-full transition-colors
+                                    {{ horus.portaoEstado == 'travado' ? 'bg-aether-broto/30 border border-aether-broto/50' : 'bg-white/5 border border-aether-border' }}">
+                            <span class="absolute top-0.5 w-4.5 h-4.5 rounded-full transition-all
+                                {{ horus.portaoEstado == 'travado' ? 'right-0.5 bg-aether-broto shadow-glow-broto' : 'left-0.5 bg-slate-500' }}"></span>
+                        </button>
+                    </div>
 
-                    <!--
-                    <button type="button" data-acao="abrir-portao"
-                            class="px-3 py-2 rounded-lg text-xs font-medium text-slate-300 border border-aether-border hover:bg-white/5 transition-colors whitespace-nowrap">
-                        Abrir por 10s
-                    </button> -->
+                    {# Botão de ação momentânea — dispara um pulso no relé do portão,
+                       sem estado (o portão não sabe se vai abrir ou fechar, depende
+                       de onde ele parou fisicamente). Não usa role="switch"/aria-checked
+                       porque não há "ligado/desligado" pra representar. #}
+                    <button type="button" data-modulo="horus" data-acao="portao_atuar" data-cooldown-ms="4000"
+                            class="px-3 py-2 rounded-lg text-xs font-medium text-slate-300 border border-aether-border hover:bg-white/5 transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-wait">
+                        Atuar
+                    </button>
                 </div>
             </div>
 

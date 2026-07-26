@@ -231,6 +231,10 @@ Comportamento já pronto: abre/fecha no clique, fecha ao clicar fora, fecha com 
 
 ### 5.5 Toggles / switches (com estado "Pendente")
 
+Todo `role="switch"` leva `aria-label` com um nome estável do que ele controla (ex: `"Travamento do portão principal"`) — não é opcional, é o nome acessível do controle pra quem usa leitor de tela, já que o switch não tem texto próprio.
+
+**Legenda visual quando há mais de um controle na mesma linha:** um toggle sozinho ao lado do seu label (padrão do Poseidon: "Cascata" + estado à esquerda, switch à direita) não precisa de legenda própria — o contexto ao lado já deixa claro. Mas se o switch dividir espaço com **outro controle** (ex: o portão do Horus, que tem o toggle de travamento *e* o botão "Atuar" lado a lado), adicione uma legenda curta acima do switch (`text-[10px] font-mono uppercase tracking-wide text-slate-600`, ex: "Trava") — sem isso, dois controles sem texto próprio um do lado do outro deixam ambíguo qual faz o quê.
+
 Três estados visuais fixos — usar sempre os três, nunca só on/off:
 
 | Estado | Trilho | Thumb | Extra |
@@ -263,6 +267,8 @@ Fluxo: clique → pendente (imediato, sem esperar rede) → `POST /api/modulos/{
 ```
 
 `data-classe-on`/`data-classe-off` sempre a string **completa** da classe (nunca só a parte que muda) — o `className` é substituído por inteiro. Os satélites só atualizam quando o estado é definitivo (`on`/`off`); durante `pending` continuam mostrando o último estado confirmado.
+
+**Ações momentâneas (sem estado):** nem todo controle é um toggle. Um atuador que não tem "ligado/desligado" pra representar — ex: o botão "Atuar" do portão do Horus, que só dispara um pulso no relé e não sabe se o resultado foi abrir ou fechar — usa um botão comum (`<button>`, sem `role="switch"`) com `data-modulo`/`data-acao`(/`data-dispositivo`), sem `aria-checked`. `atuador_control.js` trata isso à parte: desabilita + mostra "Acionando..." no clique, `POST /api/modulos/{modulo}/acoes/{acao}`, e reabilita depois de um cooldown (`data-cooldown-ms`, opcional) — não faz polling de confirmação, porque não há estado final pra resolver, só um tempo de segurança antes de permitir acionar de novo (evita disparar duas vezes enquanto o atuador físico ainda está em movimento).
 
 **Erro de acionamento não usa Tailwind:** a classe `.atuador-erro` (flash vermelho no toggle quando a requisição falha ou expira) é CSS puro em `app.css`, não uma combinação de utilities do Tailwind. Motivo: é aplicada/removida dinamicamente via `classList` no JS — uma classe Tailwind só existe no CSS compilado se aparecer *por extenso* em algum arquivo que o Tailwind escaneia, e um `.js` fora do padrão de conteúdo não garante isso. Regra geral: **qualquer classe que o JS vai adicionar/remover em runtime deve ser CSS puro**, nunca uma utility Tailwind nova que só existiria se o JS a "inventasse" (mesma armadilha de `bg-{{ variavel }}` no Twig, ver §5.6 abaixo — só que essa não dá pra resolver com ternária, porque não é renderização server-side).
 

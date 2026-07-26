@@ -166,4 +166,67 @@
         if (botao.disabled) return;
         botao.addEventListener('click', () => acionar(botao));
     });
+
+    // =========================================================================
+    // Ações momentâneas — botões sem estado (não são role="switch", não têm
+    // aria-checked). Cobre casos como "atuar" no portão: o dispositivo não
+    // tem como saber/reportar se o resultado foi abrir ou fechar, então não
+    // há um "ligado/desligado" pra representar — só uma ação disparada.
+    //
+    // Contrato de atributos esperado no <button>:
+    //   - data-modulo        : slug do módulo
+    //   - data-acao           : nome da ação dentro do módulo ("portao_atuar", ...)
+    //   - data-dispositivo    : SÓ em módulo multi-dispositivo (ver toggle acima)
+    //   - data-cooldown-ms    : opcional, tempo em ms que o botão fica desabilitado
+    //                           após o clique (padrão abaixo). Evita disparar de
+    //                           novo enquanto o atuador físico ainda está em
+    //                           movimento (ex: motor do portão a meio curso).
+    // =========================================================================
+
+    const COOLDOWN_PADRAO_MS = 3000;
+
+    function montarUrlAcao(modulo, acao, dispositivo) {
+        const base = `${window.AETHER_CORE_BASE_URL}/api/modulos/${modulo}`;
+        return dispositivo
+            ? `${base}/dispositivos/${dispositivo}/acoes/${acao}`
+            : `${base}/acoes/${acao}`;
+    }
+
+    async function acionarMomentaneo(botao) {
+        const modulo = botao.dataset.modulo;
+        const acao = botao.dataset.acao;
+        const dispositivo = botao.dataset.dispositivo || null;
+        const cooldownMs = Number(botao.dataset.cooldownMs) || COOLDOWN_PADRAO_MS;
+        const textoOriginal = botao.textContent;
+
+        botao.disabled = true;
+        botao.textContent = 'Acionando...';
+
+        try {
+            const resp = await fetch(montarUrlAcao(modulo, acao, dispositivo), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+            if (!resp.ok) {
+                throw new Error(`Core respondeu ${resp.status} ao acionar ${modulo}/${acao}`);
+            }
+        } catch (erro) {
+            console.error('Erro ao acionar:', erro);
+            botao.classList.add('atuador-erro');
+            setTimeout(() => botao.classList.remove('atuador-erro'), 1300);
+        } finally {
+            // Reabilita depois do cooldown INDEPENDENTE de sucesso ou falha —
+            // não há estado pra "resolver" via polling aqui, só um tempo de
+            // segurança antes de permitir acionar de novo.
+            setTimeout(() => {
+                botao.disabled = false;
+                botao.textContent = textoOriginal;
+            }, cooldownMs);
+        }
+    }
+
+    document.querySelectorAll('[data-acao]').forEach((botao) => {
+        botao.addEventListener('click', () => acionarMomentaneo(botao));
+    });
 })();
