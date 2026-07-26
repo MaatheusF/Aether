@@ -41,6 +41,13 @@ final class EspGateDebugSender
             if (@fwrite($conexao, '1') === false) {
                 throw new RuntimeException('Falha ao enviar comando ao ESP32.');
             }
+
+            // O WiFi até o portão está instável (ver logs de DELBA/timeout
+            // no ESP32) — fechar a conexão logo após o fwrite() pode
+            // derrubá-la antes do TCP terminar de (re)transmitir o pacote
+            // pelo link ruim. Dá uma folga antes do fclose() pra sobrar
+            // tempo de retransmissão.
+            usleep(300_000);
         } finally {
             fclose($conexao);
         }
