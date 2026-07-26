@@ -9,9 +9,14 @@
 */
 (function () {
     const REFRESH_MS = 5000;
+    const canaisEmAndamento = new Set();
 
     async function atualizarSnapshot(img) {
         const canal = img.dataset.cameraChannel;
+
+        if (canaisEmAndamento.has(canal)) return;
+        canaisEmAndamento.add(canal);
+
         const url = `${window.AETHER_CORE_BASE_URL}/api/cameras/${canal}/snapshot`;
 
         try {
@@ -31,6 +36,8 @@
             if (anterior) URL.revokeObjectURL(anterior);
         } catch (erro) {
             console.error(`Erro ao atualizar snapshot da câmera ${canal}:`, erro);
+        } finally {
+            canaisEmAndamento.delete(canal);
         }
     }
 
