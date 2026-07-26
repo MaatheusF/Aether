@@ -21,6 +21,7 @@
       <config projectName="Aether" targetName="aetherd" />
       <config projectName="Aether" targetName="aether_core" />
       <config projectName="Aether" targetName="aether_protocol" />
+      <config projectName="Aether" targetName="aether_api" />
       <config projectName="Aether" targetName="aether" />
       <config projectName="Aether" targetName="ModulePoseidon" />
       <config projectName="Aether" targetName="ModuleTest" />
@@ -33,17 +34,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3de95979-493c-4cb4-b400-dc05d93cf079" name="Changes" comment="Adiciona serializer usando JSON e retorno das tags do método /api/status">
-      <change afterPath="$PROJECT_DIR$/docs/api/deploy/API_ARCHITECTURE.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/api/deploy/API_CODE_REFERENCE.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/api/deploy/API_REST.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/api/deploy/API_USAGE.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/api/deploy/CHANGELOG.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/api/deploy/QUICKSTART.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/api/deploy/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/api/deploy/VISUAL_SUMMARY.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/api/methods/status.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aether-core/api/config/CameraConfig.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aether-core/api/controllers/CameraController.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aether-core/api/controllers/CameraController.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aether-core/api/dto/CameraSnapshotResponse.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aether-core/api/services/CameraService.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aether-core/api/services/CameraService.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aether-core/core/utils/Md5.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aether-core/core/utils/Md5.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/api/methods/camera.md.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/api/API_REST.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aether-core/api/transport/rest/Router.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/api/transport/rest/Router.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aether-core/api/transport/rest/RouterGet.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/api/transport/rest/RouterGet.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aether-core/core/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/aether-core/core/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aether-web/templates/modulos/horus.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/aether-web/templates/modulos/horus.html.twig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -198,9 +202,9 @@
       </template>
     </option>
   </component>
-  <component name="ProjectStatusUIService"><![CDATA[{
-  "uiKindId": "Widget"
-}]]></component>
+  <component name="ProjectStatusUIService">{
+  &quot;uiKindId&quot;: &quot;Widget&quot;
+}</component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -221,9 +225,9 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "feature-core-api",
+    "git-widget-placeholder": "feature-api-horus-camera",
     "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "C:/projetos/Aether/docs/web/frontend",
+    "last_opened_file_path": "C:/projetos/Aether/aether-core/core/utils",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -236,7 +240,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\projetos\Aether\docs\web\frontend" />
+      <recent name="C:\projetos\Aether\aether-core\core\utils" />
+      <recent name="C:\projetos\Aether\aether-core\core" />
+      <recent name="C:\projetos\Aether\aether-core\api\transport\rest" />
+      <recent name="C:\projetos\Aether\aether-core\api\services" />
+      <recent name="C:\projetos\Aether\aether-core\api\dto" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\projetos\Aether\docs\api\deploy" />
@@ -266,6 +274,11 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="aether_api" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Aether" TARGET_NAME="aether_api" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="aether_core" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Aether" TARGET_NAME="aether_core" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -282,6 +295,7 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="CMake Application.aether_api" />
       <item itemvalue="CMake Application.aetherd" />
       <item itemvalue="CMake Application.aether" />
       <item itemvalue="CMake Application.aether_core" />
