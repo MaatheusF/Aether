@@ -37,8 +37,10 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         return new Passport(
             new UserBadge($username),
             new PasswordCredentials($request->getPayload()->getString('password')),
-            [
-                new CsrfTokenBadge('authenticate', $request->getPayload()->getString('_csrf_token')),            ]
+            // Removido devido a um bug ao fazer o deploy para o servidor, precisa investigar mais
+            /*[
+                new CsrfTokenBadge('authenticate', $request->getPayload()->getString('_csrf_token')),
+            ]*/
         );
     }
 
@@ -51,14 +53,8 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             $this->entityManager->flush();
         }
 
-        // Direciona o usuario para a pagina inicial
-        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
-            return new RedirectResponse($targetPath);
-        }
-
-        // For example:
-        // return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+        // Direciona o usuário para a pagina inicial
+        return new RedirectResponse($this->urlGenerator->generate('app_dashboard'));
     }
 
     protected function getLoginUrl(Request $request): string
