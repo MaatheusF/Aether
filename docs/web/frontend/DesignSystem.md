@@ -106,16 +106,30 @@ grid grid-cols-1 lg:grid-cols-3 gap-4                  /* zonas internas de mód
 ```
 Regra geral: **1 coluna até o breakpoint em que o conteúdo realmente cabe confortável** — nunca forçar 2-3 colunas apertadas no mobile.
 
-### 3.3 Módulos com múltiplos dispositivos
+### 3.3 Dois tipos de módulo: multi-dispositivo vs. instância única
 
-Um módulo (Poseidon, e futuramente outros) pode ter mais de um ESP32 acoplado — ex: vários aquários/paludários rodando o mesmo módulo. Isso muda a rota e a sidebar:
+Nem todo módulo tem a mesma forma. Antes de criar um módulo novo, decida qual dos dois ele é — isso muda rota, sidebar e o card do dashboard:
+
+#### 3.3.1 Multi-dispositivo (padrão Poseidon)
+
+Um módulo pode ter mais de um ESP32 acoplado — ex: vários aquários/paludários rodando o mesmo módulo.
 
 - **Rota:** `/modulos/{modulo}` sem device vira redirect pro primeiro dispositivo conhecido; a página real vive em `/modulos/{modulo}/{slug}` (nome de rota `app_modulo_{modulo}_dispositivo`). Nunca renderizar a página do módulo sem um dispositivo resolvido — se não houver nenhum cadastrado, mostrar o estado vazio (ver `modulos/poseidon.html.twig`), não uma tela quebrada.
 - **`slug` do dispositivo:** deve ser o mesmo valor usado como `device_name` no handshake TCP do Core (ver `docs/core/BuildAndRun.md`/`ConnSession`) — é o que amarra "o card que o usuário clicou" a "o ESP32 que o Core está falando".
 - **Sidebar:** ganha um bloco de **Seletor de dispositivo** acima dos submenus — lista todos os dispositivos do módulo com um ponto de status (`bg-aether-broto` online / `bg-aether-critico` alerta / `bg-slate-600` offline) e destaca o selecionado com o mesmo padrão visual dos submenus ativos (`bg-{cor}/10 text-{cor} font-medium`). Os submenus abaixo (Visão Geral/Iluminação/etc.) continuam sendo por-módulo, mas exibidos no contexto do dispositivo selecionado.
-- **Dashboard:** o card do módulo na grade principal deixa de ser único — vira um `{% for %}` sobre a lista de dispositivos, um card por device, todos linkando pra rota com o `slug` correspondente. Reaproveita exatamente o mesmo componente de card de módulo (`5.9` mais abaixo), só parametrizado.
+- **Dashboard:** o card do módulo na grade principal deixa de ser único — vira um `{% for %}` sobre a lista de dispositivos, um card por device, todos linkando pra rota com o `slug` correspondente, dentro da seção do módulo (ver §3.6).
 - **Fonte da lista de dispositivos:** nunca duplicar em mais de um controller. Um serviço dedicado (ex: `PoseidonDeviceProvider`) é a única fonte, injetado tanto no controller do dashboard quanto no do módulo — hoje pode retornar dados mock, depois passa a chamar o Core, sem os controllers/templates saberem a diferença.
 - **Estado offline/alerta desabilita a Zona 1:** quando `dispositivo.status != 'online'`, mostrar um aviso (`⚠` + texto) acima das zonas e aplicar `opacity-40 pointer-events-none` na seção de Ações Rápidas — nunca deixar toggles/sliders parecendo funcionais para um dispositivo sem conexão confirmada.
+
+#### 3.3.2 Instância única (padrão Horus)
+
+Alguns módulos não têm dispositivos separados do ponto de vista da WEB — câmeras, sensores e atuadores fazem parte de uma única instalação (o Horus é assim: não existe "Horus 1" e "Horus 2", existe UM módulo de segurança com vários componentes dentro dele).
+
+- **Rota:** uma só, `/modulos/{modulo}` (`app_modulo_{modulo}`), sem `{slug}`. Nada de redirect nem de seletor de dispositivo na sidebar.
+- **Sidebar:** só os submenus (Visão Geral, e as demais telas específicas do módulo — no Horus: Portão, Câmeras, Configurações, Logs). Sem bloco de seletor.
+- **Fonte do status:** em vez de um `{Modulo}DeviceProvider` retornando uma lista, um `{Modulo}StatusProvider` retornando **um objeto só** (ex: `HorusStatus`) com os campos que a UI precisa. Mesmo princípio do Poseidon — fonte única, injetada no dashboard e no controller do módulo, mock hoje e API do Core depois — só que sem a multiplicidade.
+- **Dashboard:** o card desse módulo ocupa a **linha inteira** (não entra num grid de 2-3 colunas), porque não existe "mais um card do mesmo módulo" pra formar grade — e a largura extra permite mostrar vários indicadores lado a lado dentro do próprio card (ver §3.6 e o card do Horus em `home/index.html.twig`).
+- **Decida isso ANTES de escrever qualquer rota.** Se não tiver certeza se um módulo futuro vai crescer pra multi-dispositivo, pergunte: "faz sentido o usuário ter vários desses ao mesmo tempo, cada um com seu próprio card?". Câmeras de segurança são plural mas pertencem a UMA instalação (Horus); aquários são plural E cada um é uma instalação independente (Poseidon) — é essa segunda característica que define multi-dispositivo, não só "ter mais de um item".
 
 ### 3.4 Bottom nav mobile: "Mais" em vez de lotar a barra
 
@@ -126,6 +140,16 @@ Padrão de implementação: mesma lógica do drawer da sidebar (`-translate-x-fu
 ### 3.5 Faixa de resumo (dashboard)
 
 Bloco curto (`glass-surface rounded-2xl p-4 flex flex-wrap gap-x-8`) no topo do dashboard, acima dos Cards de Alerta, com 2-4 números-chave em `font-mono` (ex: dispositivos totais, online, alertas ativos). Vem de um cálculo simples no controller (nunca em Twig com filtros de array — mantém a lógica testável em PHP puro), não é um componente decorativo — deve refletir dado real assim que existir fonte pra isso.
+
+### 3.6 Dashboard: uma seção por módulo, nunca um grid único
+
+A área "Módulos" do dashboard é **uma seção por módulo** (eyebrow com o nome do módulo, depois o conteúdo daquele módulo), não um grid único misturando cards de módulos diferentes — sem isso, não há nenhuma pista visual de qual card pertence a qual módulo.
+
+O conteúdo de cada seção muda conforme o tipo do módulo (ver §3.3):
+- **Multi-dispositivo (Poseidon):** eyebrow + contagem de dispositivos à direita, depois um grid `sm:grid-cols-2 xl:grid-cols-3` com `{% for %}` sobre a lista, e um `{% else %}` cobrindo "nenhum dispositivo cadastrado ainda" (nunca deixar a seção em branco silenciosamente).
+- **Instância única (Horus):** eyebrow sem contagem (não faz sentido contar "1 de 1"), depois **um único card ocupando a linha inteira** (`class="group block rounded-2xl glass-surface p-5 ..."`, sem grid em volta) — a largura extra é usada pra mostrar os indicadores lado a lado dentro do próprio card (`grid grid-cols-1 sm:grid-cols-3 gap-4`), em vez de espremidos numa mini-telemetria de 3 colunas apertada.
+
+**Sobre o controller:** não crie uma interface genérica de "provider de módulo" até existir de fato mais de ~3-4 módulos reais com essa necessidade — com poucos módulos, cada um injetando seu próprio provider (`PoseidonDeviceProvider`, `HorusStatusProvider`, ...) e passando sua própria variável é mais simples de entender e não é uma abstração precisando de manutenção. Se o `DashboardController` começar a ficar repetitivo, esse é o sinal concreto pra generalizar com uma interface comum + `#[AutoconfigureTag]` do Symfony — não antes.
 
 ---
 
@@ -142,19 +166,24 @@ templates/
 ├── login.html.twig       ← tela isolada, não estende base
 ├── dashboard.html.twig   ← extends base, layout_mode = full
 └── modulos/
-    └── poseidon.html.twig ← extends base, layout_mode = sidebar, escopado por dispositivo (ver §3.3)
+    ├── poseidon.html.twig ← extends base, layout_mode = sidebar, multi-dispositivo (ver §3.3.1)
+    └── horus.html.twig    ← extends base, layout_mode = sidebar, instância única (ver §3.3.2)
 
 src/Controller/
 ├── SecurityController.php   ← app_login, app_logout
-├── DashboardController.php  ← app_dashboard (injeta PoseidonDeviceProvider)
-└── ModuloController.php     ← app_modulo_poseidon (redirect) + app_modulo_poseidon_dispositivo
+├── DashboardController.php  ← app_dashboard (injeta PoseidonDeviceProvider + HorusStatusProvider)
+└── ModuloController.php     ← app_modulo_poseidon (redirect) + app_modulo_poseidon_dispositivo + app_modulo_horus
 
 src/Service/Poseidon/
 ├── PoseidonDevice.php         ← value object (slug, nome, tipo, status, telemetria)
 └── PoseidonDeviceProvider.php ← fonte única da lista de dispositivos (mock hoje, API do Core depois)
+
+src/Service/Horus/
+├── HorusStatus.php         ← value object (status, câmeras, dispositivos, portão) — SEM lista, é instância única
+└── HorusStatusProvider.php ← fonte única do status (mock hoje, API do Core depois)
 ```
 
-**Convenção para novo módulo (ex: Horus):** replicar o padrão do Poseidon — `templates/modulos/horus.html.twig` estendendo `base.html.twig`, controller com rota índice + rota por dispositivo, um `HorusDeviceProvider` próprio em `src/Service/Horus/`, e (se precisar de CSS próprio) `assets/styles/pages/horus.css` importado em `app.css`. Não reaproveitar `PoseidonDeviceProvider` pra outro módulo — cada módulo tem sua própria fonte de dispositivos, mesmo que a forma seja idêntica.
+**Convenção para novo módulo:** primeiro decida se ele é multi-dispositivo ou instância única (§3.3). Multi-dispositivo replica o padrão Poseidon (`{Modulo}DeviceProvider` + rota índice/dispositivo). Instância única replica o padrão Horus (`{Modulo}StatusProvider` + rota única). Nos dois casos: template próprio em `templates/modulos/`, serviço próprio em `src/Service/{Modulo}/` (nunca reaproveitar o provider de outro módulo, mesmo que a forma seja idêntica), e (se precisar de CSS próprio) `assets/styles/pages/{modulo}.css` importado em `app.css`.
 
 ---
 
@@ -202,6 +231,10 @@ Comportamento já pronto: abre/fecha no clique, fecha ao clicar fora, fecha com 
 
 ### 5.5 Toggles / switches (com estado "Pendente")
 
+Todo `role="switch"` leva `aria-label` com um nome estável do que ele controla (ex: `"Travamento do portão principal"`) — não é opcional, é o nome acessível do controle pra quem usa leitor de tela, já que o switch não tem texto próprio.
+
+**Legenda visual quando há mais de um controle na mesma linha:** um toggle sozinho ao lado do seu label (padrão do Poseidon: "Cascata" + estado à esquerda, switch à direita) não precisa de legenda própria — o contexto ao lado já deixa claro. Mas se o switch dividir espaço com **outro controle** (ex: o portão do Horus, que tem o toggle de travamento *e* o botão "Atuar" lado a lado), adicione uma legenda curta acima do switch (`text-[10px] font-mono uppercase tracking-wide text-slate-600`, ex: "Trava") — sem isso, dois controles sem texto próprio um do lado do outro deixam ambíguo qual faz o quê.
+
 Três estados visuais fixos — usar sempre os três, nunca só on/off:
 
 | Estado | Trilho | Thumb | Extra |
@@ -211,6 +244,33 @@ Três estados visuais fixos — usar sempre os três, nunca só on/off:
 | **Pendente** | `bg-aether-ambar/20 border-aether-ambar/40 opacity-70 cursor-wait` | — | `disabled`, ícone de spinner (`animate-spin`) ao lado do label, texto `pendente` em `text-aether-ambar` |
 
 O estado Pendente representa o intervalo entre o clique do usuário e a confirmação real do hardware (ACK do Core/ESP32 — ver `docs/payload-telemetria-poseidon.md` §3.4). **Todo novo atuador precisa implementar esse terceiro estado**, não só on/off.
+
+**Acionamento:** `public/js/services/atuador_control.js` cobre TODO toggle de atuador do sistema, de qualquer módulo — não escrever um handler de clique novo por módulo. Um `<button role="switch">` vira interativo automaticamente se tiver:
+
+```
+data-modulo="poseidon|horus|..."     — slug do módulo (monta a URL)
+data-atuador="cascata|portao|..."     — nome do atuador dentro do módulo
+data-dispositivo="{{ slug }}"          — SÓ em módulo multi-dispositivo (§3.3.1); omitir em instância única (§3.3.2)
+```
+
+Fluxo: clique → pendente (imediato, sem esperar rede) → `POST /api/modulos/{modulo}[/dispositivos/{slug}]/atuadores/{atuador}` → Core responde 202 → polling no status até resolver → aplica estado real, ou reverte + sinaliza erro se não confirmar em 15s. Um toggle `disabled` no HTML nunca recebe o listener — é assim que o bombeamento do Poseidon fica permanentemente no visual "Pendente" como demonstração, sem interferência do JS.
+
+**Elementos satélite (label, ícone, borda do card):** o JS só atualiza o próprio botão por padrão. Qualquer texto/cor ao redor que também deva mudar com o estado (ex: o texto "Travado"/"Destravado", a cor do ícone do cadeado, a borda âmbar do card do portão) precisa ser marcado explicitamente — não é automático:
+
+```
+<div data-atuador-grupo>                         ← ancestral comum (o JS sobe até aqui a partir do botão)
+  <span data-classe-on="..." data-classe-off="..." class="...">     ← classe completa troca por estado
+  <p data-texto-on="Travado" data-texto-off="Destravado"
+     data-classe-on="..." data-classe-off="..." class="...">Travado</p>  ← texto E classe trocam juntos
+  <button role="switch" data-modulo="..." data-atuador="...">...</button>
+</div>
+```
+
+`data-classe-on`/`data-classe-off` sempre a string **completa** da classe (nunca só a parte que muda) — o `className` é substituído por inteiro. Os satélites só atualizam quando o estado é definitivo (`on`/`off`); durante `pending` continuam mostrando o último estado confirmado.
+
+**Ações momentâneas (sem estado):** nem todo controle é um toggle. Um atuador que não tem "ligado/desligado" pra representar — ex: o botão "Atuar" do portão do Horus, que só dispara um pulso no relé e não sabe se o resultado foi abrir ou fechar — usa um botão comum (`<button>`, sem `role="switch"`) com `data-modulo`/`data-acao`(/`data-dispositivo`), sem `aria-checked`. `atuador_control.js` trata isso à parte: desabilita + mostra "Acionando..." no clique, `POST /api/modulos/{modulo}/acoes/{acao}`, e reabilita depois de um cooldown (`data-cooldown-ms`, opcional) — não faz polling de confirmação, porque não há estado final pra resolver, só um tempo de segurança antes de permitir acionar de novo (evita disparar duas vezes enquanto o atuador físico ainda está em movimento).
+
+**Erro de acionamento não usa Tailwind:** a classe `.atuador-erro` (flash vermelho no toggle quando a requisição falha ou expira) é CSS puro em `app.css`, não uma combinação de utilities do Tailwind. Motivo: é aplicada/removida dinamicamente via `classList` no JS — uma classe Tailwind só existe no CSS compilado se aparecer *por extenso* em algum arquivo que o Tailwind escaneia, e um `.js` fora do padrão de conteúdo não garante isso. Regra geral: **qualquer classe que o JS vai adicionar/remover em runtime deve ser CSS puro**, nunca uma utility Tailwind nova que só existiria se o JS a "inventasse" (mesma armadilha de `bg-{{ variavel }}` no Twig, ver §5.6 abaixo — só que essa não dá pra resolver com ternária, porque não é renderização server-side).
 
 ### 5.6 Cards de Alerta (estados biológicos)
 

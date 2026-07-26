@@ -121,26 +121,32 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
                 {# Toggle: Cascata — estado normal (ligado) #}
-                <div class="flex items-center justify-between p-3 rounded-xl border border-aether-border">
+                <div data-atuador-grupo class="flex items-center justify-between p-3 rounded-xl border border-aether-border">
                     <div>
                         <p class="text-sm font-medium text-slate-200">Cascata</p>
-                        <p class="text-[11px] font-mono text-aether-broto">ativa</p>
+                        <p data-texto-on="ativa" data-texto-off="inativa"
+                           data-classe-on="text-[11px] font-mono text-aether-broto"
+                           data-classe-off="text-[11px] font-mono text-slate-500"
+                           class="text-[11px] font-mono text-aether-broto">ativa</p>
                     </div>
-                    <button type="button" role="switch" aria-checked="true"
-                            data-relay="cascata" data-dispositivo="{{ dispositivo.slug }}"
+                    <button type="button" role="switch" aria-checked="true" aria-label="Cascata"
+                            data-modulo="poseidon" data-atuador="cascata" data-dispositivo="{{ dispositivo.slug }}"
                             class="relative w-11 h-6 rounded-full bg-aether-broto/30 border border-aether-broto/50 transition-colors">
                         <span class="absolute top-0.5 right-0.5 w-4.5 h-4.5 rounded-full bg-aether-broto shadow-glow-broto transition-all"></span>
                     </button>
                 </div>
 
                 {# Toggle: Névoa — estado desligado #}
-                <div class="flex items-center justify-between p-3 rounded-xl border border-aether-border">
+                <div data-atuador-grupo class="flex items-center justify-between p-3 rounded-xl border border-aether-border">
                     <div>
                         <p class="text-sm font-medium text-slate-200">Névoa</p>
-                        <p class="text-[11px] font-mono text-slate-500">inativa</p>
+                        <p data-texto-on="ativa" data-texto-off="inativa"
+                           data-classe-on="text-[11px] font-mono text-aether-broto"
+                           data-classe-off="text-[11px] font-mono text-slate-500"
+                           class="text-[11px] font-mono text-slate-500">inativa</p>
                     </div>
-                    <button type="button" role="switch" aria-checked="false"
-                            data-relay="nevoa" data-dispositivo="{{ dispositivo.slug }}"
+                    <button type="button" role="switch" aria-checked="false" aria-label="Névoa"
+                            data-modulo="poseidon" data-atuador="nevoa" data-dispositivo="{{ dispositivo.slug }}"
                             class="relative w-11 h-6 rounded-full bg-white/5 border border-aether-border transition-colors">
                         <span class="absolute top-0.5 left-0.5 w-4.5 h-4.5 rounded-full bg-slate-500 transition-all"></span>
                     </button>
@@ -157,8 +163,8 @@
                             pendente
                         </p>
                     </div>
-                    <button type="button" role="switch" aria-checked="true" disabled
-                            data-relay="bombeamento" data-dispositivo="{{ dispositivo.slug }}"
+                    <button type="button" role="switch" aria-checked="true" aria-label="Bombeamento" disabled
+                            data-modulo="poseidon" data-atuador="bombeamento" data-dispositivo="{{ dispositivo.slug }}"
                             class="relative w-11 h-6 rounded-full bg-aether-ambar/20 border border-aether-ambar/40 opacity-70 cursor-wait">
                         <span class="absolute top-0.5 right-0.5 w-4.5 h-4.5 rounded-full bg-aether-ambar/80"></span>
                     </button>

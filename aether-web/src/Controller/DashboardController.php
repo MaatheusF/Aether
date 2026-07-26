@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\Horus\HorusStatusProvider;
 use App\Service\Poseidon\PoseidonDeviceProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,6 +12,7 @@ final class DashboardController extends AbstractController
 {
     public function __construct(
         private readonly PoseidonDeviceProvider $poseidonDevices,
+        private readonly HorusStatusProvider $horusStatus,
     ) {
     }
 
@@ -21,6 +23,7 @@ final class DashboardController extends AbstractController
 
         return $this->render('/home/index.html.twig', [
             'dispositivos_poseidon' => $dispositivos,
+            'horus' => $this->horusStatus->obter(),
             'resumo' => $this->montarResumo($dispositivos),
             // TODO: substituir por alertas reais vindos do Core assim que a
             // avaliação de limiar (temperatura/umidade fora do ideal) existir
