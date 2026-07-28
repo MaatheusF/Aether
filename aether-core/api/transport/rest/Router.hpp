@@ -3,6 +3,7 @@
 #include "../../common/HttpResponse.hpp"
 #include "../../common/HttpRequest.hpp"
 #include "../../controllers/StatusController.hpp"
+#include "../../controllers/CameraController.hpp"
 
 #include <string>
 
@@ -79,5 +80,6 @@ namespace Aether::Api
 
         private:
             StatusController m_statusController;  /**< Controller de status */
+            CameraController m_cameraController;  /**< Controller de câmeras */
     };
 }

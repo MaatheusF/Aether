@@ -114,6 +114,14 @@
                             class="px-3 py-2 rounded-lg text-xs font-medium text-slate-300 border border-aether-border hover:bg-white/5 transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-wait">
                         Atuar
                     </button>
+
+                    {# TEMPORÁRIO: botão de debug, envia direto pro servidor de
+                       debug do ESP32 via Symfony (ver GateDebugController).
+                       Remover quando o fluxo oficial acima estiver funcional. #}
+                    <button type="button" id="btn-debug-portao" data-cooldown-ms="4000"
+                            class="px-3 py-2 rounded-lg text-xs font-medium text-aether-ambar border border-aether-ambar/40 hover:bg-aether-ambar/10 transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-wait">
+                        Debug: Abrir
+                    </button>
                 </div>
             </div>
 
@@ -133,17 +141,34 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {% set cameras = ['Entrada', 'Garagem', 'Quintal', 'Portão'] %}
-                {% for nome in cameras %}
-                    <div class="rounded-xl border border-dashed border-aether-border aspect-video flex flex-col items-center justify-center gap-2 text-slate-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5V6a1.5 1.5 0 0 0-1.5-1.5h-9A1.5 1.5 0 0 0 3 6v9a1.5 1.5 0 0 0 1.5 1.5h9a1.5 1.5 0 0 0 1.5-1.5v-4.5Zm0 0 4.72-2.36a.75.75 0 0 1 1.08.67v7.38a.75.75 0 0 1-1.08.67L15 13.5" />
-                        </svg>
-                        <p class="text-xs font-mono text-center px-4">
-                            Câmera · {{ nome }}<br>
-                            <span class="text-slate-700">player — id="cam-{{ nome|lower }}"</span>
-                        </p>
-                    </div>
+                {# canal != null → câmera já exposta pelo Core (GET /api/cameras/:canal/snapshot).
+                   As demais seguem como placeholder até o Core expor os canais correspondentes. #}
+                {% set cameras = [
+                    {nome: 'Entrada', canal: 1},
+                    {nome: 'Garagem', canal: null},
+                    {nome: 'Quintal', canal: null},
+                    {nome: 'Portão', canal: null},
+                ] %}
+                {% for cam in cameras %}
+                    {% if cam.canal %}
+                        <div class="rounded-xl border border-aether-border aspect-video relative overflow-hidden bg-black/40">
+                            <img data-camera-snapshot data-camera-channel="{{ cam.canal }}"
+                                 alt="Câmera · {{ cam.nome }}" class="w-full h-full object-cover">
+                            <p class="absolute bottom-0 inset-x-0 py-1 text-[10px] font-mono text-center text-slate-300 bg-black/50">
+                                Câmera · {{ cam.nome }}
+                            </p>
+                        </div>
+                    {% else %}
+                        <div class="rounded-xl border border-dashed border-aether-border aspect-video flex flex-col items-center justify-center gap-2 text-slate-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5V6a1.5 1.5 0 0 0-1.5-1.5h-9A1.5 1.5 0 0 0 3 6v9a1.5 1.5 0 0 0 1.5 1.5h9a1.5 1.5 0 0 0 1.5-1.5v-4.5Zm0 0 4.72-2.36a.75.75 0 0 1 1.08.67v7.38a.75.75 0 0 1-1.08.67L15 13.5" />
+                            </svg>
+                            <p class="text-xs font-mono text-center px-4">
+                                Câmera · {{ cam.nome }}<br>
+                                <span class="text-slate-700">player — id="cam-{{ cam.nome|lower }}"</span>
+                            </p>
+                        </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         </section>
@@ -174,4 +199,36 @@
 
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/services/camera_snapshot.js') }}"></script>
+
+    {# TEMPORÁRIO: ver botão #btn-debug-portao acima. #}
+    <script>
+        (function () {
+            const botao = document.getElementById('btn-debug-portao');
+            if (!botao) return;
+
+            botao.addEventListener('click', async () => {
+                const textoOriginal = botao.textContent;
+                botao.disabled = true;
+                botao.textContent = 'Enviando...';
+
+                try {
+                    const resp = await fetch('{{ path('app_horus_portao_debug_abrir') }}', { method: 'POST' });
+                    if (!resp.ok) throw new Error(`Symfony respondeu ${resp.status}`);
+                } catch (erro) {
+                    console.error('Erro ao enviar comando de debug ao portao:', erro);
+                    botao.classList.add('atuador-erro');
+                    setTimeout(() => botao.classList.remove('atuador-erro'), 1300);
+                } finally {
+                    setTimeout(() => {
+                        botao.disabled = false;
+                        botao.textContent = textoOriginal;
+                    }, Number(botao.dataset.cooldownMs) || 4000);
+                }
+            });
+        })();
+    </script>
 {% endblock %}

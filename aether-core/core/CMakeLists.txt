@@ -4,6 +4,8 @@ project(aether_core)
 # Cria a biblioteca estática do core apenas com os .cpp
 add_library(aether_core STATIC
         utils/logger.cpp
+        utils/Md5.cpp
+        utils/Md5.hpp
         eventbus/src/EventBus.cpp
         database/src/PostgresDriver.cpp
         database/include/PostgresDriver.hpp
