@@ -49,15 +49,15 @@
         {# --- Centro: módulos globais (oculto no mobile, vira bottom nav) --- #}
         <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
             <a href="{{ path('app_dashboard') }}"
-               class="px-3 py-1.5 rounded-full transition-colors {{ module_active|default('') == '' ? 'text-slate-50 bg-white/5' : 'text-slate-400 hover:text-slate-100 hover:bg-white/5' }}">
+               class="px-3 py-1.5 rounded-full transition-colors {{ block('module_active') == '' ? 'text-slate-50 bg-white/5' : 'text-slate-400 hover:text-slate-100 hover:bg-white/5' }}">
                 Visão Geral
             </a>
             <a href="{{ path('app_modulo_poseidon') }}"
-               class="px-3 py-1.5 rounded-full transition-colors {{ module_active|default('') == 'poseidon' ? 'text-aether-agua bg-aether-agua/10' : 'text-slate-400 hover:text-slate-100 hover:bg-white/5' }}">
+               class="px-3 py-1.5 rounded-full transition-colors {{ block('module_active') == 'poseidon' ? 'text-aether-agua bg-aether-agua/10' : 'text-slate-400 hover:text-slate-100 hover:bg-white/5' }}">
                 Poseidon
             </a>
             <a href="{{ path('app_modulo_horus') }}"
-               class="px-3 py-1.5 rounded-full transition-colors {{ module_active|default('') == 'horus' ? 'text-aether-ambar bg-aether-ambar/10' : 'text-slate-400 hover:text-slate-100 hover:bg-white/5' }}">
+               class="px-3 py-1.5 rounded-full transition-colors {{ block('module_active') == 'horus' ? 'text-aether-ambar bg-aether-ambar/10' : 'text-slate-400 hover:text-slate-100 hover:bg-white/5' }}">
                 Horus
             </a>
         </nav>
@@ -164,13 +164,13 @@
 
 {# ======================= BOTTOM NAV — mobile, estilo app ======================= #}
 <nav class="md:hidden fixed bottom-0 inset-x-0 z-40 h-16 glass-fixed flex items-stretch">
-    <a href="{{ path('app_dashboard') }}" class="flex-1 flex flex-col items-center justify-center gap-1 {{ module_active|default('') == '' ? 'text-aether-broto' : 'text-slate-500' }}">
+    <a href="{{ path('app_dashboard') }}" class="flex-1 flex flex-col items-center justify-center gap-1 {{ block('module_active') == '' ? 'text-aether-broto' : 'text-slate-500' }}">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-5 h-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75" />
         </svg>
         <span class="text-[10px] font-medium">Visão Geral</span>
     </a>
-    <a href="{{ path('app_modulo_poseidon') }}" class="flex-1 flex flex-col items-center justify-center gap-1 {{ module_active|default('') == 'poseidon' ? 'text-aether-agua' : 'text-slate-500' }}">
+    <a href="{{ path('app_modulo_poseidon') }}" class="flex-1 flex flex-col items-center justify-center gap-1 {{ block('module_active') == 'poseidon' ? 'text-aether-agua' : 'text-slate-500' }}">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-5 h-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 21c-4.97 0-9-3.5-9-8 0-3.5 3-6 4.5-9.5C9 6 10.5 3 12 3s3 3 4.5 4.5C18 11 21 9.5 21 13c0 4.5-4.03 8-9 8Z" />
         </svg>
@@ -181,7 +181,7 @@
        Todo módulo novo entra aqui primeiro; só ganha atalho fixo na barra se
        o uso no dia a dia justificar (ver DesignSystem.md §3.4). #}
     <button type="button" id="mobile-more-btn"
-            class="flex-1 flex flex-col items-center justify-center gap-1 {{ module_active|default('') in ['horus', 'poseidon'] ? 'text-aether-ambar' : 'text-slate-500' }}">
+            class="flex-1 flex flex-col items-center justify-center gap-1 {{ block('module_active') in ['horus', 'poseidon'] ? 'text-aether-ambar' : 'text-slate-500' }}">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-5 h-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
         </svg>
@@ -202,7 +202,7 @@
         </button>
     </div>
     <nav class="flex flex-col gap-1 text-sm pb-[env(safe-area-inset-bottom)]">
-        <a href="{{ path('app_modulo_horus') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg {{ module_active|default('') == 'horus' ? 'bg-aether-ambar/10 text-aether-ambar' : 'text-slate-300 hover:bg-white/5' }}">
+        <a href="{{ path('app_modulo_horus') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg {{ block('module_active') == 'horus' ? 'bg-aether-ambar/10 text-aether-ambar' : 'text-slate-300 hover:bg-white/5' }}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-5 h-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
             </svg>
