@@ -192,7 +192,7 @@
 {# --------------------- Folha "Mais módulos" (mobile) --------------------- #}
 <div id="mobile-more-overlay" class="md:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm hidden"></div>
 <div id="mobile-more-sheet"
-     class="md:hidden fixed z-50 inset-x-0 bottom-16 translate-y-[120%] transition-transform duration-300 ease-out glass-fixed rounded-t-2xl p-4">
+     class="md:hidden fixed z-50 inset-x-0 bottom-16 translate-y-[calc(100%+4rem)] transition-transform duration-300 ease-out glass-fixed rounded-t-2xl p-4">
     <div class="flex items-center justify-between mb-3">
         <span class="text-xs font-mono uppercase tracking-widest text-slate-500">Módulos</span>
         <button type="button" id="mobile-more-close-btn" class="text-slate-400 hover:text-slate-100">
@@ -257,11 +257,11 @@
         if (!sheet) return;
 
         function openSheet() {
-            sheet.classList.remove('translate-y-[120%]');
+            sheet.classList.remove('translate-y-[calc(100%+4rem)]');
             overlay?.classList.remove('hidden');
         }
         function closeSheet() {
-            sheet.classList.add('translate-y-[120%]');
+            sheet.classList.add('translate-y-[calc(100%+4rem)]');
             overlay?.classList.add('hidden');
         }
         openBtn?.addEventListener('click', openSheet);
