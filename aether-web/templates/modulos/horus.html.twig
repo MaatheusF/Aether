@@ -154,6 +154,11 @@
                         <div class="rounded-xl border border-aether-border aspect-video relative overflow-hidden bg-black/40">
                             <img data-camera-snapshot data-camera-channel="{{ cam.canal }}"
                                  alt="Câmera · {{ cam.nome }}" class="w-full h-full object-fill">
+                            {# Bolinha de Atualização do snapshot — verde enquanto a última
+                               atualização tiver menos de 10s, vermelha se passar disso
+                               sem uma nova imagem chegar. Controlada por camera_snapshot.js. #}
+                            <span data-camera-status-dot
+                                  class="absolute bottom-2 right-2 z-10 w-2 h-2 rounded-full bg-aether-broto vital-dot"></span>
                             <p class="absolute bottom-0 inset-x-0 py-1 text-[10px] font-mono text-center text-slate-300 bg-black/50">
                                 Câmera · {{ cam.nome }}
                             </p>
