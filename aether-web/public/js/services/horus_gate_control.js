@@ -17,7 +17,22 @@
     const botao = document.getElementById('btn-portao-atuador');
     if (!botao) return;
 
-    botao.addEventListener('click', async () => {
+    // Confirmação antes de enviar o comando — evita abrir o portão sem
+    // querer num toque acidental (ver overlay #portao-confirm-overlay
+    // em modulos/horus.html.twig).
+    const overlay = document.getElementById('portao-confirm-overlay');
+    const botaoCancelar = document.getElementById('portao-confirm-cancelar');
+    const botaoConfirmar = document.getElementById('portao-confirm-aceitar');
+
+    function abrirConfirmacao() {
+        overlay?.classList.remove('hidden');
+    }
+
+    function fecharConfirmacao() {
+        overlay?.classList.add('hidden');
+    }
+
+    async function enviarComando() {
         const textoOriginal = botao.textContent;
         botao.disabled = true;
         botao.textContent = 'Enviando...';
@@ -35,5 +50,15 @@
                 botao.textContent = textoOriginal;
             }, Number(botao.dataset.cooldownMs) || 4000);
         }
+    }
+
+    botao.addEventListener('click', abrirConfirmacao);
+    botaoCancelar?.addEventListener('click', fecharConfirmacao);
+    overlay?.addEventListener('click', (evento) => {
+        if (evento.target === overlay) fecharConfirmacao();
+    });
+    botaoConfirmar?.addEventListener('click', () => {
+        fecharConfirmacao();
+        enviarComando();
     });
 })();
