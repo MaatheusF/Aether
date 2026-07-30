@@ -548,6 +548,9 @@
   .justify-center {
     justify-content: center;
   }
+  .justify-end {
+    justify-content: flex-end;
+  }
   .gap-1 {
     gap: var(--spacing);
   }
@@ -1122,6 +1125,14 @@
     @supports (color: color-mix(in lab, red, red)) {
       .hover\:border-aether-broto\/30:hover {
         border-color: color-mix(in oklab, var(--color-aether-broto) 30%, transparent);
+      }
+    }
+    .hover\:bg-aether-ambar\/10:hover {
+      background-color: color-mix(in srgb, #FFB900 10%, transparent);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .hover\:bg-aether-ambar\/10:hover {
+        background-color: color-mix(in oklab, var(--color-aether-ambar) 10%, transparent);
       }
     }
     .hover\:bg-aether-broto\/20:hover {
