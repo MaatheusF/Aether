@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <mutex>
 
 /** @class AetherCoreLogger
  * @brief Classe responsável pelo registro de logs do sistema AetherCore.
@@ -44,6 +45,8 @@ public:
      */
     static void Log(const std::string& message)
     {
+        std::lock_guard<std::mutex> lock(sMutex);
+
         if (logFile.is_open())
         {
             logFile << returnCurrentTimeStamp() << " " << message << std::endl;
@@ -92,6 +95,8 @@ private:
         {
             if (c == EOF) return !EOF;
 
+            std::lock_guard<std::mutex> lock(sMutex);
+
             // Console
             if (sb1)
             {
@@ -133,6 +138,8 @@ private:
          */
         int sync() override
         {
+            std::lock_guard<std::mutex> lock(sMutex);
+
             int r1 = sb1 ? sb1->pubsync() : 0;          /// Sincroniza o primeiro buffer
             int r2 = sb2 ? sb2->pubsync() : 0;          /// Sincroniza o segundo buffer
             return (r1 == 0 && r2 == 0) ? 0 : -1;       /// Retorna 0 se ambos sincronizaram com sucesso
@@ -146,4 +153,5 @@ private:
     };
 
     static std::ofstream logFile;       /// Arquivo de log
+    static std::mutex sMutex;           /// Protege escritas concorrentes em logFile/TeeBuffer
 };

@@ -4,8 +4,9 @@
 #include <iomanip>
 #include <string>
 
-// Definição da variável estática
+// Definição das variáveis estáticas
 std::ofstream AetherCoreLogger::logFile;
+std::mutex AetherCoreLogger::sMutex;
 
 /**
  * @brief Retorna o timestamp atual no formato "YYYY-MM-DD HH:MM:SS".
