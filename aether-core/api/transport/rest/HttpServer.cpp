@@ -28,7 +28,11 @@ namespace Aether::Api
                   boost::asio::ip::make_address(config.host),
                   config.port))
     {
-        AccessLogger::Initialize(config.accessLogPath);
+        AccessLogger::Initialize(
+            config.accessLogPath,
+            config.requestDetailsDir,
+            config.loggedMethods,
+            config.detailedMethods);
     }
 
     /**

@@ -1,9 +1,12 @@
 #pragma once
 
+#include "../common/HttpMethod.hpp"
+
 #include <algorithm>
 #include <cstdint>
 #include <string>
 #include <thread>
+#include <unordered_set>
 
 namespace Aether::Api
 {
@@ -42,5 +45,62 @@ namespace Aether::Api
          * @see AccessLogger
          */
         std::string accessLogPath = "/var/log/aether/aether_api_access.log";
+
+        /**
+         * @brief Diretório onde cada requisição grava seu próprio arquivo
+         * com o payload da requisição e o corpo da resposta completos.
+         * @see AccessLogger
+         */
+        std::string requestDetailsDir = "/var/log/aether/api_requests";
+
+        /**
+         * @brief Métodos HTTP que geram entrada no access log + arquivo de detalhe.
+         *
+         * Requisições com método fora desse conjunto não geram linha
+         * nenhuma no access log, nem arquivo de detalhe -- são ignoradas
+         * pelo AccessLogger por completo (mas continuam sendo processadas
+         * normalmente pelo Router). Default: todos os métodos suportados.
+         *
+         * Exemplo pra logar só GET (ex: ignorar POSTs de atuadores, que já
+         * ficam registrados no log operacional de cada módulo):
+         * @code
+         *   config.loggedMethods = { HttpMethod::GET };
+         * @endcode
+         */
+        std::unordered_set<HttpMethod> loggedMethods = {
+            HttpMethod::GET,
+            HttpMethod::POST,
+            HttpMethod::PUT,
+            HttpMethod::PATCH,
+            HttpMethod::DELETE_,
+        };
+
+        /**
+         * @brief Métodos HTTP que, além da linha resumo, também geram
+         * arquivo de detalhe (payload + response completos).
+         *
+         * Só tem efeito pra métodos que já estão em loggedMethods -- um
+         * método fora de loggedMethods nem chega a ser avaliado aqui,
+         * já que é ignorado antes. Métodos em loggedMethods mas fora
+         * desse conjunto continuam gerando a linha normal no access log,
+         * só que com `detail=-` (sem arquivo de detalhe). Default: todos
+         * os métodos suportados (mesmo comportamento de antes).
+         *
+         * Exemplo pra logar todo método na linha resumo, mas só gravar o
+         * arquivo de detalhe pesado (payload/response) de POST/PUT/DELETE,
+         * sem o volume extra de GET (ex: snapshots de câmera a cada
+         * segundo, que já viram placeholder no detalhe mas nem precisam
+         * do arquivo em si):
+         * @code
+         *   config.detailedMethods = { HttpMethod::POST, HttpMethod::PUT, HttpMethod::DELETE_ };
+         * @endcode
+         */
+        std::unordered_set<HttpMethod> detailedMethods = {
+            HttpMethod::GET,
+            HttpMethod::POST,
+            HttpMethod::PUT,
+            HttpMethod::PATCH,
+            HttpMethod::DELETE_,
+        };
     };
 }
