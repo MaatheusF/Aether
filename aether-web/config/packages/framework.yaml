@@ -8,6 +8,12 @@ framework:
     #esi: true
     #fragments: true
 
+    # Versiona os asset('...') com ?v=<APP_VERSION> -- cada deploy muda o
+    # valor (ver deploy-aether.sh), então a URL do arquivo muda junto e o
+    # Cloudflare/navegador nunca serve uma versão em cache antiga por engano.
+    assets:
+        version: '%env(APP_VERSION)%'
+
 when@test:
     framework:
         test: true
