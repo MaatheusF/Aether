@@ -22,11 +22,20 @@ aether-core/api/
 ├── config/
 │   └── ApiConfig.hpp           # Configuração (host, porta)
 ├── controllers/                 # MVC: Recebe requisições
-│   └── Arquvios controllers dos Métodos
+│   ├── core/                    # Controllers que não pertencem a um módulo específico
+│   │   └── StatusController.*
+│   └── modules/<NomeDoModulo>/  # Controllers específicos de um módulo (ex: Horus, Poseidon)
+│       └── CameraController.*   # (exemplo real: modules/Horus/CameraController.*)
 ├── dto/                         # Data Transfer Objects
-│   └── DTO dos Métodos
+│   ├── core/
+│   │   └── StatusResponse.hpp
+│   └── modules/<NomeDoModulo>/
+│       └── CameraSnapshotResponse.hpp
 ├── services/                    # Lógica de negócio
-│   └── Arquvios services dos Métodos
+│   ├── core/
+│   │   └── StatusService.*
+│   └── modules/<NomeDoModulo>/
+│       └── CameraService.*
 └── transport/
     └── rest/                    # Implementação HTTP
         ├── HttpServer.hpp/cpp         # Servidor TCP
@@ -38,6 +47,12 @@ aether-core/api/
         ├── RouterPut.hpp/cpp          # Handlers PUT
         └── RouterDelete.hpp/cpp       # Handlers DELETE
 ```
+
+`controllers/`, `dto/` e `services/` seguem a mesma convenção de duas gavetas:
+- **`core/`** — endpoints que não pertencem a nenhum módulo do Aether (ex: `/api/core/status`).
+- **`modules/<NomeDoModulo>/`** — endpoints específicos de um módulo (ex: `modules/Horus/` para tudo relacionado a câmeras/portão do Horus). O nome do módulo é o mesmo usado em `aether-core/modules/` (`ModuleTest`, `ModulePoseidon`, etc.).
+
+Isso não cria nenhuma fronteira de build (ainda é tudo compilado junto na lib `aether_api`) — é só convenção de arquivos pra deixar claro o que pertence a que módulo. O `Router` continua sendo o único ponto que conhece todos os controllers, de todos os módulos (ver seção de melhorias no fim deste documento).
 
 ## 🔄 Fluxo de Uma Requisição HTTP
 
@@ -150,7 +165,7 @@ HttpResponse Router::dispatch(const HttpRequest& request)
 // Cada método faz matching de path
 HttpResponse Router::dispatchGet(const HttpRequest& request)
 {
-    if (request.path == "/api/status")
+    if (request.path == "/api/core/status")
         return m_statusController.get(request);
     
     return notFound();
@@ -166,7 +181,7 @@ Fornece API fluente para adicionar rotas:
 ```cpp
 auto registry = std::make_shared<RouteRegistry>();
 
-registry->get("/api/status", [&](const HttpRequest& req) {
+registry->get("/api/core/status", [&](const HttpRequest& req) {
     return statusController.get(req);
 });
 
@@ -183,7 +198,7 @@ registry->delete_("/api/users/:id", [&](const HttpRequest& req) {
 });
 
 // Buscar rota
-auto handler = registry->find(HttpMethod::GET, "/api/status");
+auto handler = registry->find(HttpMethod::GET, "/api/core/status");
 if (handler) {
     response = (*handler)(request);
 }
@@ -251,9 +266,13 @@ namespace Aether::Api::Dto {
 
 ## 🚀 Como Adicionar Uma Nova Rota
 
+Exemplo abaixo pra uma rota de usuários pertencente a um módulo hipotético
+`Auth` — troque `modules/Auth/` por `core/` se a rota não pertencer a nenhum
+módulo específico (ver seção "Estrutura de Pastas" acima).
+
 ### Passo 1: Criar o DTO (se necessário)
 
-`aether-core/api/dto/UserResponse.hpp`:
+`aether-core/api/dto/modules/Auth/UserResponse.hpp`:
 ```cpp
 #pragma once
 
@@ -268,11 +287,11 @@ namespace Aether::Api::Dto {
 
 ### Passo 2: Criar o Service
 
-`aether-core/api/services/UserService.hpp`:
+`aether-core/api/services/modules/Auth/UserService.hpp`:
 ```cpp
 #pragma once
 
-#include "../dto/UserResponse.hpp"
+#include "../../../dto/modules/Auth/UserResponse.hpp"
 
 namespace Aether::Api {
     class UserService {
@@ -283,7 +302,7 @@ namespace Aether::Api {
 }
 ```
 
-`aether-core/api/services/UserService.cpp`:
+`aether-core/api/services/modules/Auth/UserService.cpp`:
 ```cpp
 #include "UserService.hpp"
 
@@ -306,13 +325,13 @@ namespace Aether::Api {
 
 ### Passo 3: Criar o Controller
 
-`aether-core/api/controllers/UserController.hpp`:
+`aether-core/api/controllers/modules/Auth/UserController.hpp`:
 ```cpp
 #pragma once
 
-#include "../services/UserService.hpp"
-#include "../common/HttpResponse.hpp"
-#include "../common/HttpRequest.hpp"
+#include "../../../services/modules/Auth/UserService.hpp"
+#include "../../../common/HttpResponse.hpp"
+#include "../../../common/HttpRequest.hpp"
 
 namespace Aether::Api {
     class UserController {
@@ -331,7 +350,7 @@ namespace Aether::Api {
 }
 ```
 
-`aether-core/api/controllers/UserController.cpp`:
+`aether-core/api/controllers/modules/Auth/UserController.cpp`:
 ```cpp
 #include "UserController.hpp"
 #include <nlohmann/json.hpp>
@@ -364,6 +383,8 @@ namespace Aether::Api {
     }
 }
 ```
+
+⚠️ **Atenção pro include do próprio header** (`#include "UserController.hpp"` no `.cpp`, `#include "UserService.hpp"` no `.cpp`): como o `.hpp` e o `.cpp` moram na mesma pasta, esse include NUNCA leva `../` na frente, não importa quantos níveis de `modules/<Nome>/` o arquivo esteja. Esse foi justamente o bug mais comum ao mover os arquivos existentes pra essa estrutura — ver nota na seção de melhorias no fim deste documento.
 
 ### Passo 4: Registrar a Rota
 
@@ -460,8 +481,13 @@ Edite `aether-core/api/config/ApiConfig.hpp`:
 
 ```cpp
 struct ApiConfig {
-    std::string host = "0.0.0.0";  // Interface de escuta
-    uint16_t port = 9001;           // Porta TCP
+    std::string host = "0.0.0.0";       // Interface de escuta
+    uint16_t port = 9001;                // Porta TCP
+    unsigned int threads = ...;          // Threads do pool (default: nº de cores, piso 2)
+    std::string accessLogPath = ...;     // access.log estilo Apache (ver AccessLogger)
+    std::string requestDetailsDir = ...; // Diretório com 1 arquivo por requisição (payload+response)
+    std::unordered_set<HttpMethod> loggedMethods = ...;   // Métodos que entram no access log
+    std::unordered_set<HttpMethod> detailedMethods = ...; // Métodos que também geram arquivo de detalhe
 };
 ```
 
@@ -470,7 +496,7 @@ struct ApiConfig {
 ### Curto prazo
 - [ ] Implementar path parameters (ex: /users/:id)
 - [ ] Adicionar query parameter parsing
-- [ ] Logging centralizado
+- [x] Logging centralizado — `AccessLogger` (access log estilo Apache + arquivo de detalhe por requisição, ver `AccessLogger.hpp`)
 
 ### Médio prazo
 - [ ] Middleware (authentication, logging)
@@ -478,11 +504,11 @@ struct ApiConfig {
 - [ ] Error handling centralizado
 
 ### Longo prazo
-- [ ] Async I/O com coroutines C++20
+- [x] Async I/O — `HttpServer`/`HttpSession` reescritos com `async_accept`/`async_read`/`async_write` (Boost.Beast), sem coroutines C++20 por enquanto
 - [ ] WebSocket support
 - [ ] Rate limiting
 - [ ] Cache (Redis integration)
-- [ ] Multithread handling via thread pool
+- [x] Multithread handling via thread pool — `HttpServer::start()` sobe `ApiConfig::threads` rodando `io_context::run()`
 
 ## 📖 Referências Externas
 
@@ -497,4 +523,44 @@ Ao adicionar novas rotas/controllers:
 2. Adicionar comentários Doxygen
 3. Manter responsabilidades bem definidas
 4. Testar com cURL antes de fazer commit
+
+## 🗂️ Notas da Refatoração core/modules
+
+Ao separar `controllers/`, `dto/` e `services/` em `core/` vs `modules/<Nome>/`:
+
+**Bug encontrado e corrigido:** os quatro arquivos `.cpp` movidos (`StatusController.cpp`,
+`CameraController.cpp`, `StatusService.cpp`, `CameraService.cpp`) ficaram com o include do
+próprio header (`.hpp` irmão, na mesma pasta) apontando pra fora dela — ex:
+`#include "../../CameraController.hpp"` em vez de `#include "CameraController.hpp"`.
+Como o `.hpp` sempre se move **junto** com o `.cpp` pra mesma pasta nova, esse include nunca
+deveria ganhar `../`, mesmo que a pasta em si fique mais aninhada. É fácil cometer esse erro de
+novo ao mover mais arquivos pra essa estrutura (ou ao criar um módulo novo) — vale conferir esse
+include específico depois de qualquer `git mv`/refactor de IDE.
+
+**Oportunidades de melhoria nessa mesma direção** (organização/separação por módulo):
+
+1. **`Router` ainda centraliza todos os módulos.** `Router.hpp` tem `m_statusController` e
+   `m_cameraController` como membros diretos, e `RouterGet.cpp` faz `if (path == ...)` pra cada
+   rota manualmente. A separação de pastas não mudou isso — pra adicionar um módulo novo ainda é
+   preciso editar o `Router` central, que conhece o Horus e o "core" ao mesmo tempo. O
+   `RouteRegistry` (`transport/rest/RouteRegistry.hpp`) já existe com exatamente o mecanismo pra
+   resolver isso (registro de rotas via `std::function`), mas **não está sendo usado** — `Router`
+   não o consome, é código morto hoje. Ligar o `RouteRegistry` e deixar cada módulo registrar suas
+   próprias rotas (ex: um `RegisterHorusRoutes(registry)` dentro de `controllers/modules/Horus/`)
+   completaria a separação: o `Router` deixaria de precisar conhecer `CameraController` diretamente.
+
+2. **Nome `controllers/core/` colide conceitualmente com `aether-core/core/`.** Já existe um
+   `core/` na raiz do projeto (EventBus, database, network, utils — a camada de infraestrutura).
+   Ter também um `api/controllers/core/` (endpoints sem módulo) usa a mesma palavra pra duas coisas
+   diferentes. Considerar renomear pra algo como `controllers/system/` ou `controllers/general/`
+   evitaria a ambiguidade — troca simples, mas só vale a pena decidir antes de mais módulos se
+   acumularem nessa pasta.
+
+3. **A separação é só de arquivos, não de build.** `api/CMakeLists.txt` continua compilando tudo
+   (core + todos os módulos) numa única lib `aether_api` via `file(GLOB_RECURSE ...)`. Isso é
+   suficiente pra organização visual, mas não impede um controller do "core" incluir algo de um
+   módulo por engano, nem permite compilar/testar um módulo isoladamente. Os módulos "de verdade"
+   em `aether-core/modules/` (ex: `ModulePoseidon`) já têm CMakeLists.txt próprios — replicar esse
+   padrão pra `api/` (um target por módulo, ex: `aether_api_horus`) tornaria a fronteira real, não
+   só convencional. Vale considerar se a lista de módulos crescer.
 

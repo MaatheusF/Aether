@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../services/CameraService.hpp"
-#include "../common/HttpResponse.hpp"
-#include "../common/HttpRequest.hpp"
+#include "../../../services/modules/Horus/CameraService.hpp"
+#include "../../../common/HttpResponse.hpp"
+#include "../../../common/HttpRequest.hpp"
 
 namespace Aether::Api
 {
@@ -21,7 +21,7 @@ namespace Aether::Api
             /**
              * @brief Processa requisição GET de snapshot de uma câmera
              *
-             * Rota: GET /api/cameras/:channel/snapshot
+             * Rota: GET /api/horus/cameras/:channel/snapshot
              *
              * @param request Requisição HTTP recebida
              * @return Resposta HTTP com a imagem JPEG (Content-Type: image/jpeg)
@@ -34,7 +34,7 @@ namespace Aether::Api
 
             /**
              * @brief Extrai o número do canal a partir do path da requisição
-             * (ex: "/api/cameras/1/snapshot" -> 1)
+             * (ex: "/api/horus/cameras/1/snapshot" -> 1)
              * @param path Path da requisição
              * @return Número do canal, ou -1 se o path for inválido
              */

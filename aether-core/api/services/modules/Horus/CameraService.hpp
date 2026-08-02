@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../config/CameraConfig.hpp"
-#include "../dto/CameraSnapshotResponse.hpp"
+#include "../../../config/CameraConfig.hpp"
+#include "../../../dto/modules/Horus/CameraSnapshotResponse.hpp"
 
 #include <string>
 

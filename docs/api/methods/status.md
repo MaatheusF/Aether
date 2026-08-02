@@ -1,4 +1,4 @@
-# GET /api/status
+# GET /api/core/status
 
 ## Descrição
 
@@ -6,7 +6,7 @@ Retorna o estado atual do Aether Core/API. Método utilizado para verificar a sa
 
 ## Request
 
-GET /api/status
+GET /api/core/status
 
 ## Response
 

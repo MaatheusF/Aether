@@ -1,4 +1,4 @@
-# Rota de snapshot de câmera — GET /api/cameras/:channel/snapshot
+# Rota de snapshot de câmera — GET /api/horus/cameras/:channel/snapshot
 
 ## O que foi criado
 
@@ -8,12 +8,17 @@ Seguindo exatamente o padrão MVC do projeto (Controller → Service → DTO):
 |---|---|
 | `core/utils/Md5.hpp` / `.cpp` | MD5 próprio (sem dependência nova), usado no cálculo do Digest Auth |
 | `api/config/CameraConfig.hpp` | Host, porta, usuário, senha e path do snapshot da câmera |
-| `api/dto/CameraSnapshotResponse.hpp` | DTO com os bytes da imagem, content-type e status |
-| `api/services/CameraService.hpp` / `.cpp` | Faz o handshake HTTP Digest Auth e busca o JPEG na câmera |
-| `api/controllers/CameraController.hpp` / `.cpp` | Extrai o canal da URL e devolve a imagem (ou erro em JSON) |
+| `api/dto/modules/Horus/CameraSnapshotResponse.hpp` | DTO com os bytes da imagem, content-type e status |
+| `api/services/modules/Horus/CameraService.hpp` / `.cpp` | Faz o handshake HTTP Digest Auth e busca o JPEG na câmera |
+| `api/controllers/modules/Horus/CameraController.hpp` / `.cpp` | Extrai o canal da URL e devolve a imagem (ou erro em JSON) |
 | `api/transport/rest/Router.hpp` (editado) | Adiciona `m_cameraController` |
-| `api/transport/rest/RouterGet.cpp` (editado) | Registra a rota `GET /api/cameras/:channel/snapshot` |
+| `api/transport/rest/RouterGet.cpp` (editado) | Registra a rota `GET /api/horus/cameras/:channel/snapshot` |
 | `core/CMakeLists.txt` (editado) | Adiciona `Md5.cpp`/`Md5.hpp` na lib `aether_core` |
+
+> `CameraController`/`CameraService`/`CameraSnapshotResponse` foram movidos pra
+> dentro de `modules/Horus/` numa refatoração posterior, que separou `controllers/`,
+> `services/` e `dto/` em `core/` (sem módulo) vs `modules/<Nome>/` (por módulo).
+> Ver `API_ARCHITECTURE.md` para a convenção completa.
 
 Os arquivos `.cpp` novos dentro de `api/` (`CameraService.cpp`, `CameraController.cpp`)
 já são pegos automaticamente pelo `file(GLOB_RECURSE ...)` do `api/CMakeLists.txt` —
@@ -58,7 +63,7 @@ Se um dia você tiver mais de uma câmera, dá pra evoluir `CameraConfig` para u
 
 ```bash
 # depois de rebuildar e subir o aetherd
-curl http://localhost:9001/api/cameras/1/snapshot --output snapshot.jpg
+curl http://localhost:9001/api/horus/cameras/1/snapshot --output snapshot.jpg
 file snapshot.jpg   # deve dizer "JPEG image data"
 ```
 

@@ -58,6 +58,11 @@ curl http://localhost:9001/api/test
 
 ## 🔧 Adicionar Uma Nova Rota em 5 Passos
 
+> Os caminhos abaixo (`api/dto/UserResponse.hpp`, etc.) são o layout antigo,
+> flat. A convenção atual usa `core/` (sem módulo) ou `modules/<Nome>/` (por
+> módulo) em `controllers/`, `services/` e `dto/` — ver exemplo completo em
+> `API_ARCHITECTURE.md` → "Como Adicionar Uma Nova Rota".
+
 ### Passo 1: Criar DTO
 `aether-core/api/dto/UserResponse.hpp`:
 ```cpp
@@ -181,7 +186,7 @@ Service = StatusService (lógica)
 
 Exemplo real:
 ```
-Requisição GET /api/status
+Requisição GET /api/core/status
    ↓
 StatusController::get(HttpRequest)
    ↓
@@ -233,7 +238,7 @@ HttpResponse ProductController::list(const HttpRequest& request)
 
 ```bash
 # GET
-curl http://localhost:9001/api/status
+curl http://localhost:9001/api/core/status
 
 # GET com header
 curl -H "Accept: application/json" http://localhost:9001/api/users

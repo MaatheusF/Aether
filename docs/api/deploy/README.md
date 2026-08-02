@@ -71,16 +71,26 @@ aether-core/api/
 ├── config/
 │   └── ApiConfig.hpp       # Configuração (host, porta)
 ├── controllers/             # Processam requisições HTTP (MVC)
-│   └── StatusController.*
+│   ├── core/                # Sem módulo específico
+│   │   └── StatusController.*
+│   └── modules/<Nome>/      # Por módulo (ex: modules/Horus/)
+│       └── CameraController.*
 ├── services/                # Lógica de negócio
-│   └── StatusService.*
+│   ├── core/
+│   │   └── StatusService.*
+│   └── modules/<Nome>/
+│       └── CameraService.*
 ├── dto/                     # Data Transfer Objects
-│   └── StatusResponse.hpp
+│   ├── core/
+│   │   └── StatusResponse.hpp
+│   └── modules/<Nome>/
+│       └── CameraSnapshotResponse.hpp
 └── transport/rest/          # Implementação HTTP
-    ├── HttpServer.*         # Servidor TCP
-    ├── HttpSession.*        # Gerencia conexão
+    ├── HttpServer.*         # Servidor TCP (async, pool de threads)
+    ├── HttpSession.*        # Gerencia conexão (async_read/async_write)
+    ├── AccessLogger.*       # Access log estilo Apache + arquivo de detalhe por requisição
     ├── Router.*             # Despachante de rotas
-    ├── RouteRegistry.*      # Registro de rotas (novo!)
+    ├── RouteRegistry.*      # Registro de rotas (existe, mas não é usado pelo Router ainda)
     ├── RouterGet.cpp        # Handlers GET
     ├── RouterPost.cpp       # Handlers POST
     ├── RouterPut.cpp        # Handlers PUT
