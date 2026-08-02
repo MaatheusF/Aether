@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../dto/StatusResponse.hpp"
+#include "../../dto/core/StatusResponse.hpp"
 
 namespace Aether::Api
 {

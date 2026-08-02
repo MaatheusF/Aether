@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../services/StatusService.hpp"
-#include "../common/HttpResponse.hpp"
-#include "../common/HttpRequest.hpp"
+#include "../../services/core/StatusService.hpp"
+#include "../../common/HttpResponse.hpp"
+#include "../../common/HttpRequest.hpp"
 
 namespace Aether::Api
 {

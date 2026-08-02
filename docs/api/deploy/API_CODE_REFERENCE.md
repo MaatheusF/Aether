@@ -111,7 +111,7 @@ private:
 Router router;
 HttpRequest req;
 req.method = HttpMethod::GET;
-req.path = "/api/status";
+req.path = "/api/core/status";
 
 HttpResponse response = router.dispatch(req);
 ```

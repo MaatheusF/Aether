@@ -5,7 +5,7 @@ const label_status = document.getElementById("core-status-label");
 /* Função que consulta o status do Core */
 async function getCoreStatus() {
     try {
-        const response = await fetch(`${window.AETHER_CORE_BASE_URL}/api/status`);
+        const response = await fetch(`${window.AETHER_CORE_BASE_URL}/api/core/status`);
         if (!response.ok) {
             throw new Error('Core unavailable');
         }

@@ -1,7 +1,7 @@
 /* public/js/services/camera_snapshot.js
    Atualiza periodicamente qualquer <img data-camera-snapshot> com o
    snapshot JPEG mais recente da câmera, via GET
-   /api/cameras/:canal/snapshot no Core (ver CameraController).
+   /api/horus/cameras/:canal/snapshot no Core (ver CameraController).
 
    cache: 'no-store' evita que o browser reutilize o snapshot anterior.
    O object URL anterior é revogado a cada troca pra não vazar memória —
@@ -47,7 +47,7 @@
         if (canaisEmAndamento.has(canal)) return;
         canaisEmAndamento.add(canal);
 
-        const url = `${window.AETHER_CORE_BASE_URL}/api/cameras/${canal}/snapshot`;
+        const url = `${window.AETHER_CORE_BASE_URL}/api/horus/cameras/${canal}/snapshot`;
 
         try {
             const resp = await fetch(url, { cache: 'no-store' });

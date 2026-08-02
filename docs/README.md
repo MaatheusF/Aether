@@ -21,7 +21,7 @@ docs/
 │   │   ├── API_CODE_REFERENCE.md     # Referência de código
 │   │   └── API_REST.md               # Referência dos endpoints REST
 │   └── methods/
-│       └── status.md                 # GET /api/status
+│       └── status.md                 # GET /api/core/status
 │
 └── web/
     ├── Deploy.md                     # Setup do ambiente de desenvolvimento da interface Web

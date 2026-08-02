@@ -2,8 +2,8 @@
 
 #include "../../common/HttpResponse.hpp"
 #include "../../common/HttpRequest.hpp"
-#include "../../controllers/StatusController.hpp"
-#include "../../controllers/CameraController.hpp"
+#include "../../controllers/core/StatusController.hpp"
+#include "../../controllers/modules/Horus/CameraController.hpp"
 
 #include <string>
 

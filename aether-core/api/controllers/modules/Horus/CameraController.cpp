@@ -1,11 +1,11 @@
 #include "CameraController.hpp"
-#include "../../include/external/json.hpp"
+#include "../../../../include/external/json.hpp"
 
 namespace Aether::Api
 {
     namespace
     {
-        constexpr const char* kCamerasPrefix = "/api/cameras/";
+        constexpr const char* kCamerasPrefix = "/api/horus/cameras/";
         constexpr const char* kSnapshotSuffix = "snapshot";
 
         /**
@@ -29,7 +29,7 @@ namespace Aether::Api
     }
 
     /**
-     * Extrai o canal do path "/api/cameras/:channel/snapshot".
+     * Extrai o canal do path "/api/horus/cameras/:channel/snapshot".
      * Tolera query string ao final (ex: "?t=123") para uso futuro
      * com cache-buster.
      */
@@ -67,7 +67,7 @@ namespace Aether::Api
     }
 
     /**
-     * Processa requisição GET para /api/cameras/:channel/snapshot
+     * Processa requisição GET para /api/horus/cameras/:channel/snapshot
      *
      * Delega ao CameraService a captura da imagem (Digest Auth) e
      * retorna o JPEG bruto, ou um erro em JSON quando a captura falha.
@@ -78,7 +78,7 @@ namespace Aether::Api
 
         if (channel < 0)
         {
-            return buildErrorResponse(400, "Canal invalido. Use /api/cameras/:channel/snapshot");
+            return buildErrorResponse(400, "Canal invalido. Use /api/horus/cameras/:channel/snapshot");
         }
 
         auto dto = m_service.getSnapshot(channel);

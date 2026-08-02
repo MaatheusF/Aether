@@ -103,7 +103,7 @@ Atualmente, o roteamento é feito com string matching simples:
 HttpResponse Router::dispatchGet(const HttpRequest& request)
 {
     // Exact match
-    if (request.path == "/api/status")
+    if (request.path == "/api/core/status")
     {
         return m_statusController.get(request);
     }
@@ -134,7 +134,7 @@ std::shared_ptr<RouteRegistry> setupRoutes(
     auto registry = std::make_shared<RouteRegistry>();
     
     // GET routes
-    registry->get("/api/status", 
+    registry->get("/api/core/status", 
         [&](const HttpRequest& req) {
             return statusCtrl.get(req);
         });
@@ -167,6 +167,12 @@ std::shared_ptr<RouteRegistry> setupRoutes(
 ```
 
 ## 📝 Implementando um Controller
+
+> ⚠️ Os caminhos abaixo (`controllers/ProductController.*`) são o layout antigo,
+> flat. A convenção atual separa em `controllers/core/` (sem módulo) ou
+> `controllers/modules/<Nome>/` (por módulo) — mesma coisa pra `services/` e
+> `dto/`. Ver `API_ARCHITECTURE.md` → "Estrutura de Pastas" e "Como Adicionar
+> Uma Nova Rota" pra um exemplo completo já nesse formato.
 
 ### Step 1: Header
 

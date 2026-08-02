@@ -134,7 +134,7 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {# canal != null → câmera já exposta pelo Core (GET /api/cameras/:canal/snapshot).
+                {# canal != null → câmera já exposta pelo Core (GET /api/horus/cameras/:canal/snapshot).
                    As demais seguem como placeholder até o Core expor os canais correspondentes. #}
                 {% set cameras = [
                     {nome: 'Entrada', canal: 1},

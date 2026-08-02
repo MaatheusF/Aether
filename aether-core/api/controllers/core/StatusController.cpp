@@ -1,10 +1,10 @@
 #include "StatusController.hpp"
-#include "../../include/external/json.hpp"
+#include "../../../include/external/json.hpp"
 
 namespace Aether::Api
 {
     /**
-     * Processa requisição GET para /api/status
+     * Processa requisição GET para /api/core/status
      *
      * Retorna o status atual da API em formato JSON.
      * Delegada ao StatusService para obter os dados.
