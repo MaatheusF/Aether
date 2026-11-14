@@ -1,0 +1,61 @@
+/* ==========================================================================
+   Aether — app-shell.css
+   Casca das telas da área logada: rail lateral + barra superior ("bar").
+   Depende de base.css (tokens, botões, tema) carregado antes.
+
+   Paralelo ao base.html.twig antigo (Tailwind/glass) — só a /home usa isso
+   por enquanto. poseidon.html.twig e horus.html.twig continuam no shell
+   antigo até serem migrados.
+   ========================================================================== */
+
+.app { display: flex; min-height: 100vh; }
+
+/* ---------- rail ---------- */
+.rail { width: 232px; flex: none; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 18px 14px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+.rail-brand { display: flex; align-items: center; gap: 9px; padding: 4px 8px 20px; }
+.rail-brand svg { width: 22px; height: 22px; color: var(--accent); flex: none; }
+.rail-brand b { font-family: var(--font-display); font-size: 15px; letter-spacing: .03em; text-transform: uppercase; }
+
+.rail-group { display: block; font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); padding: 14px 10px 6px; }
+.rail a { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 6px; color: var(--text-2); text-decoration: none; font-size: 13.5px; font-weight: 500; }
+.rail a svg { width: 17px; height: 17px; flex: none; }
+.rail a:hover { background: var(--surface-2); color: var(--text); }
+.rail a.on { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
+
+.rail-add { color: var(--muted) !important; border: 1px dashed var(--border-strong); margin-top: 4px; }
+.rail-add:hover { color: var(--text-2) !important; background: transparent !important; }
+
+.rail-foot { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; }
+.pilot { display: flex; align-items: center; gap: 9px; padding: 8px; border-radius: 6px; text-decoration: none; color: inherit; }
+.pilot:hover { background: var(--surface-2); }
+.pilot-badge { width: 28px; height: 28px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border); display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; color: var(--text-2); flex: none; }
+.pilot-info { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
+.pilot-info b { font-size: 12.5px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pilot-info span { font-size: 10.5px; color: var(--muted); }
+.rail-logout { padding: 8px; font-size: 12px; color: var(--muted) !important; }
+.rail-logout:hover { color: var(--danger) !important; background: transparent !important; }
+
+/* ---------- main / bar ---------- */
+.main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.bar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 14px; height: 64px; padding: 0 28px; background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
+.bar-title { margin-right: auto; min-width: 0; }
+.bar-title h1 { font-size: 18px; white-space: nowrap; }
+.bar-title .eyebrow { margin-bottom: 2px; }
+.sync-note { font-family: var(--font-mono); font-size: 11px; color: var(--muted); white-space: nowrap; }
+.content { padding: 28px; flex: 1; }
+
+.rail-toggle-btn { display: none; }
+
+/* ---------- rail como gaveta no mobile ---------- */
+.rail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 45; }
+.rail-overlay.show { display: block; }
+
+@media (max-width: 959px) {
+  .rail { position: fixed; top: 0; left: 0; z-index: 50; transform: translateX(-100%); transition: transform .22s ease; box-shadow: 0 0 0 1px var(--border), 0 20px 40px rgba(0,0,0,.25); }
+  .rail.open { transform: translateX(0); }
+  .rail-toggle-btn { display: inline-flex; }
+  .bar { padding: 0 16px; gap: 10px; }
+  .bar-title h1 { font-size: 16px; }
+  .sync-note { display: none; }
+  .content { padding: 18px; }
+}
