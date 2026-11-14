@@ -1,0 +1,72 @@
+/* ==========================================================================
+   Aether — base.css
+   Tokens de design e componentes compartilhados (topbar, botões, tema
+   claro/escuro). Cada tela adiciona o próprio CSS em pages/<tela>.css por
+   cima deste arquivo.
+
+   CSS puro, sem passar pelo build do Tailwind: não precisa rodar o build
+   do CSS para esta tela refletir mudanças.
+   ========================================================================== */
+
+:root {
+  --bg: #EDF1F2; --surface: #FFFFFF; --surface-2: #F4F7F8;
+  --border: #D3DDE1; --border-strong: #B7C6CC;
+  --text: #0E181D; --text-2: #4C5F68; --muted: #5A6D76;
+  /* accent = marca / item ativo / foco (on-accent = texto sobre ele). ok,
+     ice, warn e danger têm significado semântico fixo (ver DesignSystem.md).
+     Valores de accent e muted no claro ficam um pouco mais escuros que os
+     do Katabatic para passar 4,5:1 de contraste (WCAG AA). */
+  --accent: #AD4E00; --on-accent: #FFFFFF; --ice: #2C7CA5; --ok: #2F7D50; --warn: #A87408; --danger: #B33B2C;
+  --shadow: 0 1px 2px rgba(14,24,29,.06), 0 10px 30px rgba(14,24,29,.06);
+}
+[data-theme="dark"] {
+  --bg: #0A0E11; --surface: #121A1F; --surface-2: #18232A;
+  --border: #24333E; --border-strong: #334754;
+  --text: #DFE8EC; --text-2: #9DB0BA; --muted: #6F838E;
+  --accent: #FF8A1F; --on-accent: #1A0E00; --ice: #5AA9D6; --ok: #4ADE80; --warn: #FFB900; --danger: #E4574A;
+  --shadow: none;
+}
+:root {
+  --font-display: "Archivo", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --wrap: 1140px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -.02em; margin: 0; line-height: 1.12; }
+p { margin: 0; }
+a { color: inherit; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 24px; }
+.eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ---------- topbar ---------- */
+.topbar { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--bg) 90%, transparent); border-bottom: 1px solid var(--border); backdrop-filter: blur(8px); }
+.topbar-inner { display: flex; align-items: center; gap: 24px; height: 64px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-right: auto; }
+.brand svg { width: 26px; height: 26px; color: var(--accent); flex: none; }
+.brand-text { display: flex; align-items: baseline; gap: 8px; }
+.brand-mark { font-family: var(--font-display); font-size: 18px; letter-spacing: .05em; text-transform: uppercase; }
+.brand-code { font-family: var(--font-mono); font-size: 11px; color: var(--accent); letter-spacing: .1em; }
+.tools { display: flex; align-items: center; gap: 8px; }
+
+/* ---------- botões ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; padding: 9px 16px; border-radius: 6px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text); text-decoration: none; cursor: pointer; font-family: var(--font-body); transition: border-color .15s ease; }
+.btn:hover { border-color: var(--accent); }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn-primary:hover { filter: brightness(1.08); }
+.btn-lg { padding: 12px 22px; font-size: 15px; }
+
+/* ---------- alternância de tema ---------- */
+.theme-toggle { width: 36px; height: 36px; padding: 0; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text-2); cursor: pointer; display: grid; place-items: center; }
+.theme-toggle:hover { color: var(--text); border-color: var(--border-strong); }
+.theme-toggle svg { width: 17px; height: 17px; }
+[data-theme="light"] .icon-sun { display: none; }
+[data-theme="dark"] .icon-moon { display: none; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } html { scroll-behavior: auto; } }
+@media (max-width: 560px) { .brand-code { display: none; } }
