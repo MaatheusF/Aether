@@ -1,43 +1,37 @@
-/* Elementos do DOM que exibe o status do Core */
-const dot_status = document.getElementById("core-status-dot");
-const label_status = document.getElementById("core-status-label");
+/* public/js/services/api_status.js
+   Indicador global de conexão com o Core — ponto + rótulo no rodapé da
+   rail (ver partials/_rail.html.twig), presente em toda a área logada.
+   Consulta GET /api/core/status a cada 60s.
+*/
+(function () {
+    const dotStatus = document.getElementById('core-status-dot');
+    const labelStatus = document.getElementById('core-status-label');
+    if (!dotStatus || !labelStatus) return;
 
-/* Função que consulta o status do Core */
-async function getCoreStatus() {
-    try {
-        const response = await fetch(`${window.AETHER_CORE_BASE_URL}/api/core/status`);
-        if (!response.ok) {
-            throw new Error('Core unavailable');
+    function setCoreStatus(status) {
+        const online = status.status === 'UP';
+
+        dotStatus.classList.toggle('ok', online);
+        dotStatus.classList.toggle('danger', !online);
+        labelStatus.classList.toggle('ok', online);
+        labelStatus.classList.toggle('danger', !online);
+        labelStatus.textContent = online ? 'Core online' : 'Core offline';
+    }
+
+    async function getCoreStatus() {
+        try {
+            const resp = await fetch(`${window.AETHER_CORE_BASE_URL}/api/core/status`);
+            if (!resp.ok) throw new Error('Core unavailable');
+            const data = await resp.json();
+            setCoreStatus(data);
+            return data;
+        } catch (erro) {
+            console.error('Erro ao consultar o Core:', erro);
+            setCoreStatus({ status: 'error', message: erro.message });
+            return { status: 'error', message: erro.message };
         }
-        const data = await response.json();
-        setCoreStatus(data);
-        return data;
-    } catch (error) {
-        console.error('Erro ao consultar o Core:', error);
-        setCoreStatus(error);
-        return { status: 'error', message: error.message };
     }
-}
 
-/* Função que atualiza a exibição status do Core no Front */
-function setCoreStatus(status) {
-
-    if(status.status === "UP") {
-        dot_status.classList.remove("bg-aether-critico");
-        dot_status.classList.add("bg-aether-broto");
-
-        label_status.classList.remove("text-aether-critico");
-        label_status.classList.add("text-aether-broto");
-        label_status.textContent = "Core Online"
-    } else {
-        dot_status.classList.remove("bg-aether-broto");
-        dot_status.classList.add("bg-aether-critico");
-
-        label_status.classList.remove("text-aether-broto");
-        label_status.classList.add("text-aether-critico");
-        label_status.textContent = "Core Offline"
-    }
-}
-
-document.addEventListener("DOMContentLoaded", getCoreStatus);
-setInterval(getCoreStatus, 60000); /* Atualiza o status a cada 60 segundos */
+    document.addEventListener('DOMContentLoaded', getCoreStatus);
+    setInterval(getCoreStatus, 60000);
+})();

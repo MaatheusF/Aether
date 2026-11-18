@@ -1,0 +1,65 @@
+{# ==========================================================================
+   layout/app_base.html.twig — Casca "rail + bar" das telas da área logada
+   Estilo: superfícies sólidas, tokens claro/escuro (public/css/base.css),
+   rail lateral (public/css/app-shell.css), mesmo princípio do login.
+
+   Não estende o base.html.twig antigo (Tailwind/glass) — só login.html.twig
+   ficou de fora da migração por já ser uma tela isolada antes disso.
+
+   Blocos que as telas filhas sobrescrevem:
+     - title            → título da aba
+     - active_view       → slug do módulo ativo ('dashboard'|'poseidon'|'horus'),
+                            usado pelo partials/_rail.html.twig pra destacar o item
+     - stylesheets       → CSS extra da página (ex.: pages/home.css)
+     - bar               → conteúdo da barra superior
+     - content           → conteúdo principal
+     - javascripts        → JS extra da página
+========================================================================== #}
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>{% block title %}Aether{% endblock %} · Aether</title>
+    <meta name="theme-color" content="#EDF1F2" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0A0E11" media="(prefers-color-scheme: dark)">
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='15' cy='17' r='9' fill='none' stroke='%23FF8A1F' stroke-width='2.6'/%3E%3Ccircle cx='15' cy='17' r='3' fill='none' stroke='%23FF8A1F' stroke-width='2.4'/%3E%3Ccircle cx='25.6' cy='7.6' r='2.2' fill='%23FF8A1F'/%3E%3C/svg%3E">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ asset('css/base.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app-shell.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components.css') }}">
+    {% block stylesheets %}{% endblock %}
+
+    {# Sem defer de propósito: aplica o tema salvo antes da primeira pintura (evita piscar). #}
+    <script src="{{ asset('js/components/theme-toggle.js') }}"></script>
+</head>
+<body>
+
+<div class="rail-overlay" id="rail-overlay"></div>
+
+<div class="app">
+    {# block() é chamado aqui dentro do próprio corpo do layout (igual o
+       base.html.twig antigo já faz com module_active) — resolução de block()
+       através de um include separado não é garantida, por isso passamos o
+       valor já resolvido como variável comum pro partial. #}
+    {% include 'partials/_rail.html.twig' with { active_view: block('active_view') } %}
+
+    <div class="main">
+        {% block bar %}{% endblock %}
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</div>
+
+<script src="{{ asset('js/components/rail.js') }}"></script>
+<script src="{{ asset('js/config.js') }}"></script>
+<script src="{{ asset('js/services/api_status.js') }}"></script>
+{% block javascripts %}{% endblock %}
+</body>
+</html>

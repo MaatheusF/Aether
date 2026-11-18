@@ -1,0 +1,44 @@
+{# Rail lateral das telas da área logada. `active_view` vem do
+   layout/app_base.html.twig, que resolve `block('active_view')` (definido
+   pela tela filha) e repassa aqui — marca qual item fica destacado:
+   dashboard|poseidon|horus. #}
+<nav class="rail" id="rail">
+    <div class="rail-brand">
+        {% include 'partials/_brand_icon.html.twig' %}
+        <b>Aether</b>
+    </div>
+
+    <span class="rail-group">Core</span>
+    <a href="{{ path('app_dashboard') }}"{% if active_view == 'dashboard' %} class="on"{% endif %}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5M5 10v9.5a1 1 0 0 0 1 1h4.5v-6h3v6H18a1 1 0 0 0 1-1V10"/></svg>
+        <span>Visão Geral</span>
+    </a>
+
+    <span class="rail-group">Módulos</span>
+    <a href="{{ path('app_modulo_poseidon') }}"{% if active_view == 'poseidon' %} class="on"{% endif %}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-7 6-11Z"/></svg>
+        <span>Poseidon</span>
+    </a>
+    <a href="{{ path('app_modulo_horus') }}"{% if active_view == 'horus' %} class="on"{% endif %}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span>Horus</span>
+    </a>
+    <a class="rail-add" aria-disabled="true" title="Em breve">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        <span>Novo módulo</span>
+    </a>
+
+    <div class="rail-foot">
+        <a href="#" class="pilot">
+            <span class="pilot-badge">{{ app.user ? app.user.username|slice(0, 2)|upper : 'OP' }}</span>
+            <span class="pilot-info">
+                <b>{{ app.user ? app.user.username : 'Operador' }}</b>
+                <span class="core-status">
+                    <span id="core-status-dot" class="pill-dot ok vital-dot"></span>
+                    <span id="core-status-label" class="core-status-label ok">Core online</span>
+                </span>
+            </span>
+        </a>
+        <a href="{{ path('app_logout') }}" class="rail-logout">Sair</a>
+    </div>
+</nav>
