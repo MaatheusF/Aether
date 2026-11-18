@@ -9,9 +9,9 @@
 
    Cada <img> pode ter um irmão [data-camera-status-dot] (ver
    modulos/horus.html.twig) que reflete a atualização do snapshot: verde
-   enquanto a última atualização bem-sucedida tiver menos de STALE_MS,
-   vermelho a partir daí — mesmo que a imagem continue tentando atualizar
-   em segundo plano.
+   (.ok) enquanto a última atualização bem-sucedida tiver menos de
+   STALE_MS, vermelho (.stale) a partir daí — mesmo que a imagem continue
+   tentando atualizar em segundo plano.
 */
 (function () {
     const REFRESH_MS = 5000; // Tempo de atualização da camera (Por virar uma configuração no futuro)
@@ -26,8 +26,8 @@
         img.dataset.lastUpdate = String(Date.now());
         const dot = dotDe(img);
         if (!dot) return;
-        dot.classList.remove('bg-aether-critico');
-        dot.classList.add('bg-aether-broto');
+        dot.classList.remove('stale');
+        dot.classList.add('ok');
     }
 
     function verificarAtualizacao(img) {
@@ -37,8 +37,8 @@
         const ultima = Number(img.dataset.lastUpdate || 0);
         const estaVelho = !ultima || (Date.now() - ultima) > STALE_MS;
 
-        dot.classList.toggle('bg-aether-critico', estaVelho);
-        dot.classList.toggle('bg-aether-broto', !estaVelho);
+        dot.classList.toggle('stale', estaVelho);
+        dot.classList.toggle('ok', !estaVelho);
     }
 
     async function atualizarSnapshot(img) {

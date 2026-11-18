@@ -3,8 +3,8 @@
    Estilo: superfícies sólidas, tokens claro/escuro (public/css/base.css),
    rail lateral (public/css/app-shell.css), mesmo princípio do login.
 
-   Não estende o base.html.twig antigo (Tailwind/glass) — ele continua
-   valendo para poseidon.html.twig e horus.html.twig até serem migrados.
+   Não estende o base.html.twig antigo (Tailwind/glass) — só login.html.twig
+   ficou de fora da migração por já ser uma tela isolada antes disso.
 
    Blocos que as telas filhas sobrescrevem:
      - title            → título da aba
@@ -32,6 +32,7 @@
 
     <link rel="stylesheet" href="{{ asset('css/base.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app-shell.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components.css') }}">
     {% block stylesheets %}{% endblock %}
 
     {# Sem defer de propósito: aplica o tema salvo antes da primeira pintura (evita piscar). #}
@@ -57,6 +58,8 @@
 </div>
 
 <script src="{{ asset('js/components/rail.js') }}"></script>
+<script src="{{ asset('js/config.js') }}"></script>
+<script src="{{ asset('js/services/api_status.js') }}"></script>
 {% block javascripts %}{% endblock %}
 </body>
 </html>

@@ -1,29 +1,12 @@
 /* ==========================================================================
    Aether — pages/home.css
-   Depende de base.css e app-shell.css carregados antes.
+   Depende de base.css, app-shell.css e components.css carregados antes.
 
-   --text-ok/--text-warn/--text-danger/--text-ice: variantes de --ok/--warn/
-   --danger/--ice ajustadas pra uso como TEXTO (no número do resumo, no
-   label do alerta, no texto do pill) — os tokens originais de base.css
-   continuam valendo sem mudança pra bordas, pontos e qualquer uso que não
-   seja texto pequeno, onde o contraste original já bastava. Alguns valores
-   aqui são idênticos ao token original porque aquele tema específico já
-   passava em 4.5:1 (WCAG AA); só os que falhavam foram escurecidos
-   (claro) ou clareados (escuro).
+   .pill, .device-card e companhia, a grade .devices e os tokens --text-*
+   moravam aqui e foram promovidos pra components.css/base.css quando a
+   página do módulo Poseidon passou a reusar as mesmas peças (ver
+   pages/poseidon.css) — não duplicar essas regras de novo aqui.
    ========================================================================== */
-
-:root {
-  --text-ok: #2C764B;
-  --text-warn: #9E6D08;
-  --text-danger: var(--danger);
-  --text-ice: #287095;
-}
-[data-theme="dark"] {
-  --text-ok: var(--ok);
-  --text-warn: var(--warn);
-  --text-danger: #E7675C;
-  --text-ice: var(--ice);
-}
 
 .summary { display: flex; flex-wrap: wrap; gap: 28px; padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 24px; }
 .summary > div { display: flex; flex-direction: column; gap: 2px; }
@@ -49,26 +32,10 @@
 
 .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .section-count { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
-
-.devices { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; margin-bottom: 28px; }
-.device-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 14px; transition: border-color .15s ease; }
-.device-card:hover { border-color: var(--accent); }
-.device-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-.device-type { font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em; color: var(--muted); text-transform: uppercase; }
-.device-name { font-size: 15px; font-weight: 600; margin-top: 2px; }
-
-.pill { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .05em; text-transform: uppercase; padding: 3px 8px; border-radius: 99px; background: var(--surface-2); color: var(--muted); white-space: nowrap; flex: none; }
-.pill-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-.pill.online { background: color-mix(in srgb, var(--ok) 14%, transparent); color: var(--text-ok); }
-.pill.alert { background: color-mix(in srgb, var(--danger) 14%, transparent); color: var(--text-danger); }
-.pill.pending { background: color-mix(in srgb, var(--ice) 14%, transparent); color: var(--text-ice); }
-
-.device-telemetry { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding-top: 12px; border-top: 1px solid var(--border); }
-.device-telemetry div { display: flex; flex-direction: column; gap: 1px; }
-.device-telemetry span { font-family: var(--font-mono); font-size: 9.5px; text-transform: uppercase; color: var(--muted); }
-.device-telemetry b { font-family: var(--font-mono); font-size: 13px; font-weight: 500; color: var(--ice); }
-
-.empty-devices { grid-column: 1 / -1; border: 1px dashed var(--border-strong); border-radius: 10px; padding: 24px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-family: var(--font-mono); font-size: 12px; }
+/* .devices (grade de cards) tem margin-bottom aqui, específico desta
+   página — em components.css ela fica sem, já que outras páginas (ex: a
+   lista do Poseidon) podem ser só isso na tela, sem precisar do respiro. */
+.devices { margin-bottom: 28px; }
 
 .module-card { display: block; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; text-decoration: none; color: inherit; margin-bottom: 20px; transition: border-color .15s ease; }
 .module-card:hover { border-color: var(--accent); }
@@ -87,6 +54,5 @@
   .module-stats { grid-template-columns: 1fr; gap: 12px; }
 }
 @media (max-width: 520px) {
-  .devices { grid-template-columns: 1fr; }
   .summary { gap: 18px; }
 }

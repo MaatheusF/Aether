@@ -22,9 +22,40 @@
 [data-theme="dark"] {
   --bg: #0A0E11; --surface: #121A1F; --surface-2: #18232A;
   --border: #24333E; --border-strong: #334754;
-  --text: #DFE8EC; --text-2: #9DB0BA; --muted: #6F838E;
+  /* --muted um pouco mais claro que o valor original (#6F838E): como texto
+     (ex: .eyebrow) ele só passava 4,5:1 de contraste contra --bg, não
+     contra --surface (4,45:1) nem --surface-2 (4,05:1) — achado ao usar
+     --surface-2 no console de logs do Poseidon, mas valia pra qualquer
+     .eyebrow em cima de um card, login incluído. */
+  --text: #DFE8EC; --text-2: #9DB0BA; --muted: #7A8D97;
   --accent: #FF8A1F; --on-accent: #1A0E00; --ice: #5AA9D6; --ok: #4ADE80; --warn: #FFB900; --danger: #E4574A;
   --shadow: none;
+}
+
+/* --text-ok/--text-warn/--text-danger/--text-ice: variantes de --ok/--warn/
+   --danger/--ice ajustadas pra uso como TEXTO pequeno (label de pill, label
+   de alerta, número de resumo) em cima de --surface puro OU de um tint do
+   próprio token (ex: color-mix(in srgb, var(--ok) 14%, transparent)) — os
+   tokens originais acima continuam valendo sem mudança pra bordas, pontos
+   e qualquer uso que não seja texto, onde o contraste original já bastava.
+   Alguns valores aqui são idênticos ao token original porque aquele tema
+   específico já passava em 4,5:1 (WCAG AA); só os que falhavam foram
+   escurecidos (claro) ou clareados (escuro) — contraste conferido
+   programaticamente, não só visualmente. */
+:root {
+  --text-ok: #2C764B;
+  /* Escurecido mais um pouco em relação à 1ª versão (#9E6D08): aquela
+     passava 4,5:1 contra --surface, mas não contra --surface-2 (4,2:1) —
+     usado no console de logs do Poseidon. */
+  --text-warn: #946608;
+  --text-danger: var(--danger);
+  --text-ice: #287095;
+}
+[data-theme="dark"] {
+  --text-ok: var(--ok);
+  --text-warn: var(--warn);
+  --text-danger: #E7675C;
+  --text-ice: var(--ice);
 }
 :root {
   --font-display: "Archivo", system-ui, sans-serif;

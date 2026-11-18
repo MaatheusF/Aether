@@ -16,6 +16,12 @@
                             travado no Horus — este script não presume nada
                             sobre o que "checked" significa, só inverte).
 
+   Visual: botão e bolinha usam classes fixas (.toggle / .toggle-thumb) e o
+   estado é só um modificador (.on / .off / .pending) no próprio botão — o
+   CSS (public/css/components.css) decide a aparência de cada combinação via
+   seletor descendente (.toggle.on .toggle-thumb etc). Por isso a bolinha
+   (<span>) nunca precisa trocar de classe: só o botão.
+
    Fluxo (ver docs/api-contract-core.md e openapi.yaml para o contrato HTTP):
      1. Clique → botão vira "pendente" imediatamente (sem esperar rede).
      2. POST para o Core com a ação desejada.
@@ -34,29 +40,14 @@
     const POLL_INTERVAL_MS = 1500;
     const POLL_TIMEOUT_MS = 15000;
 
-    // Classes completas por estado — nunca montar por interpolação
-    // (ex: `bg-aether-${cor}`): o Tailwind só gera CSS pra classes que
-    // aparecem por extenso em algum arquivo escaneado, e um arquivo .js
-    // não é escaneado da mesma forma que um .twig. Ver DesignSystem.md §5.1x.
-    const TRACK = {
-        on: 'relative w-11 h-6 rounded-full transition-colors bg-aether-broto/30 border border-aether-broto/50',
-        off: 'relative w-11 h-6 rounded-full transition-colors bg-white/5 border border-aether-border',
-        pending: 'relative w-11 h-6 rounded-full transition-colors bg-aether-ambar/20 border border-aether-ambar/40 opacity-70 cursor-wait',
-    };
-    const THUMB = {
-        on: 'absolute top-0.5 right-0.5 w-4.5 h-4.5 rounded-full transition-all bg-aether-broto shadow-glow-broto',
-        off: 'absolute top-0.5 left-0.5 w-4.5 h-4.5 rounded-full transition-all bg-slate-500',
-        pending: 'absolute top-0.5 right-0.5 w-4.5 h-4.5 rounded-full transition-all bg-aether-ambar/80',
-    };
-
     function aplicarEstadoGrupo(botao, estado) {
         // Além do próprio toggle, atualiza qualquer elemento "satélite" (label,
-        // ícone, borda do card) marcado dentro do mesmo grupo — texto/classe
-        // completos vêm dos data-texto-on/off e data-classe-on/off de CADA
-        // elemento, nunca montados por interpolação (mesmo motivo de sempre:
-        // o Tailwind só gera CSS pra classe que aparece por extenso em algum
-        // arquivo escaneado — aqui ela aparece, só que como valor de atributo
-        // em vez de dentro de `class=""`, o que o Tailwind também escaneia).
+        // ícone) marcado dentro do mesmo grupo — texto/classe completos vêm
+        // dos data-texto-on/off e data-classe-on/off de CADA elemento, nunca
+        // montados por interpolação. Esse cuidado nasceu por causa do Tailwind
+        // (ver DesignSystem.md §5.1x), mas manter classes completas em vez de
+        // montadas continua sendo mais simples de ler e depurar, então o
+        // padrão foi mantido mesmo sem mais depender disso.
         const grupo = botao.closest('[data-atuador-grupo]');
         if (!grupo) return;
 
@@ -71,13 +62,13 @@
     }
 
     function aplicarEstado(botao, estado) {
+        botao.className = `toggle ${estado}`;
         const thumb = botao.querySelector('span');
-        botao.className = TRACK[estado];
-        if (thumb) thumb.className = THUMB[estado];
+        if (thumb) thumb.className = 'toggle-thumb';
         botao.setAttribute('aria-checked', estado === 'on' ? 'true' : 'false');
         botao.disabled = estado === 'pending';
 
-        // Label/ícone/container só atualizam quando o estado é definitivo
+        // Label/ícone satélite só atualiza quando o estado é definitivo
         // (on/off) — durante "pending" eles continuam mostrando o último
         // estado confirmado, já que ainda não sabemos qual vai ser o real.
         if (estado !== 'pending') {

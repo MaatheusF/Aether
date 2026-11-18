@@ -31,7 +31,12 @@
 .pilot-badge { width: 28px; height: 28px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border); display: grid; place-items: center; font-family: var(--font-mono); font-size: 11px; color: var(--text-2); flex: none; }
 .pilot-info { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
 .pilot-info b { font-size: 12.5px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.pilot-info span { font-size: 10.5px; color: var(--muted); }
+
+/* Indicador real de conexão com o Core (public/js/services/api_status.js),
+   no lugar onde antes ficava um texto fixo "Core · online". */
+.core-status { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; }
+.core-status-label.ok { color: var(--text-ok); }
+.core-status-label.danger { color: var(--text-danger); }
 .rail-logout { padding: 8px; font-size: 12px; color: var(--muted) !important; }
 .rail-logout:hover { color: var(--danger) !important; background: transparent !important; }
 

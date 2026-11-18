@@ -18,35 +18,24 @@ class ModuloController extends AbstractController
     }
 
     /**
-     * /modulos/poseidon — sem dispositivo especificado.
-     * Redireciona pro primeiro dispositivo conhecido, para sempre existir
-     * uma URL válida e "compartilhável" mesmo quando o link não vem com slug
-     * (ex: clique vindo do menu superior, que não sabe qual dispositivo
-     * o usuário estava vendo por último).
+     * /modulos/poseidon — lista todos os dispositivos do módulo.
+     *
+     * Antes redirecionava pro primeiro dispositivo conhecido (não existia
+     * uma "lista" de verdade, só o detalhe com um seletor lateral). Isso
+     * mudou: clicar num card leva pro detalhe em
+     * app_modulo_poseidon_dispositivo, com um link "← Poseidon" pra voltar
+     * (ver templates/modulos/poseidon/lista.html.twig e dispositivo.html.twig).
      */
     #[Route('/modulos/poseidon', name: 'app_modulo_poseidon')]
     public function poseidonIndex(): Response
     {
-        $dispositivos = $this->poseidonDevices->listar();
-
-        if (empty($dispositivos)) {
-            // Nenhum dispositivo cadastrado ainda — renderiza a própria
-            // página do módulo sem dispositivo selecionado (ela já sabe
-            // lidar com esse estado, ver bloco 'sem_dispositivo' no template).
-            return $this->render('modulos/poseidon.html.twig', [
-                'dispositivos' => [],
-                'dispositivo' => null,
-            ]);
-        }
-
-        return $this->redirectToRoute('app_modulo_poseidon_dispositivo', [
-            'slug' => $dispositivos[0]->slug,
+        return $this->render('modulos/poseidon/lista.html.twig', [
+            'dispositivos' => $this->poseidonDevices->listar(),
         ]);
     }
 
     /**
-     * /modulos/poseidon/{slug} — página completa do módulo, escopada a um
-     * dispositivo (ESP32) específico.
+     * /modulos/poseidon/{slug} — detalhe de um dispositivo (ESP32) específico.
      */
     #[Route('/modulos/poseidon/{slug}', name: 'app_modulo_poseidon_dispositivo')]
     public function poseidonDispositivo(string $slug): Response
@@ -57,8 +46,7 @@ class ModuloController extends AbstractController
             throw new NotFoundHttpException(sprintf('Dispositivo Poseidon "%s" não encontrado.', $slug));
         }
 
-        return $this->render('modulos/poseidon.html.twig', [
-            'dispositivos' => $this->poseidonDevices->listar(),
+        return $this->render('modulos/poseidon/dispositivo.html.twig', [
             'dispositivo' => $dispositivo,
         ]);
     }

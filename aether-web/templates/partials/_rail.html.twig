@@ -31,7 +31,13 @@
     <div class="rail-foot">
         <a href="#" class="pilot">
             <span class="pilot-badge">{{ app.user ? app.user.username|slice(0, 2)|upper : 'OP' }}</span>
-            <span class="pilot-info"><b>{{ app.user ? app.user.username : 'Operador' }}</b><span>Core · online</span></span>
+            <span class="pilot-info">
+                <b>{{ app.user ? app.user.username : 'Operador' }}</b>
+                <span class="core-status">
+                    <span id="core-status-dot" class="pill-dot ok vital-dot"></span>
+                    <span id="core-status-label" class="core-status-label ok">Core online</span>
+                </span>
+            </span>
         </a>
         <a href="{{ path('app_logout') }}" class="rail-logout">Sair</a>
     </div>

@@ -1,0 +1,58 @@
+{% extends 'layout/app_base.html.twig' %}
+
+{# ==========================================================================
+   modulos/poseidon/lista.html.twig — Lista de dispositivos do Poseidon
+   Substitui o antigo seletor lateral: /modulos/poseidon agora é uma lista
+   de verdade (não redireciona mais pro primeiro dispositivo), e cada card
+   leva pro detalhe em /modulos/poseidon/{slug} (ver dispositivo.html.twig).
+
+   Variável esperada (ver ModuloController::poseidonIndex): dispositivos
+========================================================================== #}
+
+{% block title %}Poseidon{% endblock %}
+{% block active_view %}poseidon{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/pages/poseidon.css') }}">
+{% endblock %}
+
+{% block bar %}
+    <div class="bar">
+        <button type="button" class="theme-toggle rail-toggle-btn" id="rail-toggle" aria-label="Abrir menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <div class="bar-title">
+            <p class="eyebrow">Módulo · Aquário / Paludário</p>
+            <h1>Poseidon</h1>
+        </div>
+        <button type="button" class="theme-toggle" id="theme" aria-label="Alternar tema">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="devices">
+        {% for d in dispositivos %}
+            <a href="{{ path('app_modulo_poseidon_dispositivo', { slug: d.slug }) }}" class="device-card">
+                <div class="device-top">
+                    <div>
+                        <p class="device-type">{{ d.tipo == 'paludario' ? 'Paludário' : 'Aquário' }}</p>
+                        <p class="device-name">{{ d.nome }}</p>
+                    </div>
+                    <span class="pill {{ d.status == 'online' ? 'online' : (d.status == 'alert' ? 'alert' : (d.status == 'pending' ? 'pending' : '')) }}">
+                        <span class="pill-dot"></span>{{ d.status == 'online' ? 'Online' : (d.status == 'alert' ? 'Alerta' : (d.status == 'pending' ? 'Pendente' : 'Offline')) }}
+                    </span>
+                </div>
+                <div class="device-telemetry">
+                    <div><span>Água</span><b>{{ d.telemetria.temp_agua|default('--') }}</b></div>
+                    <div><span>Umid.</span><b>{{ d.telemetria.umidade|default('--') }}</b></div>
+                    <div><span>Luz</span><b>{{ d.telemetria.luz|default('--') }}</b></div>
+                </div>
+            </a>
+        {% else %}
+            <div class="empty-devices">Nenhum dispositivo Poseidon cadastrado ainda.</div>
+        {% endfor %}
+    </div>
+{% endblock %}
